@@ -9,7 +9,7 @@ API_PREFIX = '/api/v1'
 
 @bp.route(f'{API_PREFIX}/environment')
 def environment():
-    return jsonify(type=getPlatformEnvironment(), instance_count=getPlatformInstances(), redis_connection=getSessionStorageType())
+    return jsonify(type=getPlatformEnvironment(), instance_count=getPlatformInstances(), session_storage=getSessionStorageType())
 
 @bp.route('/')
 def home():
