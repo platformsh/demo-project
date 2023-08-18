@@ -18,7 +18,7 @@ def home():
 def getPlatformInstances():
     platform_application_data = os.environ.get('PLATFORM_APPLICATION')
     if platform_application_data is None:
-        platform_application_data = base64.b64encode('{"instance_count": null}')
+        return None
 
     platform_application = json.loads(base64.b64decode(platform_application_data))
 
@@ -27,6 +27,7 @@ def getPlatformInstances():
     else :
         instance_count = None
     return instance_count
+
 def getSessionStorageType():
     platform_relationships_data = os.environ.get('PLATFORM_RELATIONSHIPS')
     
