@@ -19,7 +19,7 @@ function App() {
   const [sessionStorageType, setSessionStorageType] = useState<string | null>(null);
   const [appInstances, setAppInstances] = useState<number | null>(null);
   const [fatalErrorMessage, setFatalErrorMessage] = useState<string | null>(null);
-  const [currentStep, setCurrentStep] = useState<"redis" | "scale" | "complete" | null>("redis");
+  const [currentStep, setCurrentStep] = useState<"redis" | "merge-production" | "scale" | "complete" | null>("redis");
 
   useEffect(() => {
     fetchEnvironment()
@@ -38,6 +38,9 @@ function App() {
       case (sessionStorageType === 'file'):
         setCurrentStep('redis');
         break;
+      case (environment?.toLocaleLowerCase() === 'staging' && sessionStorageType === 'redis'):
+        setCurrentStep('merge-production');
+        break;
       case (appInstances !== null && appInstances < 1):
         setCurrentStep('scale');
         break;
@@ -45,7 +48,7 @@ function App() {
         setCurrentStep('complete')
         break;
     }
-  }, [sessionStorageType, appInstances]);
+  }, [environment, sessionStorageType, appInstances]);
 
 
 
@@ -53,7 +56,7 @@ function App() {
     <>
       {/* Temporary error container: needs design */}
       {fatalErrorMessage && <p className='bg-red-400 p-6 m-6 rounded-lg'>{fatalErrorMessage}</p>}
-      <div className={`max-w-[83.875rem] w-[83.875rem] m-auto transition duration-500 ${!environment && "blur"}`}>
+      <div className={`max-w-[83.875rem] w-[83.875rem] m-auto transition duration-500 ${(!environment || fatalErrorMessage) && "blur"}`}>
         <header className='p-12 flex flex-row justify-between items-center'>
           <div className="flex flex-row inline-flex items-center gap-6">
             <Logo className="logo w-[7rem] flex h-[2rem] p-0 justify-center items-center" title="Powered by Upsun" />
@@ -135,7 +138,7 @@ function App() {
             <div className='content-intro w-3/4 mx-auto mt-12'>
               <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 font-mono text-xs leading-6 ">Welcome to your Upsun app, a Python and Node.js multi-app designed to run on Upsun and teach you about it's unique features.</div>
 
-              {environment && environment === 'production' ?
+              {environment && environment.toLocaleLowerCase() === 'production' ?
                 <p className='text-sm leading-6 mt-2'>
                   This is your production environment — the environment that will show up in search results, that your domain name will point to, and what your visitors will see. This is the parent environment you and your team branch from to begin your development work.
                 </p>
@@ -163,12 +166,19 @@ function App() {
                   </div>
                 </div>
 
-                <div className={`feature--merge-production flex flex-col ${currentStep !== 'redis' && 'is-disabled'}`}>
+                <div className={`feature--merge-production flex flex-col ${!(currentStep === 'merge-production' || currentStep === 'redis') && 'is-disabled'}`}>
                   <div className='aside-title flex flex-row gap-4 items-center'>
                     <MergeIcon className='w-10 h-10' />
                     <h2 className='font-semibold'>Merge staging into production</h2>
                   </div>
-                  <div className='border-l-2 ml-5 mt-2 pl-10 h-10'>
+                  <div className={`border-l-2 ml-5 mt-2 pl-10 ${environment?.toLocaleLowerCase() === 'production' && 'h-10'}`}>
+                    {(environment?.toLocaleLowerCase() === 'staging' && currentStep === 'merge-production') &&
+                      <div className='rounded-lg p-4 bg-upsun-black-900'>
+                        <p className='mb-2'>Great! You've made the required changes and deployed them to staging. </p>
+                        <p className='mb-2'>In the future, any further changes that you want to make can be implemented here or in other preview environments.</p>
+                        <p className=''>Return to <code className='px-2 py-1'>upsun demo</code> in your terminal to continue your tour of Upsun.</p>
+                      </div>
+                    }
                   </div>
                 </div>
 
