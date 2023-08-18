@@ -33,4 +33,13 @@
     code {
       @apply p-0 pl-3 font-mono inline-flex justify-center items-center rounded-md bg-upsun-black-800 text-xs text-upsun-yellow-400 leading-5
     }
+
+    .TooltipContent {
+      @apply p-2 bg-[#302F45] rounded-md font-sans-soft;
+      box-shadow: 0px 1px 4px 0px rgba(26, 25, 43, 0.40);
+    }
+
+    .TooltipArrow {
+      @apply fill-[#302F45]
+    }
   }
