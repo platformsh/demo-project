@@ -7,6 +7,10 @@ import { ReactComponent as InfoIcon } from './assets/utility/key_info.svg';
 import { ReactComponent as ResetIcon } from './assets/utility/key_reset.svg';
 import CopyButton from './components/copy';
 import { ReactComponent as EnvironmentIcon } from './assets/utility/environment.svg';
+import { ReactComponent as RedisIcon } from './assets/utility/service_redis.svg';
+import { ReactComponent as ScaleIcon } from './assets/utility/scale_app.svg';
+import { ReactComponent as DoneIcon } from './assets/utility/done.svg';
+import { ReactComponent as MergeIcon } from './assets/utility/merge.svg';
 import { ReactComponent as StatusCompleteIcon } from './assets/utility/status_complete.svg';
 import { ReactComponent as StatusIncompleteIcon } from './assets/utility/status_incomplete.svg';
 
@@ -20,7 +24,7 @@ function App() {
   }, []);
 
   return (
-    <div className="max-w-[90rem] m-auto">
+    <div className="max-w-[83.875rem] w-[83.875rem] m-auto">
       <header className='p-12 flex flex-row justify-between items-center'>
         <div className="flex flex-row inline-flex items-center gap-6">
           <Logo className="logo w-[7rem] flex h-[2rem] p-0 justify-center items-center" title="Powered by Upsun" />
@@ -31,7 +35,7 @@ function App() {
         </div>
       </header>
       <main className='border-t-[1px] border-upsun-violet-600 flex flex-row'>
-        <aside>
+        <aside className='h-fit'>
           <section className='p-4'>
             <div className='aside-title flex flex-row gap-4 items-center'>
               <EnvironmentIcon className='w-[32px] h-[32px]' />
@@ -91,7 +95,67 @@ function App() {
             </div>
           </section>
         </aside>
-        <section className='border-t-2 border-upsun-violet-600'></section>
+        <section className='border-t-2 border-upsun-violet-600 w-3/4'>
+          <div className='content-intro w-3/4 mx-auto mt-12'>
+            <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 font-mono text-xs leading-6 ">Welcome to your Upsun app, a Python and Node.js multi-app designed to run on Upsun and teach you about it's unique features.</div>
+            <p className='text-sm leading-6 mt-2'>
+            This is your production environment — the environment that will show up in search results, that your domain name will point to, and what your visitors will see. This is the parent environment you and your team branch from to begin your development work.
+            </p>
+
+            <div className='pt-8 flex flex-col gap-2'>
+              <div className='feature--add-service flex flex-col'>
+                <div className='aside-title flex flex-row gap-4 items-center'>
+                  <RedisIcon className='w-10 h-10'/>
+                  <h2 className='font-semibold'>Add Redis to Staging</h2>
+                </div>
+                <div className='border-l-2 ml-5 pl-10'>
+                  <div className='rounded-lg p-4 bg-upsun-black-900'>
+                  <p className='mb-2'>With Upsun you can clone any environment to get a bye-for-byte copy to use for staging, features, and bugfixes.</p>
+                  <p className='mb-2'>Upsun also is unique in that you can version control your app services—MariaDB, Redis, and more.</p>
+                  <p className='mb-2'>We'll guide you through adding a Redis service and merging back into production. Simply run: </p>
+                  <code className='px-4'>upsun demo:start</code>
+                  </div>
+                </div>
+              </div>
+
+              <div className='feature--merge-production flex flex-col'>
+                <div className='aside-title flex flex-row gap-4 items-center'>
+                  <MergeIcon className='w-10 h-10'/>
+                  <h2 className='font-semibold'>Merge staging into production</h2>
+                </div>
+                <div className='border-l-2 ml-5 mt-2 pl-10 h-10'>
+                </div>
+              </div>
+
+              <div className='feature--scale-app flex flex-col pointer-events-none opacity-25'>
+                <div className='aside-title flex flex-row gap-4 items-center'>
+                  <ScaleIcon className='w-10 h-10'/>
+                  <h2 className='font-semibold'>Scale app</h2>
+                </div>
+                <div className='border-l-2 ml-5 pl-10'>
+                  <div className='rounded-lg p-4 bg-upsun-black-900'>
+                  <p className='mb-2'>Whether you have 10 daily visitors or 10,000, with Upsun your app is primed to scale at a moments notice using the CLI.</p>
+                  <code className='px-4 mb-2'>upsun scale:update</code>
+                  <p className='mb-2'>To wrap up your tour of Upsun, let’s scale your app. Continue with the following command in your terminal.</p>
+                  <code className='px-4 mb-2'>upsun demo:start</code>
+                  </div>
+                </div>
+              </div>
+
+              <div className='feature--all-done flex flex-col pointer-events-none opacity-25'>
+                <div className='aside-title flex flex-row gap-4 items-center'>
+                  <DoneIcon className='w-10 h-10 p-1'/>
+                  <h2 className='font-semibold'>You did it!</h2>
+                </div>
+                <div className='border-l-2 ml-5 pl-10'>
+                  <div className='rounded-lg p-4 bg-upsun-black-900'>
+                  <p className='mb-2'>Congratulation! You've connected with your database and feel free to store something in it. You can also delete this demo project and bring your own things here. Upsun is here to help.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
       <footer></footer>
     </div>
