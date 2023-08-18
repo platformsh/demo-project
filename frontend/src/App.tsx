@@ -127,7 +127,7 @@ function App() {
                 </div>
               </div>
 
-              <div className='feature--scale-app flex flex-col pointer-events-none opacity-25'>
+              <div className='feature--scale-app flex flex-col is-disabled'>
                 <div className='aside-title flex flex-row gap-4 items-center'>
                   <ScaleIcon className='w-10 h-10'/>
                   <h2 className='font-semibold'>Scale app</h2>
@@ -142,7 +142,7 @@ function App() {
                 </div>
               </div>
 
-              <div className='feature--all-done flex flex-col pointer-events-none opacity-25'>
+              <div className='feature--all-done flex flex-col is-disabled'>
                 <div className='aside-title flex flex-row gap-4 items-center'>
                   <DoneIcon className='w-10 h-10 p-1'/>
                   <h2 className='font-semibold'>You did it!</h2>

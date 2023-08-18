@@ -42,4 +42,8 @@
     .TooltipArrow {
       @apply fill-[#302F45]
     }
+
+    .is-disabled {
+      @apply select-none pointer-events-none opacity-25
+    }
   }
