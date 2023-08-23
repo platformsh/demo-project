@@ -154,7 +154,7 @@ function App() {
                 <div className={`feature--add-service flex flex-col ${currentStep !== 'redis' && 'is-disabled'}`}>
                   <div className='aside-title flex flex-row gap-4 items-center'>
                     <RedisIcon className='w-10 h-10' />
-                    <h2 className='font-semibold'>Add Redis to Staging</h2>
+                    <h2 className='font-semibold'>Add Redis to staging</h2>
                   </div>
                   <div className='border-l-2 ml-5 pl-10'>
                     <div className='rounded-lg p-4 bg-upsun-black-900'>
