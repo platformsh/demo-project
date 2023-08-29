@@ -1,1 +1,4 @@
-export const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:8000/api/v1';
+/** The Upsun deploy  hook in your ./upsun/config.yaml creates a var.js that sets this value */
+const BASE_PATH = window.APP_BASE_URL || 'http://localhost:8000/';
+
+export const API_BASE_URL = `${BASE_PATH}api/v1`;
