@@ -6,7 +6,8 @@ import { ReactComponent as StartIcon } from './assets/utility/key_start.svg';
 import { ReactComponent as InfoIcon } from './assets/utility/key_info.svg';
 import { ReactComponent as ResetIcon } from './assets/utility/key_reset.svg';
 import CopyButton from './components/copy';
-import { ReactComponent as EnvironmentIcon } from './assets/utility/environment.svg';
+import { ReactComponent as ProductionIcon } from './assets/utility/production.svg';
+import { ReactComponent as StagingIcon } from './assets/utility/staging.svg';
 import { ReactComponent as RedisIcon } from './assets/utility/service_redis.svg';
 import { ReactComponent as ScaleIcon } from './assets/utility/scale_app.svg';
 import { ReactComponent as DoneIcon } from './assets/utility/done.svg';
@@ -70,7 +71,7 @@ function App() {
           <aside className='h-fit'>
             <section className='p-4'>
               <div className='aside-title flex flex-row gap-4 items-center'>
-                <EnvironmentIcon className='w-[32px] h-[32px]' />
+                {environment?.toLowerCase() === "production" ? <ProductionIcon className='w-[32px] h-[32px]' /> : <StagingIcon className='w-[32px] h-[32px]' /> }
                 <h1>{environment}</h1>
               </div>
             </section>
