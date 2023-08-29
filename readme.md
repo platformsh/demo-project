@@ -15,7 +15,9 @@
 1. `npm install`
 2. `npm run start`
 
-## Good-to-know
+# First Deployment
+* Allocate required resources for scaling compatibility: `./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "demo-app-frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "demo-app-backend": { "resources": { "profile_size": "0.1" } } }, "services": { "redis_persistent": { "resources": { "profile_size": "0.1" }, "disk": 1024 } } }'`
+# Good-to-know
 
 * React's index.html has been modified to request dynamic/vars.js
   * This file is designed to provide dynamic project information such as routes in order to minimize the need to create various mounts and to avoid building using the deploy hook
