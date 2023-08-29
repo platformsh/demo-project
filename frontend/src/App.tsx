@@ -96,7 +96,7 @@ function App() {
                     <div className='w-4 h-4 flex justify-center'>
                       {(appInstances !== null && appInstances > 0) ? <StatusCompleteIcon className='w-auto h-auto' /> : <StatusIncompleteIcon className='w-auto h-auto' />}
                     </div>
-                    <span className='pl-3.5'>Scaled app instances: {appInstances !== null ? appInstances : ''}</span>
+                    <span className='pl-3.5'>App scaled horizontally</span>
                   </li>
                 </ul>
               </div>
@@ -137,15 +137,15 @@ function App() {
           </aside>
           <section className='border-t-2 border-upsun-violet-600 w-3/4'>
             <div className='content-intro w-3/4 mx-auto mt-12'>
-              <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 font-mono text-xs leading-6 ">Welcome to your Upsun app, a Python and Node.js multi-app designed to run on Upsun and teach you about it's unique features.</div>
+              <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">Welcome to your Upsun app, a Python and Node.js multiapp designed to run on Upsun and teach you about it's unique features.</div>
 
               {environment && environment.toLocaleLowerCase() === 'production' ?
                 <p className='text-sm leading-6 mt-2'>
-                  This is your production environment — the environment that will show up in search results, that your domain name will point to, and what your visitors will see. This is the parent environment you and your team branch from to begin your development work.
+                  This app is the React frontend of your demo project’s production environment. In your other projects, use the runtimes you prefer—Python, Node.js, PHP, and more. The net: your production environment will show up in search results. You’ll point your domain name to it. And that’s what will be visible to users. Your team can use a Git-branch workflow to create byte-for-byte copies of production (preview environments) to begin development.
                 </p>
                 : <>
                   <p className='text-sm leading-6 mt-2'>Congrats! You’ve created your staging environment 🎉</p>
-                  <p className='text-sm leading-6 mt-2'>This is your byte-for-byte copy of production. You can use staging and development environments to preview and share changes prior to pushing them to production.</p>
+                  <p className='text-sm leading-6 mt-2'>This space represents your byte-for-byte copy of production. You can use staging and development environments to preview and share changes prior to pushing them to production.</p>
                   <p className='text-sm leading-6 mt-2'>This app uses the Upsun environment variable <code className='px-2 py-1'>$UPSUN_ENVIRONMENT="staging"</code> to modify the content of this page.</p>
                   <p className='text-sm leading-6 mt-2'>Return to the <code className='px-2 py-1'>upsun demo</code> command to continue adding your Redis service.</p>
                 </>
@@ -159,8 +159,8 @@ function App() {
                   </div>
                   <div className='border-l-2 ml-5 pl-10'>
                     <div className='rounded-lg p-4 bg-upsun-black-900'>
-                      <p className='mb-2'>With Upsun you can clone any environment to get a bye-for-byte copy to use for staging, features, and bugfixes.</p>
-                      <p className='mb-2'>Upsun also is unique in that you can version control your app services—MariaDB, Redis, and more.</p>
+                      <p className='mb-2'>With Upsun, you can clone any environment to get a byte-for-byte copy to use for staging, features, and bugfixes.</p>
+                      <p className='mb-2'>Upsun is unique in that you can version-control your app services—MariaDB, Redis, and more.</p>
                       <p className='mb-2'>We'll guide you through adding a Redis service and merging back into production. Simply run: </p>
                       <code className='px-4'>upsun demo:start</code>
                     </div>
@@ -190,7 +190,7 @@ function App() {
                   </div>
                   <div className='border-l-2 ml-5 pl-10'>
                     <div className='rounded-lg p-4 bg-upsun-black-900'>
-                      <p className='mb-2'>Whether you have 10 daily visitors or 10,000, with Upsun your app is primed to scale at a moments notice using the CLI.</p>
+                      <p className='mb-2'>Whether you have 10 daily visitors or 10,000, with Upsun your app is primed to scale at a moment's notice using the CLI.</p>
                       <code className='px-4 mb-2'>upsun scale:update</code>
                       <p className='mb-2'>To wrap up your tour of Upsun, let’s scale your app. Continue with the following command in your terminal.</p>
                       <code className='px-4 mb-2'>upsun demo:start</code>
@@ -205,7 +205,8 @@ function App() {
                   </div>
                   <div className='border-l-2 ml-5 pl-10'>
                     <div className='rounded-lg p-4 bg-upsun-black-900'>
-                      <p className='mb-2'>Congratulation! You've connected with your database and feel free to store something in it. You can also delete this demo project and bring your own things here. Upsun is here to help.</p>
+                      <p className='mb-2'>Congratulations! You’ve connected with your database; feel free to store something in it.</p>
+                      <p className=''>You can also delete this demo project and bring your own projects here.</p>
                     </div>
                   </div>
                 </div>
