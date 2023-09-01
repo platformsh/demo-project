@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ReactComponent as Logo } from './assets/logo/upsun_horizontal.svg';
 import { ENVIRONMENT_PATH, fetchEnvironment } from './utility/api';
-import ShareButton from './components/share';
 import { ReactComponent as StartIcon } from './assets/utility/key_start.svg';
 import { ReactComponent as InfoIcon } from './assets/utility/key_info.svg';
 import { ReactComponent as ResetIcon } from './assets/utility/key_reset.svg';
@@ -16,6 +15,7 @@ import { ReactComponent as StatusCompleteIcon } from './assets/utility/status_co
 import { ReactComponent as StatusIncompleteIcon } from './assets/utility/status_incomplete.svg';
 import { API_BASE_PATH } from './config';
 import ErrorPage from './page/ErrorPage';
+import Header from './components/Header';
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>('');
@@ -63,15 +63,7 @@ function App() {
   return (
     <>
       <div className={`max-w-[83.875rem] w-[83.875rem] m-auto transition duration-500`}>
-        <header className='p-12 flex flex-row justify-between items-center'>
-          <div className="flex flex-row inline-flex items-center gap-6">
-            <Logo className="logo w-[7rem] flex h-[2rem] p-0 justify-center items-center" title="Powered by Upsun" />
-            <span className='font-sans-strong text-sm font-medium'>Demo project</span>
-            <span className='font-sans-strong text-sm font-normal pl-[1.5rem] pr-[1.125rem] border-l-[1px] border-upsun-black-900'>Powered by Platform.sh</span>
-          </div>
-          <div className='pull-right'><ShareButton />
-          </div>
-        </header>
+        <Header />
         <main className='border-t-[1px] border-upsun-violet-600 flex flex-row'>
           <aside className='h-fit'>
             <section className='p-4'>
