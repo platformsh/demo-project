@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { ReactComponent as Logo } from './assets/logo/upsun_horizontal.svg';
-import { ReactComponent as Unavailable } from './assets/utility/unavailable.svg';
 import { ENVIRONMENT_PATH, fetchEnvironment } from './utility/api';
 import ShareButton from './components/share';
 import { ReactComponent as StartIcon } from './assets/utility/key_start.svg';
@@ -16,6 +15,7 @@ import { ReactComponent as MergeIcon } from './assets/utility/merge.svg';
 import { ReactComponent as StatusCompleteIcon } from './assets/utility/status_complete.svg';
 import { ReactComponent as StatusIncompleteIcon } from './assets/utility/status_incomplete.svg';
 import { API_BASE_PATH } from './config';
+import ErrorPage from './page/ErrorPage';
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>('');
@@ -55,25 +55,10 @@ function App() {
 
 
   if (fatalErrorMessage)
-    return <>
-      <div className='mx-auto p-5 sm:h-screen flex flex-col justify-center sm:px-10 md:px-20 lg:px-24 max-w-[1230px]'>
-        <header className='pb-5'>
-          <Logo className="logo w-40 sm:w-36 md:w-40 flex p-0 justify-center items-center" title="Powered by Upsun" />
-        </header>
-        <main>
-          <div className='flex flex-row flex-col sm:flex-row-reverse'>
-            <div className='w-full sm:w-2/5'>
-              <Unavailable className='m-auto px-10 pb-5 w-9/10 max-w-[550px] sm:h-full sm:p-0'/>
-            </div>
-            <div className='w-full sm:3/5 h-min my-auto'>
-              <h1 className='text-2xl mb-4 lg:text-3xl'>We cannot fetch your data</h1>
-              <p className='mb-2'> There was an error fetching data from your Python backend at <code className='px-2 py-1'>{API_BASE_PATH}/{ENVIRONMENT_PATH}</code></p>
-              <p className=''> Please check your app logs using <code className='px-2 py-1'>upsun environment:log</code></p>
-            </div>
-          </div>
-        </main>
-      </div>
-    </>
+    return <ErrorPage header="We cannot fetch your data">
+      <p className='mb-2'> There was an error fetching data from your Python backend at <code className='px-2 py-1'>{API_BASE_PATH}/{ENVIRONMENT_PATH}</code></p>
+      <p className=''> Please check your app logs using <code className='px-2 py-1'>upsun environment:log</code></p>
+    </ErrorPage>
 
   return (
     <>
