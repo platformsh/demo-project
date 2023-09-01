@@ -1,23 +1,33 @@
-# Local Dev
+# Demo project
 
-## Backend App
+This is a simple demo project meant to take a user on a bit of a product tour. 
 
-1. `cd backend`
-2. `pip install -r requirements.txt`
-3. `cp .env.sample .env`
-   * There are preset `PLATFORM_*` variables available to test scenarios such as:
-     * Has redis app
-     * Has scaled environment
-     * Set staging/production
-4. `python main.py`
+## Using this project locally
 
-## Frontend App
+There is a root package `@platformsh/demo-project` that controls both the backend and frontend app setup.
+NPM is required. 
+
+1. `git clone git@github.com:platformsh/demo-project.git`
+1. `cd demo-project`
 1. `npm install`
-2. `npm run start`
+1. `npm run start`
 
-# First Deployment
+These commands will set up everything you need to get started, serving:
+
+- The `backend` Python app from `localhost:8000`
+- The `frontend` React app from `localhost:3000`
+
+> [!IMPORTANT]
+> If at any time you want to start over, run `npm run clean`.
+> This will delete everything you've done in the previous steps.
+
+## Notes
+
+### First Deployment
+
 * Allocate required resources for scaling compatibility: `./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "demo-app-frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "demo-app-backend": { "resources": { "profile_size": "0.1" } } }, "services": { "redis_persistent": { "resources": { "profile_size": "0.1" }, "disk": 1024 } } }'`
-# Good-to-know
+
+### Good-to-know
 
 * React's index.html has been modified to request dynamic/vars.js
   * This file is designed to provide dynamic project information such as routes in order to minimize the need to create various mounts and to avoid building using the deploy hook
