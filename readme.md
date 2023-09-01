@@ -17,6 +17,10 @@ These commands will set up everything you need to get started, serving:
 - The `backend` Python app from `localhost:8000`
 - The `frontend` React app from `localhost:3000`
 
+> [!IMPORTANT]
+> If at any time you want to start over, run `npm run clean`.
+> This will delete everything you've done in the previous steps.
+
 ## Notes
 
 ### First Deployment
