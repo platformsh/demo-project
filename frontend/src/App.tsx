@@ -8,6 +8,7 @@ import { API_BASE_PATH } from './config';
 import ErrorPage from './page/ErrorPage';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+import FeatureStep from './components/FeatureStep';
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>(null);
@@ -65,64 +66,35 @@ function App() {
               <EnvironmentIntroduction environment={environment} />
 
               <div className='pt-8 flex flex-col gap-2'>
-                <div className={`feature--add-service flex flex-col ${currentStep !== 'redis' && 'is-disabled'}`}>
-                  <div className='aside-title flex flex-row gap-4 items-center'>
-                    <RedisIcon className='w-10 h-10' />
-                    <h2 className='font-semibold'>Add Redis to staging</h2>
-                  </div>
-                  <div className='border-l-2 ml-5 pl-10'>
-                    <div className='rounded-lg p-4 bg-upsun-black-900'>
-                      <p className='mb-2'>With Upsun, you can clone any environment to get a byte-for-byte copy to use for staging, features, and bugfixes.</p>
-                      <p className='mb-2'>Upsun is unique in that you can version-control your app services—MariaDB, Redis, and more.</p>
-                      <p className='mb-2'>We'll guide you through adding a Redis service and merging back into production. Simply run: </p>
-                      <code className='px-4'>upsun demo:start</code>
-                    </div>
-                  </div>
-                </div>
+                <FeatureStep icon={<RedisIcon className='w-10 h-10' />} title={'Add Redis to staging'} isDisabled={currentStep !== 'redis'}>
+                  <p className='mb-2'>With Upsun, you can clone any environment to get a byte-for-byte copy to use for staging, features, and bugfixes.</p>
+                  <p className='mb-2'>Upsun is unique in that you can version-control your app services—MariaDB, Redis, and more.</p>
+                  <p className='mb-2'>We'll guide you through adding a Redis service and merging back into production. Simply run: </p>
+                  <code className='px-4'>upsun demo:start</code>
+                </FeatureStep>
 
-                <div className={`feature--merge-production flex flex-col ${!(currentStep === 'merge-production' || currentStep === 'redis') && 'is-disabled'}`}>
-                  <div className='aside-title flex flex-row gap-4 items-center'>
-                    <MergeIcon className='w-10 h-10' />
-                    <h2 className='font-semibold'>Merge staging into production</h2>
-                  </div>
-                  <div className={`border-l-2 ml-5 mt-2 pl-10 ${environment?.toLocaleLowerCase() === 'production' && 'h-10'}`}>
-                    {(environment?.toLocaleLowerCase() === 'staging' && currentStep === 'merge-production') &&
-                      <div className='rounded-lg p-4 bg-upsun-black-900'>
-                        <p className='mb-2'>Great! You've made the required changes and deployed them to staging. </p>
-                        <p className='mb-2'>In the future, any further changes that you want to make can be implemented here or in other preview environments.</p>
-                        <p className=''>Return to <code className='px-2 py-1'>upsun demo</code> in your terminal to continue your tour of Upsun.</p>
-                      </div>
-                    }
-                  </div>
-                </div>
+                <FeatureStep icon={<MergeIcon className='w-10 h-10' />} title={'Merge staging into production'} isDisabled={!(currentStep === 'merge-production' || currentStep === 'redis')}>
+                  {
+                    (environment?.toLocaleLowerCase() === 'staging' && currentStep === 'merge-production') &&
+                    <>
+                      <p className='mb-2'>Great! You've made the required changes and deployed them to staging. </p>
+                      <p className='mb-2'>In the future, any further changes that you want to make can be implemented here or in other preview environments.</p>
+                      <p className=''>Return to <code className='px-2 py-1'>upsun demo</code> in your terminal to continue your tour of Upsun.</p>
+                    </>
+                  }
+                </FeatureStep>
 
-                <div className={`feature--scale-app flex flex-col ${currentStep !== "scale" && 'is-disabled'}`}>
-                  <div className='aside-title flex flex-row gap-4 items-center'>
-                    <ScaleIcon className='w-10 h-10' />
-                    <h2 className='font-semibold'>Scale app</h2>
-                  </div>
-                  <div className='border-l-2 ml-5 pl-10'>
-                    <div className='rounded-lg p-4 bg-upsun-black-900'>
-                      <p className='mb-2'>Whether you have 10 daily visitors or 10,000, with Upsun your app is primed to scale at a moment's notice using the CLI.</p>
-                      <code className='px-4 mb-2'>upsun scale:update</code>
-                      <p className='mb-2'>To wrap up your tour of Upsun, let’s scale your app. Continue with the following command in your terminal.</p>
-                      <code className='px-4 mb-2'>upsun demo:start</code>
-                    </div>
-                  </div>
-                </div>
+                <FeatureStep icon={<ScaleIcon className='w-10 h-10' />} title={'Scale app'} isDisabled={currentStep !== "scale"}>
+                  <p className='mb-2'>Whether you have 10 daily visitors or 10,000, with Upsun your app is primed to scale at a moment's notice using the CLI.</p>
+                  <code className='px-4 mb-2'>upsun scale:update</code>
+                  <p className='mb-2'>To wrap up your tour of Upsun, let’s scale your app. Continue with the following command in your terminal.</p>
+                  <code className='px-4 mb-2'>upsun demo:start</code>
+                </FeatureStep>
 
-                <div className={`feature--all-done flex flex-col ${currentStep !== "complete" && 'is-disabled'}`}>
-                  <div className='aside-title flex flex-row gap-4 items-center'>
-                    <DoneIcon className='w-10 h-10 p-1' />
-                    <h2 className='font-semibold'>You did it!</h2>
-                  </div>
-                  <div className='border-l-2 ml-5 pl-10'>
-                    <div className='rounded-lg p-4 bg-upsun-black-900'>
-                      <p className='mb-2'>Congratulations! You’ve connected with your database; feel free to store something in it.</p>
-                      <p className=''>You can also delete this demo project and bring your own projects here.</p>
-                    </div>
-                  </div>
-                </div>
+                <FeatureStep icon={<DoneIcon className='w-10 h-10 p-1' />} title={'You did it!'} isDisabled={currentStep !== "complete"}>
+                  <p className='mb-2'>Congratulations! You’ve connected with your database; feel free to store something in it.</p>
+                  <p className=''>You can also delete this demo project and bring your own projects here.</p>
+                </FeatureStep>
               </div>
             </div>
           </section>
@@ -138,7 +110,7 @@ interface EnvironmentIntroductionProps {
 }
 
 const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({ environment }) => {
-  if(environment === null)
+  if (environment === null)
     return <></>
 
   return <>
