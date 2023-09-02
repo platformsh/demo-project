@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, act, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import CopyButton from './Copy';
+import CopyButton from './CopyButton';
 
 describe('<CopyButton />', () => {
   beforeEach(() => {

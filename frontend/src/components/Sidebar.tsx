@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { ReactComponent as StartIcon } from '../assets/utility/key_start.svg';
 import { ReactComponent as InfoIcon } from '../assets/utility/key_info.svg';
 import { ReactComponent as ResetIcon } from '../assets/utility/key_reset.svg';
-import CopyButton from './Copy';
+import CopyButton from './CopyButton';
 import { ReactComponent as ProductionIcon } from '../assets/utility/production.svg';
 import { ReactComponent as StagingIcon } from '../assets/utility/staging.svg';
 import { ReactComponent as StatusCompleteIcon } from '../assets/utility/status_complete.svg';
