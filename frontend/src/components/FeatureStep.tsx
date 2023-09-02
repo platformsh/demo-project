@@ -4,12 +4,12 @@ interface FeatureStepProps {
     icon: React.ReactNode;
     title: string;
     isDisabled: boolean;
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 
 const FeatureStep: React.FC<FeatureStepProps> = ({ icon, title, isDisabled, children }) => {
     return (
-        <div className={`feature--step flex flex-col ${isDisabled && 'is-disabled'}`}>
+        <div data-testid="feature-step" className={`feature--step flex flex-col ${isDisabled && 'is-disabled'}`}>
             <div className='aside-title flex flex-row gap-4 items-center'>
                 {icon}
                 <h2 className='font-semibold'>{title}</h2>
