@@ -10,7 +10,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 
 function App() {
-  const [environment, setEnvironment] = useState<string | null>('');
+  const [environment, setEnvironment] = useState<string | null>(null);
   const [sessionStorageType, setSessionStorageType] = useState<string | null>(null);
   const [appInstances, setAppInstances] = useState<number | null>(null);
   const [fatalErrorMessage, setFatalErrorMessage] = useState<string | null>(null);
@@ -62,17 +62,7 @@ function App() {
             <div className='content-intro w-3/4 mx-auto mt-12'>
               <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">Welcome to your Upsun app, a Python and Node.js multiapp designed to run on Upsun and teach you about it's unique features.</div>
 
-              {environment && environment.toLocaleLowerCase() === 'production' ?
-                <p className='text-sm leading-6 mt-2'>
-                  This app is the React frontend of your demo project’s production environment. In your other projects, use the runtimes you prefer—Python, Node.js, PHP, and more. The net: your production environment will show up in search results. You’ll point your domain name to it. And that’s what will be visible to users. Your team can use a Git-branch workflow to create byte-for-byte copies of production (preview environments) to begin development.
-                </p>
-                : <>
-                  <p className='text-sm leading-6 mt-2'>Congrats! You’ve created your staging environment 🎉</p>
-                  <p className='text-sm leading-6 mt-2'>This space represents your byte-for-byte copy of production. You can use staging and development environments to preview and share changes prior to pushing them to production.</p>
-                  <p className='text-sm leading-6 mt-2'>This app uses the Upsun environment variable <code className='px-2 py-1'>$UPSUN_ENVIRONMENT="staging"</code> to modify the content of this page.</p>
-                  <p className='text-sm leading-6 mt-2'>Return to the <code className='px-2 py-1'>upsun demo</code> command to continue adding your Redis service.</p>
-                </>
-              }
+              <EnvironmentIntroduction environment={environment} />
 
               <div className='pt-8 flex flex-col gap-2'>
                 <div className={`feature--add-service flex flex-col ${currentStep !== 'redis' && 'is-disabled'}`}>
@@ -142,5 +132,37 @@ function App() {
     </>
   );
 }
+
+interface EnvironmentIntroductionProps {
+  environment: string | null
+}
+
+const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({ environment }) => {
+  if(environment === null)
+    return <></>
+
+  return <>
+    {environment && environment.toLocaleLowerCase() === 'production' ?
+      <ProductionIntroduction />
+      : <StagingIntroduction />
+    }
+  </>
+}
+
+const ProductionIntroduction = () => {
+  return <p className='text-sm leading-6 mt-2'>
+    This app is the React frontend of your demo project’s production environment. In your other projects, use the runtimes you prefer—Python, Node.js, PHP, and more. The net: your production environment will show up in search results. You’ll point your domain name to it. And that’s what will be visible to users. Your team can use a Git-branch workflow to create byte-for-byte copies of production (preview environments) to begin development.
+  </p>
+}
+
+const StagingIntroduction = () => {
+  return <>
+    <p className='text-sm leading-6 mt-2'>Congrats! You’ve created your staging environment 🎉</p>
+    <p className='text-sm leading-6 mt-2'>This space represents your byte-for-byte copy of production. You can use staging and development environments to preview and share changes prior to pushing them to production.</p>
+    <p className='text-sm leading-6 mt-2'>This app uses the Upsun environment variable <code className='px-2 py-1'>$UPSUN_ENVIRONMENT="staging"</code> to modify the content of this page.</p>
+    <p className='text-sm leading-6 mt-2'>Return to the <code className='px-2 py-1'>upsun demo</code> command to continue adding your Redis service.</p>
+  </>;
+}
+
 
 export default App;
