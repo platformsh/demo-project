@@ -30,6 +30,6 @@ describe('<App />', () => {
     await screen.findByText(mockData.type.charAt(0).toUpperCase() + mockData.type.slice(1));
     expect(screen.getByText(`User session service: ${mockData.session_storage}`)).toBeInTheDocument();
     expect(screen.getByText(`Scaling: Ready`)).toBeInTheDocument();
-    expect(screen.getByText(`Scaled app instances: ${mockData.instance_count}`)).toBeInTheDocument();
+    expect(screen.getByText(`App scaled horizontally`)).toBeInTheDocument();
   });
 });
