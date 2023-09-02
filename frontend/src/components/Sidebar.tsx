@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { ReactComponent as StartIcon } from '../assets/utility/key_start.svg';
 import { ReactComponent as InfoIcon } from '../assets/utility/key_info.svg';
 import { ReactComponent as ResetIcon } from '../assets/utility/key_reset.svg';

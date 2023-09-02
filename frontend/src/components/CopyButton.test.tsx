@@ -41,6 +41,7 @@ describe('<CopyButton />', () => {
     jest.useFakeTimers();
 
     // Trigger button click
+    // eslint-disable-next-line testing-library/no-unnecessary-act
     await act(async () => {
       fireEvent.click(screen.getByText('Click Me'));
       await Promise.resolve(); // Wait for promise to resolve
