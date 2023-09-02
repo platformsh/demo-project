@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require("path");
 
 /**
  * This function build module.
@@ -18,13 +18,8 @@ const path = require('path');
  * @param {string} props
  * @return {string} string module
  */
-const buildModule = props => {
-
-  const {
-    filename,
-    functionName,
-    pathname,
-  } = props;
+const buildModule = (props) => {
+  const { filename, functionName, pathname } = props;
 
   return `
       const React = require('react');
@@ -49,10 +44,14 @@ const buildModule = props => {
  * @param {string} base
  * @return {string} string module
  */
-const createFunctionName = base => {
+const createFunctionName = (base) => {
   const words = base.split(/\W+/);
   /* here I refactored the code a bit and replaced "substr" (Deprecated) with "substring" */
-  return words.reduce((identifier, word) => identifier + word.substring(0, 1).toUpperCase() + word.substring(1), '');
+  return words.reduce(
+    (identifier, word) =>
+      identifier + word.substring(0, 1).toUpperCase() + word.substring(1),
+    "",
+  );
 };
 
 /**
@@ -64,7 +63,7 @@ const createFunctionName = base => {
  */
 const processSvg = (contents, filename) => {
   const parts = path.parse(filename);
-  if (parts.ext.toLowerCase() === '.svg') {
+  if (parts.ext.toLowerCase() === ".svg") {
     const functionName = createFunctionName(parts.name);
     return buildModule({
       filename: parts.name,
@@ -80,4 +79,3 @@ const processSvg = (contents, filename) => {
 };
 
 module.exports = { process: processSvg };
-

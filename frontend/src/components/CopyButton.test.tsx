@@ -1,17 +1,17 @@
-import React from 'react';
-import { render, screen, fireEvent, act, within } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import CopyButton from './CopyButton';
+import React from "react";
+import { render, screen, fireEvent, act, within } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import CopyButton from "./CopyButton";
 
-describe('<CopyButton />', () => {
+describe("<CopyButton />", () => {
   beforeEach(() => {
     // Mock clipboard API
-    Object.defineProperty(navigator, 'clipboard', {
+    Object.defineProperty(navigator, "clipboard", {
       value: {
         writeText: jest.fn().mockImplementation(() => Promise.resolve()),
       },
       writable: true,
-      configurable: true
+      configurable: true,
     });
 
     global.ResizeObserver = class ResizeObserver {
@@ -26,15 +26,15 @@ describe('<CopyButton />', () => {
       }
     };
   });
-  
+
   const copyText = "Some text to copy";
 
-  it('renders button with children', () => {
+  it("renders button with children", () => {
     render(<CopyButton copyText={copyText}>Click Me</CopyButton>);
-    expect(screen.getByText('Click Me')).toBeInTheDocument();
+    expect(screen.getByText("Click Me")).toBeInTheDocument();
   });
 
-  it('copies text to clipboard and shows tooltip on click', async () => {
+  it("copies text to clipboard and shows tooltip on click", async () => {
     render(<CopyButton copyText={copyText}>Click Me</CopyButton>);
 
     // Spy on setTimeout to control it
@@ -43,7 +43,7 @@ describe('<CopyButton />', () => {
     // Trigger button click
     // eslint-disable-next-line testing-library/no-unnecessary-act
     await act(async () => {
-      fireEvent.click(screen.getByText('Click Me'));
+      fireEvent.click(screen.getByText("Click Me"));
       await Promise.resolve(); // Wait for promise to resolve
     });
 
@@ -51,7 +51,9 @@ describe('<CopyButton />', () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(copyText);
 
     // Tooltip should be open
-    expect(within(screen.getByRole('tooltip')).getByText('Copied!')).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("tooltip")).getByText("Copied!"),
+    ).toBeInTheDocument();
 
     // Fast-forward time to test tooltip disappearance
     act(() => {
@@ -59,7 +61,7 @@ describe('<CopyButton />', () => {
     });
 
     // Tooltip should be closed
-    expect(screen.queryByText('Copied!')).not.toBeInTheDocument();
+    expect(screen.queryByText("Copied!")).not.toBeInTheDocument();
 
     // Restore timers
     jest.useRealTimers();
