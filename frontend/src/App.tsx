@@ -66,18 +66,18 @@ function App() {
               <EnvironmentIntroduction environment={environment} />
 
               <div className='pt-8 flex flex-col gap-2'>
-                <FeatureStep icon={<RedisIcon className='w-10 h-10' />} title={'Add Redis to staging'} isDisabled={currentStep !== 'redis'}>
+                <FeatureStep data-testid='add-redis' icon={<RedisIcon className='w-10 h-10' />} title={'Add Redis to staging'} isDisabled={currentStep !== 'redis'}>
                   <p className='mb-2'>With Upsun, you can clone any environment to get a byte-for-byte copy to use for staging, features, and bugfixes.</p>
                   <p className='mb-2'>Upsun is unique in that you can version-control your app services—MariaDB, Redis, and more.</p>
                   <p className='mb-2'>We'll guide you through adding a Redis service and merging back into production. Simply run: </p>
                   <code className='px-4'>upsun demo:start</code>
                 </FeatureStep>
 
-                <FeatureStep icon={<MergeIcon className='w-10 h-10' />} title={'Merge staging into production'} isDisabled={!(currentStep === 'merge-production' || currentStep === 'redis')}>
+                <FeatureStep icon={<MergeIcon className='w-10 h-10' />} title={'Merge staging into production'} isDisabled={!(currentStep === 'merge-production')}>
                   {
-                    (environment?.toLocaleLowerCase() === 'staging' && currentStep === 'merge-production') &&
+                    (sessionStorageType ==='redis' || (environment?.toLocaleLowerCase() === 'staging' && currentStep === 'merge-production')) &&
                     <>
-                      <p className='mb-2'>Great! You've made the required changes and deployed them to staging. </p>
+                      <p className='mb-2'>Great! You've made the required changes and deployed them to {environment?.toLocaleLowerCase()}.</p>
                       <p className='mb-2'>In the future, any further changes that you want to make can be implemented here or in other preview environments.</p>
                       <p className=''>Return to <code className='px-2 py-1'>upsun demo</code> in your terminal to continue your tour of Upsun.</p>
                     </>
