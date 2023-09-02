@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { ReactComponent as Logo } from './assets/logo/upsun_horizontal.svg';
 import { ENVIRONMENT_PATH, fetchEnvironment } from './utility/api';
-import { ReactComponent as StartIcon } from './assets/utility/key_start.svg';
-import { ReactComponent as InfoIcon } from './assets/utility/key_info.svg';
-import { ReactComponent as ResetIcon } from './assets/utility/key_reset.svg';
-import CopyButton from './components/copy';
-import { ReactComponent as ProductionIcon } from './assets/utility/production.svg';
-import { ReactComponent as StagingIcon } from './assets/utility/staging.svg';
 import { ReactComponent as RedisIcon } from './assets/utility/service_redis.svg';
 import { ReactComponent as ScaleIcon } from './assets/utility/scale_app.svg';
 import { ReactComponent as DoneIcon } from './assets/utility/done.svg';
 import { ReactComponent as MergeIcon } from './assets/utility/merge.svg';
-import { ReactComponent as StatusCompleteIcon } from './assets/utility/status_complete.svg';
-import { ReactComponent as StatusIncompleteIcon } from './assets/utility/status_incomplete.svg';
 import { API_BASE_PATH } from './config';
 import ErrorPage from './page/ErrorPage';
 import Header from './components/Header';
+import Sidebar from './components/Sidebar';
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>('');
@@ -65,73 +57,7 @@ function App() {
       <div className={`max-w-[83.875rem] w-[83.875rem] m-auto transition duration-500`}>
         <Header />
         <main className='border-t-[1px] border-upsun-violet-600 flex flex-row'>
-          <aside className='h-fit'>
-            <section className='p-4'>
-              <div className='aside-title flex flex-row gap-4 items-center'>
-                {environment?.toLowerCase() === "production" ? <ProductionIcon className='w-[32px] h-[32px]' /> : <StagingIcon className='w-[32px] h-[32px]' />}
-                <h1>{environment}</h1>
-              </div>
-            </section>
-            <section>
-              <div className='environment-status flex flex-col gap-4'>
-                <h2>Environment Status</h2>
-                <ul className='p-0 list-none flex flex-col gap-2'>
-                  <li className='flex flex-row items-center'>
-                    <div className='w-4 h-4 flex justify-center'>
-                      {(sessionStorageType && sessionStorageType === 'redis') ? <StatusCompleteIcon className='w-auto h-auto' /> : <StatusIncompleteIcon className='w-auto h-auto' />}
-                    </div>
-                    <span className='pl-3.5'>User session service: {sessionStorageType ? sessionStorageType : ''}</span>
-                  </li>
-                  <li className='flex flex-row items-center'>
-                    <div className='w-4 h-4 flex justify-center'>
-                      {/* Upsun is always ready to scale! 🥇 */}
-                      <StatusCompleteIcon className='w-auto h-auto' />
-                    </div>
-                    <span className='pl-3.5'>Scaling: Ready</span>
-                  </li>
-                  <li className='flex flex-row items-center'>
-                    <div className='w-4 h-4 flex justify-center'>
-                      {(appInstances !== null && appInstances > 0) ? <StatusCompleteIcon className='w-auto h-auto' /> : <StatusIncompleteIcon className='w-auto h-auto' />}
-                    </div>
-                    <span className='pl-3.5'>App scaled horizontally</span>
-                  </li>
-                </ul>
-              </div>
-            </section>
-            <section>
-              <div className='quick-commands flex flex-col gap-4'>
-                <h2>Quick Commands</h2>
-                <div className="flex flex-wrap">
-                  <div className="w-1/2 pr-1">
-                    <div className="flex flex-col gap-2">
-                      <CopyButton className='w-12' copyText='upsun demo:start'>
-                        <StartIcon className="h-full w-full" />
-                      </CopyButton>
-                      <code>upsun demo:start</code>
-                    </div>
-                  </div>
-                  <div className="w-1/2 pl-1">
-                    <div className="flex flex-col gap-2">
-
-                      <CopyButton className='w-12' copyText='upsun project:info'>
-                        <InfoIcon className="h-full w-full" />
-                      </CopyButton>
-                      <code>upsun project:info</code>
-                    </div>
-                  </div>
-                  <div className="w-1/2 pr-1 pt-4">
-                    <div className="flex flex-col gap-2">
-
-                      <CopyButton className='w-12' copyText='upsun demo:reset'>
-                        <ResetIcon className="h-full w-full" />
-                      </CopyButton>
-                      <code>upsun demo:reset</code>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </aside>
+          <Sidebar environment={environment} sessionStorageType={sessionStorageType} appInstances={appInstances} />
           <section className='border-t-2 border-upsun-violet-600 w-3/4'>
             <div className='content-intro w-3/4 mx-auto mt-12'>
               <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">Welcome to your Upsun app, a Python and Node.js multiapp designed to run on Upsun and teach you about it's unique features.</div>

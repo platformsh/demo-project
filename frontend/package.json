@@ -41,6 +41,11 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "transform": {
+      "^.+\\.svg$": "./src/tests/transformers/svg.js"
+    }
+  },
   "devDependencies": {
     "tailwindcss": "^3.3.3"
   }
