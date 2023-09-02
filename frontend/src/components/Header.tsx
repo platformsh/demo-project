@@ -1,6 +1,6 @@
 import React from 'react';
 import { ReactComponent as Logo } from '../assets/logo/upsun_horizontal.svg';
-import ShareButton from './Share';
+import ShareButton from './ShareButton';
 
 function Header() {
   return (
