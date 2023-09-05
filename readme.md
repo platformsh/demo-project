@@ -21,11 +21,50 @@ These commands will set up everything you need to get started, serving:
 > If at any time you want to start over, run `npm run clean`.
 > This will delete everything you've done in the previous steps.
 
+## Proposed sequence
+
+1. Local development ready
+
+  - cli is installed
+  - `upsun demo:start`
+  - project is cloned locally
+  - local repo has upsun project as remote
+  
+2. Production deployed successfuly with defined resources
+
+  - `upsun push` to push code to project
+  - `upsun scale:update` to define resources
+  - `upsun url` to verify deployment of production environment
+
+3. Staging environment ready
+
+  - `upsun environment:branch`
+  - `upsun url`
+
+4. Service added
+
+  - add a service configuration
+  - `upsun push`
+  - `upsun scale:update`
+
+5. Merge staging into production
+
+  - `upsun merge`
+  - `upsun url`
+
+6. Scale up demo app
+
+  - `upsun scale:update`
+
 ## Notes
 
 ### First Deployment
 
-* Allocate required resources for scaling compatibility: `./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "demo-app-frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "demo-app-backend": { "resources": { "profile_size": "0.1" } } }, "services": { "redis_persistent": { "resources": { "profile_size": "0.1" }, "disk": 1024 } } }'`
+* Allocate required resources for scaling compatibility: 
+
+```bash
+./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "demo-app-frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "demo-app-backend": { "resources": { "profile_size": "0.1" } } }, "services": { "redis_persistent": { "resources": { "profile_size": "0.1" }, "disk": 1024 } } }'
+```
 
 ### Good-to-know
 
