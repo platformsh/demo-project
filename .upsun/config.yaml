@@ -24,9 +24,7 @@ applications:
             deploy: >
                 set -eux
 
-                echo "window.APP_BASE_URL = '$(echo $PLATFORM_ROUTES | base64
-                --decode | jq -r 'to_entries[] | select (.value.id == "backend")
-                | .key')';" > build/dynamic/vars.js
+                echo "Add some deploy commands here if you like."
 
         web:
             locations:
