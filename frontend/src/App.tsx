@@ -4,7 +4,7 @@ import { ReactComponent as RedisIcon } from "./assets/utility/service_redis.svg"
 import { ReactComponent as ScaleIcon } from "./assets/utility/scale_app.svg";
 import { ReactComponent as DoneIcon } from "./assets/utility/done.svg";
 import { ReactComponent as MergeIcon } from "./assets/utility/merge.svg";
-import { API_BASE_PATH } from "./config";
+import { API_BASE_URL } from "./config";
 import ErrorPage from "./page/ErrorPage";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -61,7 +61,7 @@ function App() {
           {" "}
           There was an error fetching data from your Python backend at{" "}
           <code className="px-2 py-1">
-            {API_BASE_PATH}/{ENVIRONMENT_PATH}
+            {API_BASE_URL}/{ENVIRONMENT_PATH}
           </code>
         </p>
         <p className="">
