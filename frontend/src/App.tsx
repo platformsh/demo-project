@@ -75,17 +75,17 @@ function App() {
   return (
     <>
       <div
-        className={`max-w-[83.875rem] w-[83.875rem] m-auto transition duration-500`}
+        className={`max-w-7xl w-fill px-6 2xl:pl-0 m-auto transition duration-500`}
       >
         <Header />
-        <main className="border-t-[1px] border-upsun-violet-600 flex flex-row">
+        <main className="border-t-[1px] border-upsun-violet-600 flex flex-col sm:flex-row">
           <Sidebar
             environment={environment}
             sessionStorageType={sessionStorageType}
             appInstances={appInstances}
           />
-          <section className="border-t-2 border-upsun-violet-600 w-3/4">
-            <div className="content-intro w-3/4 mx-auto mt-12">
+          <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
+            <div className="content-intro sm:w-3/4 mx-auto mt-12">
               <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
                 Welcome to your Upsun app, a Python and Node.js multiapp
                 designed to run on Upsun and teach you about it's unique

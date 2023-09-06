@@ -19,8 +19,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   appInstances,
 }) => {
   return (
-    <aside className="h-fit">
-      <section className="p-4">
+    <aside className="h-fit w-full flex flex-row sm:flex-col flex-wrap sm:w-2/5 lg:w-1/4">
+      <section className="p-4 w-full">
         <div className="aside-title flex flex-row gap-4 items-center">
           {environment?.toLowerCase() === "production" ? (
             <ProductionIcon className="w-[32px] h-[32px]" />
@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <h1>{environment}</h1>
         </div>
       </section>
-      <section>
+      <section className="w-1/2 sm:w-full">
         <div className="environment-status flex flex-col gap-4">
           <h2>Environment Status</h2>
           <ul className="p-0 list-none flex flex-col gap-2">
@@ -76,32 +76,32 @@ const Sidebar: React.FC<SidebarProps> = ({
           </ul>
         </div>
       </section>
-      <section>
+      <section className="w-1/2 sm:w-full">
         <div className="quick-commands flex flex-col gap-4">
           <h2>Quick Commands</h2>
-          <div className="flex flex-wrap">
-            <div className="w-1/2 pr-1">
+          <div className="flex flex-col gap-2 md:flex-row md:gap-0 flex-wrap">
+            <div className="w-fit md:w-1/2 md:pr-1">
               <div className="flex flex-col gap-2">
-                <CopyButton className="w-12" copyText="upsun demo:start">
+                <CopyButton className="hidden sm:inline-block w-12" copyText="upsun demo:start">
                   <StartIcon className="h-full w-full" />
                 </CopyButton>
-                <code>upsun demo:start</code>
+                <code className="px-3">upsun demo:start</code>
               </div>
             </div>
-            <div className="w-1/2 pl-1">
+            <div className="w-fit md:w-1/2 md:pr-1">
               <div className="flex flex-col gap-2">
-                <CopyButton className="w-12" copyText="upsun project:info">
+                <CopyButton className="hidden sm:inline-block w-12" copyText="upsun project:info">
                   <InfoIcon className="h-full w-full" />
                 </CopyButton>
-                <code>upsun project:info</code>
+                <code className="px-3">upsun project:info</code>
               </div>
             </div>
-            <div className="w-1/2 pr-1 pt-4">
+            <div className="w-fit md:w-1/2 md:pr-1 md:pt-4">
               <div className="flex flex-col gap-2">
-                <CopyButton className="w-12" copyText="upsun demo:reset">
+                <CopyButton className="hidden sm:inline-block w-12" copyText="upsun demo:reset">
                   <ResetIcon className="h-full w-full" />
                 </CopyButton>
-                <code>upsun demo:reset</code>
+                <code className="px-3">upsun demo:reset</code>
               </div>
             </div>
           </div>
