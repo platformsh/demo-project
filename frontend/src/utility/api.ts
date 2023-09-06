@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from "../config";
 
 type EnvironmentResponseType = {
   "instance_count": null | number,
@@ -15,5 +15,6 @@ export const fetchEnvironment = async (): Promise<EnvironmentResponseType> => {
     throw new Error('Failed to fetch environment');
   }
   const data = await response.json();
+
   return data as EnvironmentResponseType;
 };
