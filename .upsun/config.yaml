@@ -2,8 +2,50 @@
 # Upsun demo project configuration
 #######################################################################################################################
 # Application configuration.
-applications:
-    # App 1: Backend (Python)
+applications:    
+    # App 1: Frontend (JS)
+    frontend:
+
+        source:
+            root: "frontend"
+
+        type: "nodejs:18"
+
+        build:
+            flavor: none
+        variables:
+            env:
+                N_PREFIX: /app/.global
+        hooks:
+            build: |
+                set -e
+                npm install
+                npm run build
+            deploy: >
+                set -eux
+
+                echo "Add some deploy commands here if you like."
+
+        web:
+            locations:
+                /:
+                    root: build
+                    index:
+                        - index.html
+                    expires: 2m
+                    scripts: false
+                    allow: true
+                    rules:
+                        static\/*:
+                            expires: 365d
+                        dynamic\/*:
+                            expires: -1
+
+        mounts:
+            /build/dynamic:
+                source: local
+                source_path: build/dynamic
+    # App 2: Backend (Python)
     backend:
 
         source:
@@ -28,53 +70,8 @@ applications:
                 /:
                     passthru: true
 
-        # relationships:
-        #     redis-session: "redis_persistent:redis-persistent"
-    
-    # App 2: Frontend (JS)
-    frontend:
-
-        source:
-            root: "frontend"
-
-        type: "nodejs:18"
-
-        build:
-            flavor: none
-        variables:
-            env:
-                N_PREFIX: /app/.global
-        hooks:
-            build: |
-                set -e
-                npm install
-                npm run build
-            deploy: >
-                set -eux
-
-                echo "window.APP_BASE_URL = '$(echo $PLATFORM_ROUTES | base64
-                --decode | jq -r 'to_entries[] | select (.value.id == "backend")
-                | .key')';" > build/dynamic/vars.js
-
-        web:
-            locations:
-                /:
-                    root: build
-                    index:
-                        - index.html
-                    expires: 2m
-                    scripts: false
-                    allow: true
-                    rules:
-                        static\/*:
-                            expires: 365d
-                        dynamic\/*:
-                            expires: -1
-
-        mounts:
-            /build/dynamic:
-                source: local
-                source_path: build/dynamic
+#         relationships:
+#             redis-session: "redis_persistent:redis-persistent"
 
 # Managed services configuration.
 # services:
@@ -87,12 +84,13 @@ routes:
         id: frontend
         type: upstream
         upstream: "frontend:http"
+
     "https://www.{default}":
         id: www-redirect
         type: redirect
         to: "https://{default}/"
 
-    "https://api.{default}/":
+    "https://{default}/api/":
         id: backend
         type: upstream
         upstream: "backend:http"
