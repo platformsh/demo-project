@@ -64,14 +64,14 @@ These commands will set up everything you need to get started, serving:
 
 * Allocate required resources for scaling compatibility: 
   ```bash
-  ./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "demo-app-frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "demo-app-backend": { "resources": { "profile_size": "0.1" } } } }'
+  ./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "backend": { "resources": { "profile_size": "0.1" } } } }'
   ```
 
 #### Redis-enabled Deployment
 
 * Allocate required resources for scaling compatibility: 
   ```bash
-  ./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "demo-app-frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "demo-app-backend": { "resources": { "profile_size": "0.1" } } }, "services": { "redis_persistent": { "resources": { "profile_size": "0.1" }, "disk": 1024 } } }'
+  ./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "backend": { "resources": { "profile_size": "0.1" } } }, "services": { "redis_persistent": { "resources": { "profile_size": "0.1" }, "disk": 1024 } } }'
   ```
 
 
