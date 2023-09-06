@@ -93,6 +93,6 @@ routes:
         to: "https://{default}/"
 
     "https://{default}/api/":
-        # id: backend
+        id: backend
         type: upstream
         upstream: "backend:http"
