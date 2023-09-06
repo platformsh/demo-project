@@ -58,13 +58,22 @@ These commands will set up everything you need to get started, serving:
 
 ## Notes
 
-### First Deployment
+### Deployments
+
+#### Redis-Disabled Deployment
 
 * Allocate required resources for scaling compatibility: 
+  ```bash
+  ./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "demo-app-frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "demo-app-backend": { "resources": { "profile_size": "0.1" } } } }'
+  ```
 
-```bash
-./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "demo-app-frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "demo-app-backend": { "resources": { "profile_size": "0.1" } } }, "services": { "redis_persistent": { "resources": { "profile_size": "0.1" }, "disk": 1024 } } }'
-```
+#### Redis-enabled Deployment
+
+* Allocate required resources for scaling compatibility: 
+  ```bash
+  ./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "demo-app-frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "demo-app-backend": { "resources": { "profile_size": "0.1" } } }, "services": { "redis_persistent": { "resources": { "profile_size": "0.1" }, "disk": 1024 } } }'
+  ```
+
 
 ### Good-to-know
 
