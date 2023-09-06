@@ -78,7 +78,7 @@ function App() {
         className={`max-w-7xl w-fill px-6 2xl:pl-0 m-auto transition duration-500`}
       >
         <Header />
-        <main className="border-t-[1px] border-upsun-violet-600 flex flex-row">
+        <main className="border-t-[1px] border-upsun-violet-600 flex flex-col sm:flex-row">
           <Sidebar
             environment={environment}
             sessionStorageType={sessionStorageType}
