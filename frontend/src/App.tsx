@@ -15,7 +15,7 @@ import { ReactComponent as DoneIcon } from './assets/utility/done.svg';
 import { ReactComponent as MergeIcon } from './assets/utility/merge.svg';
 import { ReactComponent as StatusCompleteIcon } from './assets/utility/status_complete.svg';
 import { ReactComponent as StatusIncompleteIcon } from './assets/utility/status_incomplete.svg';
-import { API_BASE_PATH } from './config';
+import { API_BASE_URL } from './config';
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>('');
@@ -67,7 +67,7 @@ function App() {
             </div>
             <div className='w-full sm:3/5 h-min my-auto'>
               <h1 className='text-2xl mb-4 lg:text-3xl'>We cannot fetch your data</h1>
-              <p className='mb-2'> There was an error fetching data from your Python backend at <code className='px-2 py-1'>{API_BASE_PATH}/{ENVIRONMENT_PATH}</code></p>
+              <p className='mb-2'> There was an error fetching data from your Python backend at <code className='px-2 py-1'>{API_BASE_URL}/{ENVIRONMENT_PATH}</code></p>
               <p className=''> Please check your app logs using <code className='px-2 py-1'>upsun environment:log</code></p>
             </div>
           </div>

@@ -1,34 +1,9 @@
-import json
 from flask import Flask
 import os
-from flask_session import Session
+# from flask_session import Session
 from flask_cors import CORS
 from app import routes
 from dotenv import load_dotenv
-import base64
-
-def get_frontend_url():
-    # Default frontend URL
-    frontend_url = 'http://localhost:3000'
-    
-    # Decode the PLATFORM_ROUTES environment variable
-    platform_routes_base64 = os.environ.get('PLATFORM_ROUTES', '')
-    platform_routes_json = ''
-    if platform_routes_base64:
-        platform_routes_json = base64.b64decode(platform_routes_base64).decode('utf-8')
-    
-    # Parse the JSON and fetch the demo-app-frontend route
-    if platform_routes_json:
-        try:
-            platform_routes = json.loads(platform_routes_json)
-            for url, details in platform_routes.items():
-                if details.get('upstream') == 'demo-app-frontend':
-                    frontend_url = url.rstrip('/')  # Remove trailing slash if present
-                    break
-        except json.JSONDecodeError:
-            print("Could not JSON decode $PLATFORM_ROUTES")
-    
-    return frontend_url
 
 def createApp():
     # Bring in environment variables
@@ -49,7 +24,6 @@ def createApp():
     #     sess.init_app(app)
 
 
-    CORS(app, origins=[get_frontend_url()])
     app.register_blueprint(routes.bp)
 
     return app
