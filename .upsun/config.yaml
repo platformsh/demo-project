@@ -28,8 +28,8 @@ applications:
                 /:
                     passthru: true
 
-        relationships:
-            redis-session: "redis_persistent:redis-persistent"
+        # relationships:
+        #     redis-session: "redis_persistent:redis-persistent"
     
     # App 2: Frontend (JS)
     frontend:
@@ -77,9 +77,9 @@ applications:
                 source_path: build/dynamic
 
 # Managed services configuration.
-services:
-    redis_persistent:
-        type: "redis-persistent:7.0"
+# services:
+#     redis_persistent:
+#         type: "redis-persistent:7.0"
         
 # Routes configuration.
 routes:
