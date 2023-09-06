@@ -2,36 +2,8 @@
 # Upsun demo project configuration
 #######################################################################################################################
 # Application configuration.
-applications:
-    # App 1: Backend (Python)
-    backend:
-
-        source:
-            root: "backend"
-
-        type: "python:3.11"
-
-        build:
-            flavor: none
-        hooks:
-            build: |
-                set -eux
-                pip install --upgrade pip
-                pip install -r requirements.txt
-                
-        web:
-            commands:
-                start: "gunicorn main:app"
-            upstream:
-                socket_family: tcp
-            locations:
-                /:
-                    passthru: true
-
-        # relationships:
-        #     redis-session: "redis_persistent:redis-persistent"
-    
-    # App 2: Frontend (JS)
+applications:    
+    # App 1: Frontend (JS)
     frontend:
 
         source:
@@ -75,6 +47,33 @@ applications:
             /build/dynamic:
                 source: local
                 source_path: build/dynamic
+    # App 2: Backend (Python)
+    backend:
+
+        source:
+            root: "backend"
+
+        type: "python:3.11"
+
+        build:
+            flavor: none
+        hooks:
+            build: |
+                set -eux
+                pip install --upgrade pip
+                pip install -r requirements.txt
+                
+        web:
+            commands:
+                start: "gunicorn main:app"
+            upstream:
+                socket_family: tcp
+            locations:
+                /:
+                    passthru: true
+
+#         relationships:
+#             redis-session: "redis_persistent:redis-persistent"
 
 # Managed services configuration.
 # services:
@@ -87,12 +86,13 @@ routes:
         id: frontend
         type: upstream
         upstream: "frontend:http"
+
     "https://www.{default}":
         id: www-redirect
         type: redirect
         to: "https://{default}/"
 
-    "https://api.{default}/":
-        id: backend
+    "https://{default}/api/":
+        # id: backend
         type: upstream
         upstream: "backend:http"
