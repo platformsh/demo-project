@@ -75,7 +75,7 @@ function App() {
   return (
     <>
       <div
-        className={`max-w-[83.875rem] w-[83.875rem] m-auto transition duration-500`}
+        className={`max-w-[83.875rem] w-fill m-auto transition duration-500`}
       >
         <Header />
         <main className="border-t-[1px] border-upsun-violet-600 flex flex-row">
