@@ -71,7 +71,7 @@ applications:
                     passthru: true
 
 #        relationships:
-#            redis-session: "redis_persistent:redis-persistent"
+#            redis-session: "redis_persistent:redis"
 
 # Managed services configuration.
 #services:
