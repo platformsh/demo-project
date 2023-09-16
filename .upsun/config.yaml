@@ -41,10 +41,6 @@ applications:
                         dynamic\/*:
                             expires: -1
 
-        mounts:
-            /build/dynamic:
-                source: local
-                source_path: build/dynamic
     # App 2: Backend (Python)
     backend:
 
