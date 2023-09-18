@@ -21,10 +21,10 @@ applications:
                 set -e
                 npm install
                 npm run build
-            deploy: >
-                set -eux
+            # deploy: >
+            #     set -eux
 
-                echo "Add some deploy commands here if you like."
+            #     echo "Add some deploy commands here if you like."
 
         relationships:
            api: "backend:http"
