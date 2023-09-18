@@ -29,6 +29,7 @@ def createApp():
     return app
 
 app = createApp()
+CORS(app)
 
 if __name__ == "__main__":
     flask_environment = os.environ.get('FLASK_ENV', 'local')

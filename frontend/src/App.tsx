@@ -26,6 +26,7 @@ function App() {
   useEffect(() => {
     fetchEnvironment()
       .then((envResponse) => {
+        console.log(envResponse);
         const { type, instance_count, session_storage } = envResponse;
         setEnvironment(type && type.charAt(0).toUpperCase() + type.slice(1));
         setAppInstances(instance_count ? instance_count : 0);
