@@ -26,6 +26,9 @@ applications:
 
                 echo "Add some deploy commands here if you like."
 
+        relationships:
+           api: "backend:http"
+
         web:
             locations:
                 /:
