@@ -69,13 +69,16 @@ applications:
                 /:
                     passthru: true
 
+# ######################################################################################################################
+# # Step 3: Add a service. Uncomment this section.
+# ######################################################################################################################
 #        relationships:
 #            redis-session: "redis_persistent:redis"
 
-# Managed services configuration.
-#services:
+# services:
 #    redis_persistent:
 #        type: "redis-persistent:7.0"
+# ######################################################################################################################
         
 # Routes configuration.
 routes:
