@@ -13,18 +13,16 @@ applications:
 
         build:
             flavor: none
-        variables:
-            env:
-                N_PREFIX: /app/.global
+        # variables:
+        #     env:
+        #         N_PREFIX: /app/.global
         hooks:
             build: |
                 set -e
                 npm install
+                export REACT_APP_BACKEND_URL=http://api.internal
+                export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
                 npm run build
-            # deploy: >
-            #     set -eux
-
-            #     echo "Add some deploy commands here if you like."
 
         relationships:
            api: "backend:http"
