@@ -38,7 +38,7 @@ function App() {
 # Step 3: Add a service. Uncomment this section.
 ###############################################################
       relationships:
-          redis-session: "redis_persistent:redis"
+          redis_session: "redis_persistent:redis"
       
 services:
     redis_persistent:

@@ -37,7 +37,7 @@ def getSessionStorageType():
     try:
         platform_relationships = json.loads(base64.b64decode(platform_relationships_data))
         
-        if 'redis-session' in platform_relationships:
+        if 'redis_session' in platform_relationships:
             return 'redis'
         else:
             return 'file'
