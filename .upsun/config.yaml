@@ -20,7 +20,7 @@ applications:
             build: |
                 set -e
                 npm install
-                export REACT_APP_BACKEND_URL=http://api.internal
+                export REACT_APP_BACKEND_URL=https://main-bvxea6i-fjrmizqs2liu2.org.recreation.plat.farm
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
                 npm run build
 
