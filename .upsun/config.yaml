@@ -27,9 +27,9 @@ applications:
                 echo "window.APP_BASE_URL = '$(echo $PLATFORM_ROUTES | base64 --decode | jq -r 'to_entries[] | select (.value.id == "frontend") | .key')';" > build/dynamic/vars.js
 
         mounts:
-        "/build/dynamic": # We will dump a var.js here to provide variable information about the project, such as routes, to React
-            source: "local" # "local" sources are unique to the app, while "service" sources can be shared among apps.
-            source_path: "build/dynamic" # The subdirectory within the mounted disk (the source) where the mount should point.
+            "/build/dynamic": # We will dump a var.js here to provide variable information about the project, such as routes, to React
+                source: "local" # "local" sources are unique to the app, while "service" sources can be shared among apps.
+                source_path: "build/dynamic" # The subdirectory within the mounted disk (the source) where the mount should point.
 
         relationships:
            api: "backend:http"
