@@ -59,32 +59,32 @@ They are listed here just in case you get lost.
 
 2. Push a Redis service
 
-Uncomment the `backend.relationships` and `services` block in `.upsun/config.yaml`, so it looks like the following:
+  Uncomment the `backend.relationships` and `services` block in `.upsun/config.yaml`, so it looks like the following:
 
-```yaml
-######################################################################################################################
-# Step 3: Add a service. Uncomment this section.
-######################################################################################################################
-        relationships:
-            redis_session: "redis_persistent:redis"
+  ```yaml
+  #####################################################################################
+  # Step 3: Add a service. Uncomment this section.
+  #####################################################################################
+          relationships:
+              redis_session: "redis_persistent:redis"
 
-services:
-   redis_persistent:
-       type: "redis-persistent:7.0"
-######################################################################################################################
-```
-
-Commit that change, push, and define resources for the change:
-
-- ```
-  git commit -am 'Add Redis service and relationship.'
+  services:
+    redis_persistent:
+        type: "redis-persistent:7.0"
+  #####################################################################################
   ```
-- ```
-  upsun push
-  ```
-- ```
-  upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
-  ```
+
+  Commit that change, push, and define resources for the change:
+
+  - ```
+    git commit -am 'Add Redis service and relationship.'
+    ```
+  - ```
+    upsun push
+    ```
+  - ```
+    upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
+    ```
 
 3. Merge the preview environment into production:
 
