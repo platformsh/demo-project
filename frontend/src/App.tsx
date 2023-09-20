@@ -200,10 +200,10 @@ services:
                   data-testid="add-redis"
                   icon={<RedisIcon className="w-10 h-10" />}
                   title={"3. Add a Redis service"}
-                  isDisabled={currentStep !== "branch"}
+                  isDisabled={currentStep !== "redis"}
                 >
                   
-                  { currentStep === "branch" && 
+                  { currentStep === "redis" && 
                     <>
                     <p className="mb-2">
                       You now have a dedicated preview environment <code className="px-4">staging</code> that is ready for you to push revisions to. 
