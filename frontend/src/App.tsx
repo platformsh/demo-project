@@ -314,6 +314,14 @@ services:
                           <code className="px-4">upsun merge staging</code>
                         </CopyButton>                  
                       </p>
+                      <p className="mb-2 mt-4">
+                        You will once again need to set the resources for the production environment and its new service, so rerun the command below 
+                      </p>
+                      <p className="mb-2 mt-4">
+                        <CopyButton className="hidden sm:inline-block w" copyText="upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512">
+                          <code className="px-4">upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512</code>
+                        </CopyButton>                       
+                      </p>
                     </>
                   }
                 </FeatureStep>
