@@ -20,16 +20,17 @@ applications:
             build: |
                 set -e
                 npm install
+                export REACT_APP_BACKEND_URL="/"
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
                 npm run build
-            deploy: |
-                set -eux
-                echo "window.APP_BASE_URL = '$(echo $PLATFORM_ROUTES | base64 --decode | jq -r 'to_entries[] | select (.value.id == "frontend") | .key')';" > build/dynamic/vars.js
+            # deploy: |
+            #     set -eux
+            #     echo "window.APP_BASE_URL = '$(echo $PLATFORM_ROUTES | base64 --decode | jq -r 'to_entries[] | select (.value.id == "frontend") | .key')';" > build/dynamic/vars.js
 
-        mounts:
-            "/build/dynamic": # We will dump a var.js here to provide variable information about the project, such as routes, to React
-                source: "local" # "local" sources are unique to the app, while "service" sources can be shared among apps.
-                source_path: "build/dynamic" # The subdirectory within the mounted disk (the source) where the mount should point.
+        # mounts:
+        #     "/build/dynamic": # We will dump a var.js here to provide variable information about the project, such as routes, to React
+        #         source: "local" # "local" sources are unique to the app, while "service" sources can be shared among apps.
+        #         source_path: "build/dynamic" # The subdirectory within the mounted disk (the source) where the mount should point.
 
         relationships:
            api: "backend:http"
