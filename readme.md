@@ -2,32 +2,21 @@
 
 This is a simple demo project meant to take a user on a bit of a product tour. 
 
-## Using this project locally
-
-There is a root package `@platformsh/demo-project` that controls both the backend and frontend app setup.
-NPM is required. 
-
-1. `git clone git@github.com:platformsh/demo-project.git`
-1. `cd demo-project`
-1. `npm install`
-1. `npm run start`
-
-These commands will set up everything you need to get started, serving:
-
-- The `backend` Python app from `localhost:8000`
-- The `frontend` React app from `localhost:3000`
-
-> [!IMPORTANT]
-> If at any time you want to start over, run `npm run clean`.
-> This will delete everything you've done in the previous steps.
-
 ## Testing the demo on Upsun
 
 ### Part 1: Replicating what is provided in Console
 
 1. Clone the repository, and create an organization and a project on Upsun we'll deploy it to:
 
-- `git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo`
+- ```
+  git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
+  ```
+- ```
+  git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
+  ```
+- ```
+  git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
+  ```
 - `upsun organization:create --label "Upsun Testing" --name upsun-testing`
 - `upsun create --org upsun-testing --title "Upsun demo" --region "org.recreation.plat.farm" --plan flexible --default-branch main --no-set-remote -y`
 
@@ -92,3 +81,22 @@ upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
 # Step 4 - Scale horizontally - to be tested for reliability
 upsun resources:set --count backend:3
 ```
+
+## Using this project locally
+
+There is a root package `@platformsh/demo-project` that controls both the backend and frontend app setup.
+NPM is required. 
+
+1. `git clone git@github.com:platformsh/demo-project.git`
+1. `cd demo-project`
+1. `npm install`
+1. `npm run start`
+
+These commands will set up everything you need to get started, serving:
+
+- The `backend` Python app from `localhost:8000`
+- The `frontend` React app from `localhost:3000`
+
+> [!IMPORTANT]
+> If at any time you want to start over, run `npm run clean`.
+> This will delete everything you've done in the previous steps.
