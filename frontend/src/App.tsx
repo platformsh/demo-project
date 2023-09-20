@@ -276,9 +276,12 @@ services:
                       Once Upsun asks for the resources definition for Redis, run: 
                     </p>
                     <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun resources:set --size redis-persistent:0.5">
-                        <code className="px-4">upsun resources:set --size redis-persistent:0.5</code>
+                      <CopyButton className="hidden sm:inline-block w" copyText="upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512">
+                        <code className="px-4">upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512</code>
                       </CopyButton>                  
+                    </p>
+                    <p className="mb-2 mt-4">
+                      When the activity has completed, just refresh this page.
                     </p>
                     </>
                   }
@@ -289,7 +292,7 @@ services:
                 <FeatureStep
                   icon={<MergeIcon className="w-10 h-10" />}
                   title={"Merge staging into production"}
-                  isDisabled={!(currentStep === "merge-production")}
+                  isDisabled={currentStep !== "merge-production"}
                 >
                   {(sessionStorageType === "redis" ||
                     (environment?.toLocaleLowerCase() === "staging" &&
