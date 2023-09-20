@@ -12,24 +12,38 @@ This is a simple demo project meant to take a user on a bit of a product tour.
   git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
   ```
 - ```
-  git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
+  upsun organization:create --label "Upsun Testing" --name upsun-testing
   ```
 - ```
-  git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
+  upsun create --org upsun-testing --title "Upsun demo" --region "org.recreation.plat.farm" --plan flexible --default-branch main --no-set-remote -y
   ```
-- `upsun organization:create --label "Upsun Testing" --name upsun-testing`
-- `upsun create --org upsun-testing --title "Upsun demo" --region "org.recreation.plat.farm" --plan flexible --default-branch main --no-set-remote -y`
 
 2. Set the remote for the project, and first push:
 
-- `PROJECT_ID=$(upsun project:list --title "Upsun demo" --pipe)`
-- `upsun project:set-remote $PROJECT_ID`
-- `upsun push -y`
+- ```
+  PROJECT_ID=$(upsun project:list --title "Upsun demo" --pipe)
+  ```
+- ```
+  upsun project:set-remote $PROJECT_ID
+  ```
+- ```
+  upsun push -y
+  ```
+
+> [!IMPORTANT]
+> This first push will take a moment to build _and_ will fail.
+> This is expected, so follow the next step (3) to setup the initial resources.
 
 3. Configure resources for production, and verify the deployment:
 
-- `upsun resources:set --size '*:1'`
-- `upsun url --primary`
+- ```
+  upsun resources:set --size '*:1'
+  ```
+- ```
+  upsun url --primary
+  ```
+
+
 
 ```
 ####################################################################################################
