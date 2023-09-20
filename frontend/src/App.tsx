@@ -342,9 +342,14 @@ services:
                       <code className="px-4 mb-2">upsun scale:update</code>
                       <p className="mb-2">
                         To wrap up your tour of Upsun, let’s scale your app.
-                        Continue with the following command in your terminal.
+                        Continue with the following command in your terminal,
+                        which will scale your backend application to have 3 instances.
                       </p>
-                      <code className="px-4 mb-2">upsun demo:start</code>
+                      <p className="mb-2 mt-4">
+                        <CopyButton className="hidden sm:inline-block w" copyText="upsun resources:set --count backend:3">
+                          <code className="px-4">upsun resources:set --count backend:3</code>
+                        </CopyButton>                       
+                      </p>
                     </>
                   }
                 </FeatureStep>
@@ -358,12 +363,31 @@ services:
                   { currentStep === "complete" && 
                     <>
                       <p className="mb-2">
-                        Congratulations! You’ve connected with your database; feel
-                        free to store something in it.
+                        Congratulations! You’ve connected the service and explored the basic workflow of Upsun.
+                        With everything - including infrastructure - based in Git, you can branch and experiment in 
+                        preview environments prior to merging that change into your production site. 
                       </p>
                       <p className="">
-                        You can also delete this demo project and bring your own
-                        projects here.
+                        All the while, you have strict control over the resources available to each container and environment,
+                        for either replicating production exactly, or using fewer resources in non-production environments.
+                      </p> 
+                      <p className="">
+                        With the demo complete, feel free to delete this project if you wish with the command below.
+                      </p> 
+                      <p className="mb-2 mt-4">
+                        <CopyButton className="hidden sm:inline-block w" copyText="upsun project:delete -p {process.env.REACT_APP_PROJECT_ID}">
+                          <code className="px-4">upsun project:delete -p {process.env.REACT_APP_PROJECT_ID}</code>
+                        </CopyButton>                       
+                      </p>
+                      <p className="">
+                        Otherwise, there are a few things you can do next!<br/>
+                        <ul>
+                          <li className="mt-2 ml-6">   - <strong>Migrate your own project: </strong> Visit the <a href="https://docs.upsun.com/get-started.html">Upsun documentation</a> for a collection of Getting started guides for a number of common frameworks.</li> 
+                          <li className="mt-2 ml-6">   - <strong>Join the Discord: </strong>Let us know what you thought of this demo, what your experience has been like working with Upsun, and just come and say "Hi" by <a href="#">joining us on Discord</a>!</li> 
+                        </ul>
+                      </p> 
+                      <p className="">
+                        Welcome to the Upsun community!
                       </p> 
                     </>
                   }
