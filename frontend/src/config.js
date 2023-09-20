@@ -1,5 +1,5 @@
 /** The .environment file exports the relevant environment variable for you. */
-const BASE_PATH = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+const BASE_PATH = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000/';
 // const BASE_PATH = window.APP_BASE_URL || 'http://localhost:8000/';
 
 export const API_BASE_PATH = `api/v1`

@@ -6,7 +6,7 @@ import { ReactComponent as DoneIcon } from "./assets/utility/done.svg";
 import { ReactComponent as MergeIcon } from "./assets/utility/merge.svg";
 import { ReactComponent as BranchIcon } from "./assets/utility/branch.svg";
 
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 
 import CopyButton from "./components/CopyButton";
 
@@ -114,7 +114,7 @@ services:
             appInstances={appInstances}
           />
           <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
-            <div className="content-intro sm:w-3/4 mx-auto mt-12">
+            <div className="content-intro sm:w-3/4 mx-auto mt-12 mb-12">
               <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
                 Welcome to the Upsun Demo project!<br/><br/>
                 It contains two applications - a Javascript (React) frontend 
@@ -363,16 +363,16 @@ services:
                 >
                   { currentStep === "complete" && 
                     <>
-                      <p className="mb-2">
+                      <p className="mb-2 mt-2">
                         Congratulations! You’ve connected the service and explored the basic workflow of Upsun.
                         With everything - including infrastructure - based in Git, you can branch and experiment in 
                         preview environments prior to merging that change into your production site. 
                       </p>
-                      <p className="">
+                      <p className="mb-2 mt-4">
                         All the while, you have strict control over the resources available to each container and environment,
                         for either replicating production exactly, or using fewer resources in non-production environments.
                       </p> 
-                      <p className="">
+                      <p className="mb-2 mt-4">
                         With the demo complete, feel free to delete this project if you wish with the command below.
                       </p> 
                       <p className="mb-2 mt-4">
@@ -380,15 +380,15 @@ services:
                           <code className="px-4">upsun project:delete -p {process.env.REACT_APP_PROJECT_ID}</code>
                         </CopyButton>                       
                       </p>
-                      <p className="">
-                        Otherwise, there are a few things you can do next!<br/>
+                      <p className="mb-2 mt-4">
+                        Otherwise, here are a few things you can do next!<br/>
                         <ul>
-                          <li className="mt-2 ml-6">   - <strong><Link to='https://docs.upsun.com/get-started.html'>Migrate your own project</Link>: </strong> Visit the <Link to='https://docs.upsun.com/get-started.html'>Upsun documentation</Link> for a collection of Getting started guides for a number of common frameworks.</li> 
-                          <li className="mt-2 ml-6">   - <strong><Link to='#'>Join the Discord</Link>: </strong>Let us know what you thought of this demo, what your experience has been like working with Upsun, and just come and say "Hi" by <Link to='#'>joining us on Discord</Link>!</li> 
+                          <li className="mt-2 ml-6">   - <strong><a href="https://docs.upsun.com/get-started.html">Migrate your own project</a>:</strong> Visit the <a href="https://docs.upsun.com/get-started.html">Upsun documentation</a> for a collection of Getting started guides for a number of common frameworks.</li>
+                          <li className="mt-2 ml-6">   - <strong><a href="#">Join us on Discord</a>:</strong> Let us know what you thought of this demo, what your experience has been like working with Upsun, and just come and say "Hi" by <a href="#">joining us on Discord</a>!</li>
                         </ul>
                       </p> 
-                      <p className="">
-                        Welcome to the Upsun community!
+                      <p className="mb-2 mt-4">
+                        <strong>Welcome to the Upsun community!</strong>
                       </p> 
                     </>
                   }
