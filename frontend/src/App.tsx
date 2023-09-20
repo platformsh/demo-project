@@ -291,12 +291,10 @@ services:
                 {/* STEP 3 - MERGE PREVIEW ENVIRONMENT INTO PRODUCTION */}
                 <FeatureStep
                   icon={<MergeIcon className="w-10 h-10" />}
-                  title={"Merge staging into production"}
+                  title={"4. Merge staging into production"}
                   isDisabled={currentStep !== "merge-production"}
                 >
-                  {(sessionStorageType === "redis" ||
-                    (environment?.toLocaleLowerCase() === "staging" &&
-                      currentStep === "merge-production")) && (
+                  { currentStep === "merge-production" && 
                     <>
                       <p className="mb-2">
                         Great! You've made the required changes and deployed
@@ -320,40 +318,50 @@ services:
                         </CopyButton>                  
                       </p>
                     </>
-                  )}
+                  }
                 </FeatureStep>
 
+                {/* Step 4 - SCALE HORIZONTALLY */}
                 <FeatureStep
                   icon={<ScaleIcon className="w-10 h-10" />}
-                  title={"Scale app"}
+                  title={"5. Scale app"}
                   isDisabled={currentStep !== "scale"}
                 >
-                  <p className="mb-2">
-                    Whether you have 10 daily visitors or 10,000, with Upsun
-                    your app is primed to scale at a moment's notice using the
-                    CLI.
-                  </p>
-                  <code className="px-4 mb-2">upsun scale:update</code>
-                  <p className="mb-2">
-                    To wrap up your tour of Upsun, let’s scale your app.
-                    Continue with the following command in your terminal.
-                  </p>
-                  <code className="px-4 mb-2">upsun demo:start</code>
+                  { currentStep === "scale" && 
+                    <>
+                      <p className="mb-2">
+                        Whether you have 10 daily visitors or 10,000, with Upsun
+                        your app is primed to scale at a moment's notice using the
+                        CLI.
+                      </p>
+                      <code className="px-4 mb-2">upsun scale:update</code>
+                      <p className="mb-2">
+                        To wrap up your tour of Upsun, let’s scale your app.
+                        Continue with the following command in your terminal.
+                      </p>
+                      <code className="px-4 mb-2">upsun demo:start</code>
+                    </>
+                  }
                 </FeatureStep>
 
+                {/* Step 5 - DEMO COMPLETED */}
                 <FeatureStep
                   icon={<DoneIcon className="w-10 h-10 p-1" />}
-                  title={"You did it!"}
+                  title={"6. You did it!"}
                   isDisabled={currentStep !== "complete"}
                 >
-                  <p className="mb-2">
-                    Congratulations! You’ve connected with your database; feel
-                    free to store something in it.
-                  </p>
-                  <p className="">
-                    You can also delete this demo project and bring your own
-                    projects here.
-                  </p>
+                  { currentStep === "complete" && 
+                    <>
+                      <p className="mb-2">
+                        Congratulations! You’ve connected with your database; feel
+                        free to store something in it.
+                      </p>
+                      <p className="">
+                        You can also delete this demo project and bring your own
+                        projects here.
+                      </p> 
+                    </>
+                  }
                 </FeatureStep>
               </div>
             </div>
