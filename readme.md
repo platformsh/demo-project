@@ -43,58 +43,73 @@ This is a simple demo project meant to take a user on a bit of a product tour.
   upsun url --primary
   ```
 
+### Part 2: Listing what is described within the Demo Project
 
+The steps below are provided for you within the deployed environment.
+They are listed here just in case you get lost.
 
+1. Create a staging (preview) environment:
+
+- ```
+  upsun branch staging --type staging
+  ```
+- ```
+  upsun url --primary
+  ```
+
+2. Push a Redis service
+
+Uncomment the `backend.relationships` and `services` block in `.upsun/config.yaml`, so it looks like the following:
+
+```yaml
+######################################################################################################################
+# Step 3: Add a service. Uncomment this section.
+######################################################################################################################
+        relationships:
+            redis_session: "redis_persistent:redis"
+
+services:
+   redis_persistent:
+       type: "redis-persistent:7.0"
+######################################################################################################################
 ```
-####################################################################################################
-# Demo steps provided in-console to get you to the live environment
-####################################################################################################
 
-# Command provided by demo path steps.
-git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
+Commit that change, push, and define resources for the change:
 
-# To be taken care of by project creation steps.
-upsun organization:create --label "Upsun Testing" --name upsun-testing
-upsun create --org upsun-testing --title "Upsun demo" --region "org.recreation.plat.farm" --plan flexible --default-branch main --no-set-remote -y
+- ```
+  git commit -am 'Add Redis service and relationship.'
+  ```
+- ```
+  upsun push
+  ```
+- ```
+  upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
+  ```
 
-# Command provided by demo path steps (Project ID substituted in console)
-PROJECT_ID=$(upsun project:list --title "Upsun demo" --pipe)
-upsun project:set-remote $PROJECT_ID
+3. Merge the preview environment into production:
 
-# Command provided (minus the flag) by demo path steps
-upsun push -y
+- ```
+  git checkout main
+  ```
+- ```
+  upsun merge staging
+  ```
+- ```
+  upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
+  ```
 
-# Command provided by demo path steps
-upsun resources:set --size '*:1'
+> [!IMPORTANT]
+> Post-merge, you _do_ need to _redefine_ resources for Redis on the production environment, as shown above.
 
-# Command provided by demo path steps
-upsun url --primary
+4. Scale the backend app container (Python):
 
-####################################################################################################
-# Start of in-app steps
-####################################################################################################
-# Step 1 - branch
-upsun branch staging --type staging
-upsun url --primary
+- ```
+  upsun resources:set --count backend:3
+  ```
 
-# Step 2 - push Redis
-# First, uncomment the backend.relationships block.
-#   and the services block of .upsun/config.yaml
-git commit -am 'Add Redis service and relationship.'
-upsun push
-# When it fails (due to a lack of resources defined):
-upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
-
-# Step 3 - Merge preview environment into production
-upsun merge staging
-# This will fail again (resources)
-# Make sure you're on the parent env, then update resources
-git checkout main
-upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
-
-# Step 4 - Scale horizontally - to be tested for reliability
-upsun resources:set --count backend:3
-```
+> [!IMPORTANT]
+> This final change should produce a "Demo complete" page to the user.
+> The transition is still in testing for reliability. 
 
 ## Using this project locally
 
