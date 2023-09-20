@@ -61,7 +61,8 @@ services:
 
   useEffect(() => {
     switch (true) {
-      case sessionStorageType === "file":
+      case sessionStorageType === "file"&&
+        environment?.toLocaleLowerCase() === "main":
         setCurrentStep("branch");
         break;
       case environment?.toLocaleLowerCase() === "staging":
