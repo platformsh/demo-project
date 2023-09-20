@@ -6,6 +6,7 @@ import { ReactComponent as DoneIcon } from "./assets/utility/done.svg";
 import { ReactComponent as MergeIcon } from "./assets/utility/merge.svg";
 import { ReactComponent as BranchIcon } from "./assets/utility/branch.svg";
 
+import { Link } from 'react-router-dom'
 
 import CopyButton from "./components/CopyButton";
 
@@ -382,8 +383,8 @@ services:
                       <p className="">
                         Otherwise, there are a few things you can do next!<br/>
                         <ul>
-                          <li className="mt-2 ml-6">   - <strong>Migrate your own project: </strong> Visit the <a href="https://docs.upsun.com/get-started.html">Upsun documentation</a> for a collection of Getting started guides for a number of common frameworks.</li> 
-                          <li className="mt-2 ml-6">   - <strong>Join the Discord: </strong>Let us know what you thought of this demo, what your experience has been like working with Upsun, and just come and say "Hi" by <a href="#">joining us on Discord</a>!</li> 
+                          <li className="mt-2 ml-6">   - <strong><Link to='https://docs.upsun.com/get-started.html'>Migrate your own project</Link>: </strong> Visit the <Link to='https://docs.upsun.com/get-started.html'>Upsun documentation</Link> for a collection of Getting started guides for a number of common frameworks.</li> 
+                          <li className="mt-2 ml-6">   - <strong><Link to='#'>Join the Discord</Link>: </strong>Let us know what you thought of this demo, what your experience has been like working with Upsun, and just come and say "Hi" by <Link to='#'>joining us on Discord</Link>!</li> 
                         </ul>
                       </p> 
                       <p className="">
