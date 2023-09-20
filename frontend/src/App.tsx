@@ -61,16 +61,13 @@ services:
 
   useEffect(() => {
     switch (true) {
-      case sessionStorageType === "file"&&
+      case sessionStorageType === "file" &&
         environment?.toLocaleLowerCase() === "main":
         setCurrentStep("branch");
         break;
-      case environment?.toLocaleLowerCase() === "staging":
-        setCurrentStep("redis");
-        break;
       case environment?.toLocaleLowerCase() === "staging" &&
-        sessionStorageType === "redis":
-        setCurrentStep("merge-production");
+        sessionStorageType === "file":
+        setCurrentStep("redis");
         break;
       case environment?.toLocaleLowerCase() === "staging" &&
         sessionStorageType === "redis":
