@@ -188,8 +188,8 @@ services:
                         back into production. Simply run:{" "}
                       </p> */}
                       <p className="mb-2 mt-4">
-                        <CopyButton className="hidden sm:inline-block w" copyText="upsun branch staging">
-                          <code className="px-4">upsun branch staging</code>
+                        <CopyButton className="hidden sm:inline-block w" copyText="upsun branch staging --type staging">
+                          <code className="px-4">upsun branch staging --type staging</code>
                         </CopyButton>                  
                       </p>   
                     </>
@@ -416,8 +416,7 @@ const StagingIntroduction = () => {
         modify the content of this page.
       </p>
       <p className="text-sm leading-6 mt-2">
-        Return to the <code className="px-2 py-1">upsun demo</code> command to
-        continue adding your Redis service.
+        Return to the steps below to continue adding your Redis service.
       </p>
     </>
   );
