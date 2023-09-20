@@ -21,64 +21,74 @@ These commands will set up everything you need to get started, serving:
 > If at any time you want to start over, run `npm run clean`.
 > This will delete everything you've done in the previous steps.
 
-## Proposed sequence
+## Testing the demo on Upsun
 
-1. Local development ready
+### Part 1: Replicating what is provided in Console
 
-  - cli is installed
-  - `upsun demo:start`
-  - project is cloned locally
-  - local repo has upsun project as remote
-  
-2. Production deployed successfuly with defined resources
+1. Clone the repository, and create an organization and a project on Upsun we'll deploy it to:
 
-  - `upsun push` to push code to project
-  - `upsun scale:update` to define resources
-  - `upsun url` to verify deployment of production environment
+- `git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo`
+- `upsun organization:create --label "Upsun Testing" --name upsun-testing`
+- `upsun create --org upsun-testing --title "Upsun demo" --region "org.recreation.plat.farm" --plan flexible --default-branch main --no-set-remote -y`
 
-3. Staging environment ready
+2. Set the remote for the project, and first push:
 
-  - `upsun environment:branch`
-  - `upsun url`
+- `PROJECT_ID=$(upsun project:list --title "Upsun demo" --pipe)`
+- `upsun project:set-remote $PROJECT_ID`
+- `upsun push -y`
 
-4. Service added
+3. Configure resources for production, and verify the deployment:
 
-  - add a service configuration
-  - `upsun push`
-  - `upsun scale:update`
+- `upsun resources:set --size '*:1'`
+- `upsun url --primary`
 
-5. Merge staging into production
+```
+####################################################################################################
+# Demo steps provided in-console to get you to the live environment
+####################################################################################################
 
-  - `upsun merge`
-  - `upsun url`
+# Command provided by demo path steps.
+git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
 
-6. Scale up demo app
+# To be taken care of by project creation steps.
+upsun organization:create --label "Upsun Testing" --name upsun-testing
+upsun create --org upsun-testing --title "Upsun demo" --region "org.recreation.plat.farm" --plan flexible --default-branch main --no-set-remote -y
 
-  - `upsun scale:update`
+# Command provided by demo path steps (Project ID substituted in console)
+PROJECT_ID=$(upsun project:list --title "Upsun demo" --pipe)
+upsun project:set-remote $PROJECT_ID
 
-## Notes
+# Command provided (minus the flag) by demo path steps
+upsun push -y
 
-### Deployments
+# Command provided by demo path steps
+upsun resources:set --size '*:1'
 
-#### Redis-Disabled Deployment
+# Command provided by demo path steps
+upsun url --primary
 
-* Allocate required resources for scaling compatibility: 
-  ```bash
-  ./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "backend": { "resources": { "profile_size": "0.1" } } } }'
-  ```
+####################################################################################################
+# Start of in-app steps
+####################################################################################################
+# Step 1 - branch
+upsun branch staging --type staging
+upsun url --primary
 
-#### Redis-enabled Deployment
+# Step 2 - push Redis
+# First, uncomment the backend.relationships block.
+#   and the services block of .upsun/config.yaml
+git commit -am 'Add Redis service and relationship.'
+upsun push
+# When it fails (due to a lack of resources defined):
+upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
 
-* Allocate required resources for scaling compatibility: 
-  ```bash
-  ./upsun e:curl /deployments/next -X PATCH -d \ '{ "webapps": { "frontend": { "resources": { "profile_size": "0.1" }, "disk": 1024 }, "backend": { "resources": { "profile_size": "0.1" } } }, "services": { "redis_persistent": { "resources": { "profile_size": "0.1" }, "disk": 1024 } } }'
-  ```
+# Step 3 - Merge preview environment into production
+upsun merge staging
+# This will fail again (resources)
+# Make sure you're on the parent env, then update resources
+git checkout main
+upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
 
-
-### Good-to-know
-
-* React's index.html has been modified to request dynamic/vars.js
-  * This file is designed to provide dynamic project information such as routes in order to minimize the need to create various mounts and to avoid building using the deploy hook
-  * This file is not generated when running on localhost, so React will fall back to defaults (see `src/config.js`)
-* The Python backend is Flask
-* The Python backend uses `getSessionStorageType()` to check for the existence of `PLATFORM_RELATIONSHIP['redis-session']`
+# Step 4 - Scale horizontally - to be tested for reliability
+upsun resources:set --count backend:3
+```
