@@ -199,7 +199,15 @@ services:
                         <CopyButton className="hidden sm:inline-block w" copyText="upsun branch staging --type staging">
                           <code className="px-4">upsun branch staging --type staging</code>
                         </CopyButton>                  
-                      </p>   
+                      </p>  
+                      <p className="mb-2 mt-4">
+                        When the activity has completed, you can the preview environment by running the command below:
+                      </p>
+                       <p className="mb-2 mt-4">
+                        <CopyButton className="hidden sm:inline-block w" copyText="upsun url --primary">
+                          <code className="px-4">upsun url --primary</code>
+                        </CopyButton>                       
+                      </p>
                     </>
                   }
                 </FeatureStep>
@@ -225,7 +233,7 @@ services:
                     </p>
                     <p className="mb-2">
                       Locally, you should be checked out to the <code className="px-4">staging</code> branch, which you can verify by running 
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun branch staging">
+                      <CopyButton className="hidden sm:inline-block w" copyText="git branch">
                         <code className="px-4">git branch</code>.
                       </CopyButton> 
                       In a your editor, open the <code className="px-4">.upsun/config.yaml</code> file, which acts as the primary configuration file 
