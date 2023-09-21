@@ -74,9 +74,9 @@ services:
         sessionStorageType === "redis":
         setCurrentStep("merge-production");
         break;
-      case appInstances !== null && appInstances < 1:
-        setCurrentStep("scale");
-        break;
+      // case appInstances !== null && appInstances < 1:
+      //   setCurrentStep("scale");
+      //   break;
       default:
         setCurrentStep("complete");
         break;
@@ -328,7 +328,7 @@ services:
                 </FeatureStep>
 
                 {/* Step 4 - SCALE HORIZONTALLY */}
-                <FeatureStep
+                {/* <FeatureStep
                   icon={<ScaleIcon className="w-10 h-10" />}
                   title={"5. Scale app"}
                   isDisabled={currentStep !== "scale"}
@@ -353,7 +353,7 @@ services:
                       </p>
                     </>
                   }
-                </FeatureStep>
+                </FeatureStep> */}
 
                 {/* Step 5 - DEMO COMPLETED */}
                 <FeatureStep
