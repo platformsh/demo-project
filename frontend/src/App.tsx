@@ -63,7 +63,7 @@ services:
   useEffect(() => {
     switch (true) {
       case sessionStorageType === "file" &&
-        environment?.toLocaleLowerCase() === "main":
+        environment?.toLocaleLowerCase() === "production":
         setCurrentStep("branch");
         break;
       case environment?.toLocaleLowerCase() === "staging" &&
@@ -77,7 +77,7 @@ services:
       // case appInstances !== null && appInstances < 1:
       //   setCurrentStep("scale");
       //   break;
-      case environment?.toLocaleLowerCase() === "main" &&
+      case environment?.toLocaleLowerCase() === "production" &&
         sessionStorageType === "redis":
         setCurrentStep("complete");
         break;
@@ -125,12 +125,12 @@ services:
                 pulling data from a Python (Flask) backend.
                 This multi-app project is designed to deploy on Upsun quickly, 
                 and teach you about the platform's unique features.<br/><br/>
-                <ul>
+                {/* <ul>
                   <li>current step: { currentStep }</li>
                   <li>environment: { environment }</li>
                   <li>session storage: { sessionStorageType }</li>
                   <li>num_instances: { appInstances }</li>
-                </ul>
+                </ul> */}
               </div>
 
               <EnvironmentIntroduction environment={environment} />
