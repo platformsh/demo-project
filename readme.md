@@ -2,6 +2,69 @@
 
 This is a simple demo project meant to take a user on a bit of a product tour. 
 
+## Resume the demo
+
+When you start the demo project through the Upsun console, you will receive all the steps you need to go through the entire demo.
+If for some reason you close your browser and lose your place, however, you can pick back up where you left off by following the instructions below.
+
+1. Install the Upsun CLI
+
+    ```bash
+    brew install upsun/tap/upsun-cli
+    ```
+
+    > [!NOTE]
+    > Determine if you already have the CLI installed by running `upsun`.
+
+2. Create a project
+
+    First run, `upsun project:list`.
+    If there is _no_ project listed, you can go right ahead back to [https://console.upsun.com/create-project](https://console.upsun.com/create-project) and restart the **Demo project** option.
+
+    If you already created a project, you will find a `PROJECT_ID` associated with that project, which you will use in the next step.
+
+3. Get the demo repository
+
+    > [!NOTE]
+    > You can determine if you have already pushed the demo project to Upsun using the command `upsun activity:list --type push`.
+    > If you've already pushed code, there will be an entry in the table that says **Your Name pushed to Main**.
+    >
+    > If you see a `push` activity, run `upsun get PROJECT_ID` to get the code, `cd` the resulting folder, and then move on to step 4.
+ 
+    Get the demo repo by running:
+
+    ```bash
+    git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
+    ```
+
+    Then push to Upsun
+
+    ```bash
+    upsun push -y --set-remote PROJECT_ID
+    ```
+
+4. Set resources
+
+    > [!NOTE]
+    > You can determine if you have already defined resources for the demo project with the command `upsun activity:list --type environment.resources.update --result=success`.
+    > If you've successfully defined resources, there will be an entry in the table that says **Your Name updated resource allocation on Main**.
+    >
+    > If you see a successful `environment.resources.update` activity, move on to step 5.
+
+    You first push for the demo project will fail because Upsun does not yet know what resources should be deployed. 
+    Run the command below to complete the deployment.
+
+    ```bash
+    upsun resources:set --size '*:1'
+    ```
+
+5. View the environment
+
+    You should be all caught up to resume the demo at this point. 
+    Run `upsun url --primary` to view the environment, and visit https://console.upsun.com/projects/PROJECT_ID to view the project.
+
+Welcome to Upsun!
+
 ## Testing the demo on Upsun
 
 ### Part 1: Replicating what is provided in Console

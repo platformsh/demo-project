@@ -77,6 +77,10 @@ services:
       // case appInstances !== null && appInstances < 1:
       //   setCurrentStep("scale");
       //   break;
+      case environment?.toLocaleLowerCase() === "main" &&
+        sessionStorageType === "redis":
+        setCurrentStep("complete");
+        break;
       default:
         setCurrentStep("complete");
         break;
