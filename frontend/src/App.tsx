@@ -199,7 +199,15 @@ services:
                         <CopyButton className="hidden sm:inline-block w" copyText="upsun branch staging --type staging">
                           <code className="px-4">upsun branch staging --type staging</code>
                         </CopyButton>                  
-                      </p>   
+                      </p>  
+                      <p className="mb-2 mt-4">
+                        When the activity has completed, you can the preview environment by running the command below:
+                      </p>
+                       <p className="mb-2 mt-4">
+                        <CopyButton className="hidden sm:inline-block w" copyText="upsun url --primary -e main">
+                          <code className="px-4">upsun url --primary</code>
+                        </CopyButton>                       
+                      </p>
                     </>
                   }
                 </FeatureStep>
