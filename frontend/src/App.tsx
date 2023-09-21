@@ -333,6 +333,14 @@ services:
                           <code className="px-4">upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512 -e main</code>
                         </CopyButton>                       
                       </p>
+                      <p className="mb-2 mt-4">
+                        When the activity has completed, you can revisit the production environment state by running the command below:
+                      </p>
+                       <p className="mb-2 mt-4">
+                        <CopyButton className="hidden sm:inline-block w" copyText="upsun url --primary -e main">
+                          <code className="px-4">upsun url --primary -e main</code>
+                        </CopyButton>                       
+                      </p>
                     </>
                   }
                 </FeatureStep>
