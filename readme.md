@@ -1,31 +1,37 @@
-# Demo project
+# Upsun demo
 
-This is a simple demo project meant to take a user on a bit of a product tour. 
+This repository is the Upsun demo project meant to help you learn the basics of [Upsun PaaS](https://upsun.com/).
 
-## Testing the demo on Upsun
+## Run de demo on Upsun
 
-### Part 1: Replicating what is provided in Console
+### 1. Deploy the demo
 
-1. Clone the repository, and create an organization and a project on Upsun we'll deploy it to:
+1. Clone the GitHub repository locally:
 
 - ```
   git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
   ```
-- ```
-  upsun organization:create --label "Upsun Testing" --name upsun-testing
-  ```
-- ```
-  upsun create --org upsun-testing --title "Upsun demo" --region "org.recreation.plat.farm" --plan flexible --default-branch main --no-set-remote -y
-  ```
 
-2. Set the remote for the project, and first push:
+2. Create a new Upsun organization if you do not have one yet:
 
 - ```
-  PROJECT_ID=$(upsun project:list --title "Upsun demo" --pipe)
+  upsun organization:create
   ```
+
+3. Create a new Upsun project:
+
 - ```
-  upsun project:set-remote $PROJECT_ID
+  upsun project:create
   ```
+
+4. Set the `upsun` Git remote:
+
+- ```
+  upsun project:set-remote PROJECT_ID
+  ```
+
+5. Deploy the project:
+
 - ```
   upsun push -y
   ```
@@ -34,7 +40,7 @@ This is a simple demo project meant to take a user on a bit of a product tour.
 > This first push will take a moment to build _and_ will fail.
 > This is expected, so follow the next step (3) to setup the initial resources.
 
-3. Configure resources for production, and verify the deployment:
+6. Configure the compute resources on your environment, and verify the deployment:
 
 - ```
   upsun resources:set --size '*:1'
@@ -43,12 +49,12 @@ This is a simple demo project meant to take a user on a bit of a product tour.
   upsun url --primary
   ```
 
-### Part 2: Listing what is described within the Demo Project
+### 2. Complete the demo
 
 The steps below are provided for you within the deployed environment.
 They are listed here just in case you get lost.
 
-1. Create a staging (preview) environment:
+1. Create a new staging (preview) environment:
 
 - ```
   upsun branch staging --type staging
@@ -57,7 +63,7 @@ They are listed here just in case you get lost.
   upsun url --primary
   ```
 
-2. Push a Redis service
+2. Add a Redis service
 
   Uncomment the `backend.relationships` and `services` block in `.upsun/config.yaml`, so it looks like the following:
 
@@ -74,7 +80,7 @@ They are listed here just in case you get lost.
   #####################################################################################
   ```
 
-  Commit that change, push, and define resources for the change:
+  Commit and deploy those changes:
 
   - ```
     git commit -am 'Add Redis service and relationship.'
@@ -82,11 +88,14 @@ They are listed here just in case you get lost.
   - ```
     upsun push
     ```
+
+  Configure the resources for Redis:
+  
   - ```
     upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
     ```
 
-3. Merge the preview environment into production:
+3. Merge staging into production:
 
 - ```
   git checkout main
@@ -101,17 +110,19 @@ They are listed here just in case you get lost.
 > [!IMPORTANT]
 > Post-merge, you _do_ need to _redefine_ resources for Redis on the production environment, as shown above.
 
-4. Scale the backend app container (Python):
 
+Congratulations, you have completed the demo!
+
+You can now enjoy more Upsun capabilities like:
+* Scale your applications horizonally:
 - ```
-  upsun resources:set --count backend:3
+  upsun resources:set --count backend:3 --count frontend:3
   ```
+* Create a team and invite contributors to your project.
+* Create new preview environments.
+* Add new services.
 
-> [!IMPORTANT]
-> This final change should produce a "Demo complete" page to the user.
-> The transition is still in testing for reliability. 
-
-## Using this project locally
+## Run the demo locally
 
 There is a root package `@platformsh/demo-project` that controls both the backend and frontend app setup.
 NPM is required. 
