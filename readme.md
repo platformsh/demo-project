@@ -1,4 +1,28 @@
-# Demo project
+<h1 align="center">Try Upsun today!</h1>
+
+<!-- <p align="center">
+<strong>Contribute, request a feature, or check out our resources</strong>
+<br />
+<br />
+<a href="https://community.platform.sh"><strong>Join our community</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://docs.platform.sh"><strong>Documentation</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://platform.sh/blog"><strong>Blog</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://github.com/platformsh-templates/drupal9/issues/new?assignees=&labels=bug&template=bug_report.yml"><strong>Report a bug</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://github.com/platformsh-templates/drupal9/issues/new?assignees=&labels=feature+request&template=improvements.yml"><strong>Request a feature</strong></a>
+<br /><br />
+</p> -->
+
+<p align="center">
+<a href="https://github.com/platformsh/demo-project/issues">
+<img src="https://img.shields.io/github/issues/platformsh/demo-project.svg?style=for-the-badge&labelColor=f4f2f3&color=6046FF&label=Issues" alt="Open issues" />
+</a>&nbsp&nbsp
+<a href="https://github.com/platformsh/demo-project/pulls">
+<img src="https://img.shields.io/github/issues-pr/platformsh/demo-project.svg?style=for-the-badge&labelColor=f4f2f3&color=6046FF&label=Pull%20requests" alt="Open PRs" />
+</a>&nbsp&nbsp
+<a href="https://github.com/platformsh/demo-project/blob/main/LICENSE">
+<img src="https://img.shields.io/static/v1?label=License&message=MIT&style=for-the-badge&labelColor=f4f2f3&color=6046FF" alt="License" />
+</a>&nbsp&nbsp
+<br /><br />
 
 This is a simple demo project meant to take a user on a bit of a product tour. 
 
