@@ -201,7 +201,7 @@ services:
                         </CopyButton>                  
                       </p>  
                       <p className="mb-2 mt-4">
-                        When the activity has completed, you can the preview environment by running the command below:
+                        When the activity has completed, you can access the preview environment by running the command below:
                       </p>
                        <p className="mb-2 mt-4">
                         <CopyButton className="hidden sm:inline-block w" copyText="upsun url --primary">
