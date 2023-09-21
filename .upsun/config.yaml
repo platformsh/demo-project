@@ -68,10 +68,10 @@ applications:
 # ######################################################################################################################
 # # Step 3: Add a service. Uncomment this section.
 # ######################################################################################################################
-#         relationships:
-#             redis_session: "redis_persistent:redis"
+#        relationships:
+#            redis_session: "redis_persistent:redis"
 
-# services:
+#services:
 #    redis_persistent:
 #        type: "redis-persistent:7.0"
 # ######################################################################################################################
