@@ -92,7 +92,7 @@ describe("<App />", () => {
 
     expect(
       screen.getByText("1. Deploy to Upsun").parentElement?.parentElement,
-    ).not.toHaveClass("is-disabled");
+    ).toHaveClass("is-disabled");
 
     expect(
       screen.getByText("2. Create your first preview environment").parentElement?.parentElement,
