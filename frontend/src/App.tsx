@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { ENVIRONMENT_PATH, fetchEnvironment } from "./utility/api";
 import { ReactComponent as RedisIcon } from "./assets/utility/service_redis.svg";
-import { ReactComponent as ScaleIcon } from "./assets/utility/scale_app.svg";
 import { ReactComponent as DoneIcon } from "./assets/utility/done.svg";
 import { ReactComponent as MergeIcon } from "./assets/utility/merge.svg";
 import { ReactComponent as BranchIcon } from "./assets/utility/branch.svg";
 
-// import { Link } from 'react-router-dom'
-
 import CopyButton from "./components/CopyButton";
-
 import { API_BASE_URL } from "./config";
 import ErrorPage from "./page/ErrorPage";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import FeatureStep from "./components/FeatureStep";
-import { CodeBlock, CopyBlock, dracula } from "react-code-blocks";
-
-// import SyntaxHighlighter from 'react-syntax-highlighter';
-// import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { CodeBlock, dracula } from "react-code-blocks";
 
 function App() {
 

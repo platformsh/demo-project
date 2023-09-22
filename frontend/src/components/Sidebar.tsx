@@ -1,6 +1,3 @@
-// import { ReactComponent as StartIcon } from "../assets/utility/key_start.svg";
-// import { ReactComponent as InfoIcon } from "../assets/utility/key_info.svg";
-// import { ReactComponent as ResetIcon } from "../assets/utility/key_reset.svg";
 import CopyButton from "./CopyButton";
 import { ReactComponent as ProductionIcon } from "../assets/utility/production.svg";
 import { ReactComponent as StagingIcon } from "../assets/utility/staging.svg";
@@ -108,51 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </CopyButton>        
               </span>
             </li>
-
           </ul>
-
-
-          {/* <div className="flex flex-col gap-2 md:flex-row md:gap-0 flex-wrap">
-
-
-            <div className="w-fit md:w-1/2 md:pr-1">
-
-              <div className="flex flex-col gap-2">
-                <CopyButton className="hidden sm:inline-block w-12" copyText="upsun project:info">
-                  <InfoIcon className="h-full w-full" />
-                </CopyButton>
-                <code className="px-3">upsun project:info</code>
-              </div>
-            </div>
-
-            <div className="w-fit md:w-1/2 md:pr-1">
-
-              <div className="flex flex-col gap-2">
-                <CopyButton className="hidden sm:inline-block w-12" copyText="upsun resources:get">
-                  <InfoIcon className="h-full w-full" />
-                </CopyButton>
-                <code className="px-3">upsun resources:get</code>
-              </div>
-            </div>
-
-            <div className="w-fit md:w-1/2 md:pr-1">
-              <div className="flex flex-col gap-2">
-                <CopyButton className="hidden sm:inline-block w-12" copyText="upsun relationships">
-                  <InfoIcon className="h-full w-full" />
-                </CopyButton>
-                <code className="px-3">upsun relationships</code>
-              </div>
-            </div>
-
-            <div className="w-fit md:w-1/2 md:pr-1 md:pt-4">
-              <div className="flex flex-col gap-2">
-                <CopyButton className="hidden sm:inline-block w-12" copyText="upsun demo:reset">
-                  <ResetIcon className="h-full w-full" />
-                </CopyButton>
-                <code className="px-3">upsun demo:reset</code>
-              </div>
-            </div>
-          </div> */}
         </div>
       </section>
     </aside>
