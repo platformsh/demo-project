@@ -15,7 +15,8 @@
     "postinstall": "cross-env FORCE_COLOR=1 npm-run-all -l postinstall:*",
     "postinstall:backend": "cd backend && ./scripts/build.sh",
     "postinstall:frontend": "cd frontend && npm install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env FORCE_COLOR=1 npm-run-all -l test:*",
+    "test:frontend": "cd frontend && npm run test"
   },
   "repository": {
     "type": "git",
