@@ -92,7 +92,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <ul className="p-0 list-none flex flex-col gap-2">
 
             <li
-              data-testid="status-session-storage"
+              data-testid="command-project-info"
               className="flex flex-row items-center"
             >
               <div className="w-4 h-4 flex justify-center">
@@ -106,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </li>
 
             <li
-              data-testid="status-session-storage"
+              data-testid="command-resources-get"
               className="flex flex-row items-center"
             >
               <div className="w-4 h-4 flex justify-center">
@@ -120,7 +120,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </li>
 
             <li
-              data-testid="status-session-storage"
+              data-testid="command-relationships"
               className="flex flex-row items-center"
             >
               <div className="w-4 h-4 flex justify-center">
