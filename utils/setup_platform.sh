@@ -2,8 +2,10 @@
 
 DOWNLOAD_LINK="https://docs.platform.sh/administration/cli.html"
 
-if ! command -v platform &> /dev/null; then
-    printf "
+if [ -z ${CI+x} ]; then 
+    echo "CI is unset"; 
+    if ! command -v platform &> /dev/null; then
+        printf "
 
 Requirement - platform: Not found
 
@@ -14,12 +16,12 @@ The Platform.sh CLI was not found, and is required to build this project locally
 Visit $DOWNLOAD_LINK to download, then try again.
 
 "
-    exit 1
-else 
-    RECOMMENDED_VERSION=$(npm pkg get 'otherDependencies.platform' | tr -d '\"')
-    CURRENT_VERSION=$(platform -V)
-    CURRENT_VERSION=${CURRENT_VERSION:16}
-    printf "
+        exit 1
+    else 
+        RECOMMENDED_VERSION=$(npm pkg get 'otherDependencies.platform' | tr -d '\"')
+        CURRENT_VERSION=$(platform -V)
+        CURRENT_VERSION=${CURRENT_VERSION:16}
+        printf "
 
 Requirement - platform: Installed
 * Installed:    $CURRENT_VERSION
@@ -30,4 +32,8 @@ to update.
 
 $DOWNLOAD_LINK
 "
+    fi
+
+else 
+    echo "CI is set to '$CI'"; 
 fi
