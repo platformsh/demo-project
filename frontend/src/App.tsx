@@ -49,7 +49,6 @@ services:
   useEffect(() => {
     fetchEnvironment()
       .then((envResponse) => {
-        console.log(envResponse);
         const { type, instance_count, session_storage } = envResponse;
         setEnvironment(type && type.charAt(0).toUpperCase() + type.slice(1));
         setAppInstances(instance_count ? instance_count : 0);
@@ -125,12 +124,6 @@ services:
                 pulling data from a Python (Flask) backend.
                 This multi-app project is designed to deploy on Upsun quickly, 
                 and teach you about the platform's unique features.<br/><br/>
-                {/* <ul>
-                  <li>current step: { currentStep }</li>
-                  <li>environment: { environment }</li>
-                  <li>session storage: { sessionStorageType }</li>
-                  <li>num_instances: { appInstances }</li>
-                </ul> */}
               </div>
 
               <EnvironmentIntroduction environment={environment} />
@@ -148,7 +141,7 @@ services:
                     <p className="mb-4">
                       <strong>Congrats!</strong> You now have a production environment deployed with the Demo Project.
                     </p>
-                    <p className="mb-4">
+                    <div className="mb-4">
                       By this point you have:
                       <br/>
                       <ul>
@@ -160,7 +153,7 @@ services:
                         <li className="mt-2 ml-6">   - Defined deployment resources: <code className="ml-2 px-4">upsun resources:set --size '*:1'</code></li> 
                         <li className="mt-2 ml-6">   - Retrieved the deployed environment URL: <code className="ml-2 px-4">upsun url --primary</code></li>  
                       </ul>
-                    </p>    
+                    </div>    
                     <p className="mb-2">
                       With the production environment now deployed, you can move onto the next step:
                       creating preview environments to make your first revision!
@@ -406,13 +399,13 @@ services:
                           <code className="px-4">upsun project:delete -p {process.env.REACT_APP_PROJECT_ID}</code>
                         </CopyButton>                       
                       </p>
-                      <p className="mb-2 mt-4">
+                      <div className="mb-2 mt-4">
                         Otherwise, here are a few things you can do next!<br/>
                         <ul>
                           <li className="mt-2 ml-6">   - <strong><a href="https://docs.upsun.com/get-started.html">Migrate your own project</a>:</strong> Visit the <a href="https://docs.upsun.com/get-started.html">Upsun documentation</a> for a collection of Getting started guides for a number of common frameworks.</li>
                           <li className="mt-2 ml-6">   - <strong><a href="#">Join us on Discord</a>:</strong> Let us know what you thought of this demo, what your experience has been like working with Upsun, and just come and say "Hi" by <a href="#">joining us on Discord</a>!</li>
                         </ul>
-                      </p> 
+                      </div> 
                       <p className="mb-2 mt-4">
                         <strong>Welcome to the Upsun community!</strong>
                       </p> 

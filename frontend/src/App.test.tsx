@@ -3,6 +3,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
 import { fetchEnvironment } from "./utility/api";
+import { act } from "react-dom/test-utils";
 
 // Mock the module and function
 jest.mock("./utility/api", () => ({
@@ -79,36 +80,41 @@ describe("<App />", () => {
     expect(element).toBeInTheDocument();
   });
 
-  it("highlights redis step on file storage in production", async () => {
+  it("highlights Deploy to Upsun and Creat preview environment on production and session_storage is file", async () => {
     const mockData = {
       type: "production",
       instance_count: 1,
       session_storage: "file",
     };
 
-    // Use mockImplementationOnce
-    mockedFetchEnvironment.mockImplementationOnce(() =>
-      Promise.resolve(mockData),
-    );
+    // Mock the fetch call
+    mockedFetchEnvironment.mockResolvedValueOnce(mockData);
 
-    render(<App />);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("Add Redis to staging").parentElement?.parentElement,
-      ).not.toHaveClass("is-disabled");
-
-      expect(
-        screen.getByText("Merge staging into production").parentElement
-          ?.parentElement,
-      ).toHaveClass("is-disabled");
-      expect(
-        screen.getByText("Scale app").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
-      expect(
-        screen.getByText("You did it!").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
+    // eslint-disable-next-line testing-library/no-unnecessary-act
+    await act(async () => {
+      render(<App />);
     });
+
+    expect(
+      screen.getByText("1. Deploy to Upsun").parentElement?.parentElement,
+    ).not.toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("2. Create your first preview environment").parentElement?.parentElement,
+    ).not.toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("3. Add a Redis service").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("4. Merge staging into production").parentElement
+        ?.parentElement,
+    ).toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("5. You did it!").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
   });
 
   it("highlights redis step on file storage in staging", async () => {
@@ -118,29 +124,34 @@ describe("<App />", () => {
       session_storage: "file",
     };
 
-    // Use mockImplementationOnce
-    mockedFetchEnvironment.mockImplementationOnce(() =>
-      Promise.resolve(mockData),
-    );
+    // Mock the fetch call
+    mockedFetchEnvironment.mockResolvedValueOnce(mockData);
 
-    render(<App />);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("Add Redis to staging").parentElement?.parentElement,
-      ).not.toHaveClass("is-disabled");
-
-      expect(
-        screen.getByText("Merge staging into production").parentElement
-          ?.parentElement,
-      ).toHaveClass("is-disabled");
-      expect(
-        screen.getByText("Scale app").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
-      expect(
-        screen.getByText("You did it!").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
+    // eslint-disable-next-line testing-library/no-unnecessary-act
+    await act(async () => {
+      render(<App />);
     });
+
+    expect(
+      screen.getByText("1. Deploy to Upsun").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("2. Create your first preview environment").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("3. Add a Redis service").parentElement?.parentElement,
+    ).not.toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("4. Merge staging into production").parentElement
+        ?.parentElement,
+    ).toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("5. You did it!").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
   });
 
   it("highlights merge step to on redis storage set in staging", async () => {
@@ -155,70 +166,31 @@ describe("<App />", () => {
       Promise.resolve(mockData),
     );
 
-    render(<App />);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(
-          "Great! You've made the required changes and deployed them to staging.",
-        ),
-      ).toBeInTheDocument();
-
-      expect(
-        screen.getByText("Add Redis to staging").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
-
-      expect(
-        screen.getByText("Merge staging into production").parentElement
-          ?.parentElement,
-      ).not.toHaveClass("is-disabled");
-
-      expect(
-        screen.getByText("Scale app").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
-      expect(
-        screen.getByText("You did it!").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
+    // eslint-disable-next-line testing-library/no-unnecessary-act
+    await act(async () => {
+      render(<App />);
     });
-  });
 
-  it("highlights scale app and shows merge copy when redis is set in production", async () => {
-    const mockData = {
-      type: "production",
-      instance_count: 0,
-      session_storage: "redis",
-    };
+    expect(
+      screen.getByText("1. Deploy to Upsun").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
 
-    // Use mockImplementationOnce
-    mockedFetchEnvironment.mockImplementationOnce(() =>
-      Promise.resolve(mockData),
-    );
+    expect(
+      screen.getByText("2. Create your first preview environment").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
 
-    render(<App />);
+    expect(
+      screen.getByText("3. Add a Redis service").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
 
-    await waitFor(() => {
-      expect(
-        screen.getByText(
-          "Great! You've made the required changes and deployed them to production.",
-        ),
-      ).toBeInTheDocument();
+    expect(
+      screen.getByText("4. Merge staging into production").parentElement
+        ?.parentElement,
+    ).not.toHaveClass("is-disabled");
 
-      expect(
-        screen.getByText("Add Redis to staging").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
-      expect(
-        screen.getByText("Merge staging into production").parentElement
-          ?.parentElement,
-      ).toHaveClass("is-disabled");
-
-      expect(
-        screen.getByText("Scale app").parentElement?.parentElement,
-      ).not.toHaveClass("is-disabled");
-
-      expect(
-        screen.getByText("You did it!").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
-    });
+    expect(
+      screen.getByText("5. You did it!").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
   });
 
   it("highlights all steps completed in production when redis storage set and instance count 1", async () => {
@@ -233,29 +205,30 @@ describe("<App />", () => {
       Promise.resolve(mockData),
     );
 
-    render(<App />);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(
-          "Great! You've made the required changes and deployed them to production.",
-        ),
-      ).toBeInTheDocument();
-
-      expect(
-        screen.getByText("Add Redis to staging").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
-      expect(
-        screen.getByText("Merge staging into production").parentElement
-          ?.parentElement,
-      ).toHaveClass("is-disabled");
-      expect(
-        screen.getByText("Scale app").parentElement?.parentElement,
-      ).toHaveClass("is-disabled");
-
-      expect(
-        screen.getByText("You did it!").parentElement?.parentElement,
-      ).not.toHaveClass("is-disabled");
+    // eslint-disable-next-line testing-library/no-unnecessary-act
+    await act(async () => {
+      render(<App />);
     });
+
+    expect(
+      screen.getByText("1. Deploy to Upsun").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("2. Create your first preview environment").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("3. Add a Redis service").parentElement?.parentElement,
+    ).toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("4. Merge staging into production").parentElement
+        ?.parentElement,
+    ).toHaveClass("is-disabled");
+
+    expect(
+      screen.getByText("5. You did it!").parentElement?.parentElement,
+    ).not.toHaveClass("is-disabled");
   });
 });
