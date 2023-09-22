@@ -10,13 +10,11 @@ import { ReactComponent as StatusIncompleteIcon } from "../assets/utility/status
 interface SidebarProps {
   environment: string | null;
   sessionStorageType: string | null;
-  appInstances: number | null;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   environment,
   sessionStorageType,
-  appInstances,
 }) => {
   return (
     <aside className="h-fit w-full flex flex-row sm:flex-col flex-wrap sm:w-2/5 lg:w-1/4">
@@ -29,15 +27,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           )}
           <h1>{environment}</h1>
         </div>
-
-        {/* <div className="aside-title mt-4 flex flex-row gap-4 items-center">
-          <ul className="p-0 list-none flex flex-col gap-2">
-            <li
-              className="flex flex-row items-center"
-            ><a href="">View the environment</a></li>
-          </ul>
-        </div> */}
-
       </section>
       <section className="w-1/2 sm:w-full">
         <div className="environment-status flex flex-col gap-4">
@@ -68,19 +57,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <StatusCompleteIcon className="w-auto h-auto" />
               </div>
               <span className="pl-3.5">Scaling: Ready</span>
-            </li>
-            <li
-              data-testid="status-app-scaled"
-              className="flex flex-row items-center"
-            >
-              <div className="w-4 h-4 flex justify-center">
-                {appInstances !== null && appInstances > 0 ? (
-                  <StatusCompleteIcon className="w-auto h-auto" />
-                ) : (
-                  <StatusIncompleteIcon className="w-auto h-auto" />
-                )}
-              </div>
-              <span className="pl-3.5">App scaled horizontally</span>
             </li>
           </ul>
         </div>

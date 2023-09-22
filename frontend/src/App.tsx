@@ -27,7 +27,6 @@ function App() {
   const [sessionStorageType, setSessionStorageType] = useState<string | null>(
     null,
   );
-  const [appInstances, setAppInstances] = useState<number | null>(null);
   const [fatalErrorMessage, setFatalErrorMessage] = useState<string | null>(
     null,
   );
@@ -49,9 +48,8 @@ services:
   useEffect(() => {
     fetchEnvironment()
       .then((envResponse) => {
-        const { type, instance_count, session_storage } = envResponse;
+        const { type, session_storage } = envResponse;
         setEnvironment(type && type.charAt(0).toUpperCase() + type.slice(1));
-        setAppInstances(instance_count ? instance_count : 0);
         setSessionStorageType(session_storage);
       })
       .catch((error) =>
@@ -73,9 +71,6 @@ services:
         sessionStorageType === "redis":
         setCurrentStep("merge-production");
         break;
-      // case appInstances !== null && appInstances < 1:
-      //   setCurrentStep("scale");
-      //   break;
       case environment?.toLocaleLowerCase() === "production" &&
         sessionStorageType === "redis":
         setCurrentStep("complete");
@@ -84,7 +79,7 @@ services:
         setCurrentStep("complete");
         break;
     }
-  }, [environment, sessionStorageType, appInstances]);
+  }, [environment, sessionStorageType]);
 
   if (fatalErrorMessage)
     return (
@@ -114,7 +109,6 @@ services:
           <Sidebar
             environment={environment}
             sessionStorageType={sessionStorageType}
-            appInstances={appInstances}
           />
           <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
             <div className="content-intro sm:w-3/4 mx-auto mt-12 mb-12">
@@ -345,34 +339,6 @@ services:
                     </>
                   }
                 </FeatureStep>
-
-                {/* Step 4 - SCALE HORIZONTALLY */}
-                {/* <FeatureStep
-                  icon={<ScaleIcon className="w-10 h-10" />}
-                  title={"5. Scale app"}
-                  isDisabled={currentStep !== "scale"}
-                >
-                  { currentStep === "scale" && 
-                    <>
-                      <p className="mb-2">
-                        Whether you have 10 daily visitors or 10,000, with Upsun
-                        your app is primed to scale at a moment's notice using the
-                        CLI.
-                      </p>
-                      <code className="px-4 mb-2">upsun scale:update</code>
-                      <p className="mb-2">
-                        To wrap up your tour of Upsun, let’s scale your app.
-                        Continue with the following command in your terminal,
-                        which will scale your backend application to have 3 instances.
-                      </p>
-                      <p className="mb-2 mt-4">
-                        <CopyButton className="hidden sm:inline-block w" copyText="upsun resources:set --count backend:3">
-                          <code className="px-4">upsun resources:set --count backend:3</code>
-                        </CopyButton>                       
-                      </p>
-                    </>
-                  }
-                </FeatureStep> */}
 
                 {/* Step 5 - DEMO COMPLETED */}
                 <FeatureStep

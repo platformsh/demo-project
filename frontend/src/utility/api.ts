@@ -1,7 +1,6 @@
 import { API_BASE_URL } from "../config";
 
 type EnvironmentResponseType = {
-  "instance_count": null | number,
   "session_storage": "redis" | "file" | string,
   "type": "production" | "staging" | "development" | string
 }

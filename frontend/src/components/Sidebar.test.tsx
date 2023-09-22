@@ -35,7 +35,6 @@ describe("<Sidebar />", () => {
     const props = {
       environment: "Production",
       sessionStorageType: "Redis",
-      appInstances: 1,
     };
 
     render(<Sidebar {...props} />);
@@ -49,7 +48,6 @@ describe("<Sidebar />", () => {
     const props = {
       environment: "Staging",
       sessionStorageType: "Redis",
-      appInstances: 1,
     };
 
     render(<Sidebar {...props} />);
@@ -63,7 +61,6 @@ describe("<Sidebar />", () => {
     const props = {
       environment: "Production",
       sessionStorageType: "file",
-      appInstances: 1,
     };
 
     render(<Sidebar {...props} />);
@@ -81,7 +78,6 @@ describe("<Sidebar />", () => {
     const props = {
       environment: "Production",
       sessionStorageType: "redis",
-      appInstances: 1,
     };
 
     render(<Sidebar {...props} />);
@@ -92,47 +88,6 @@ describe("<Sidebar />", () => {
     ).toBeInTheDocument();
     expect(
       within(storageSection).getByText("User session service: redis"),
-    ).toBeInTheDocument();
-  });
-
-  const environments = ["Production", "Staging", "Other", null];
-  const sessionStorageTypes = ["redis", "file", "Other", null];
-  const appInstancesArray = [1, 5, null];
-
-  environments.forEach((environment) => {
-    sessionStorageTypes.forEach((sessionStorageType) => {
-      appInstancesArray.forEach((appInstances) => {
-        const props = { environment, sessionStorageType, appInstances };
-        test(`environment status section renders green on Scaling: Ready for environment: ${environment}, sessionStorageType: ${sessionStorageType}, appInstances: ${appInstances}`, () => {
-          render(<Sidebar {...props} />);
-
-          const storageSection = screen.getByTestId("status-scaling-ready");
-          expect(
-            within(storageSection).getByText("status-complete-svg"),
-          ).toBeInTheDocument();
-          expect(
-            within(storageSection).getByText("Scaling: Ready"),
-          ).toBeInTheDocument();
-        });
-      });
-    });
-  });
-
-  test("environment status section renders green when app scaled", () => {
-    const props = {
-      environment: "Production",
-      sessionStorageType: "redis",
-      appInstances: 1,
-    };
-
-    render(<Sidebar {...props} />);
-
-    const storageSection = screen.getByTestId("status-app-scaled");
-    expect(
-      within(storageSection).getByText("status-complete-svg"),
-    ).toBeInTheDocument();
-    expect(
-      within(storageSection).getByText("App scaled horizontally"),
     ).toBeInTheDocument();
   });
 });
