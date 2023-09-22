@@ -1,7 +1,7 @@
 {
   "name": "@platformsh/demo-project",
   "version": "1.0.0",
-  "description": "A guided tour of Platform.sh features and CLI",
+  "description": "A guided tour of Upsun features and CLI",
   "main": "index.js",
   "scripts": {
     "clean:backend": "cd backend && ./scripts/clean.sh",
