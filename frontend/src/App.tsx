@@ -384,7 +384,7 @@ services:
                 {/* Step 5 - DEMO COMPLETED */}
                 <FeatureStep
                   icon={<DoneIcon className="w-10 h-10 p-1" />}
-                  title={"6. You did it!"}
+                  title={"5. You did it!"}
                   isDisabled={currentStep !== "complete"}
                 >
                   { currentStep === "complete" && 
