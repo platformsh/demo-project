@@ -95,7 +95,7 @@ describe("<App />", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Add Redis to staging").parentElement?.parentElement,
+        screen.getByText("Add a Redis service").parentElement?.parentElement,
       ).not.toHaveClass("is-disabled");
 
       expect(
