@@ -26,7 +26,7 @@ const FeatureStep: React.FC<FeatureStepProps> = ({
   return (
     <div
       data-testid="feature-step"
-      className={`feature--step flex flex-col ${isDisabled && !isExpanded && "is-disabled"}`}
+      className={`feature--step flex flex-col transition-all duration-300 ${(isDisabled && !isExpanded && "is-disabled") || ""}`}
     >
       <div className="aside-title flex flex-row gap-4 items-center">
         {icon}
@@ -34,9 +34,9 @@ const FeatureStep: React.FC<FeatureStepProps> = ({
       </div>
       <div className={`border-l-2 ml-5 pl-10 ${(hideContent || !children) && !hideBorder && "h-10"}`}>
         {!hideContent && children && (
-          <div className={`rounded-lg p-4 bg-upsun-black-900 transition-all duration-300`}>
+          <div className={`rounded-lg p-4 bg-upsun-black-900`}>
             <>
-              <div className={`${isDisabled && !isExpanded && "line-clamp-1"} transition-all duration-300`}>
+              <div className={`${(isDisabled && !isExpanded && "line-clamp-1") || ""}`}>
                 {children}
               </div>
               {isDisabled &&
