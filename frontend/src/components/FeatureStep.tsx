@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef, ForwardedRef } from "react";
 
 interface FeatureStepProps {
   icon: React.ReactNode;
@@ -7,16 +7,22 @@ interface FeatureStepProps {
   hideContent?: boolean;
   hideBorder?: boolean;
   children?: React.ReactNode;
+  ref?: HTMLElement
 }
 
-const FeatureStep: React.FC<FeatureStepProps> = ({
-  icon,
-  title,
-  isDisabled,
-  hideContent,
-  hideBorder,
-  children,
-}) => {
+const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
+  (
+    {
+      icon,
+      title,
+      isDisabled,
+      hideContent,
+      hideBorder,
+      children,
+    }: FeatureStepProps,
+    ref: ForwardedRef<HTMLDivElement>
+  ) => {
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
@@ -25,6 +31,7 @@ const FeatureStep: React.FC<FeatureStepProps> = ({
 
   return (
     <div
+      ref={ref}
       data-testid="feature-step"
       className={`feature--step flex flex-col transition-all duration-300 ${(isDisabled && !isExpanded && "is-disabled") || ""}`}
     >
@@ -54,6 +61,6 @@ const FeatureStep: React.FC<FeatureStepProps> = ({
       </div>
     </div>
   );
-};
+});
 
 export default FeatureStep;

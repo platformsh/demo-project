@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ENVIRONMENT_PATH, fetchEnvironment } from "./utility/api";
 import { ReactComponent as RedisIcon } from "./assets/utility/service_redis.svg";
 import { ReactComponent as DoneIcon } from "./assets/utility/done.svg";
@@ -26,7 +26,20 @@ function App() {
   >("redis");
   const [currentStepProgress, setCurrentStepProgress] = useState<number>(1);
 
-  let servicesText = `###############################################################
+  const welcomeMessage =  useRef<HTMLDivElement>(null);
+  const stepCreateProduction =  useRef<HTMLDivElement>(null);
+  const stepCreateBranch = useRef<HTMLDivElement>(null);
+  const stepCreateService = useRef<HTMLDivElement>(null);
+  const stepMergeProduction = useRef<HTMLDivElement>(null);
+  const stepAllComplete = useRef<HTMLDivElement>(null);
+
+  const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
+    if (ref.current && ref.current.scrollIntoView) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const servicesText = `###############################################################
 # Step 3: Add a service. Uncomment this section.
 ###############################################################
       relationships:
@@ -50,30 +63,38 @@ services:
   }, []);
 
   useEffect(() => {
+    if(environment === null) return
+    if(sessionStorageType === null) return
+
     switch (true) {
       case sessionStorageType === "file" &&
         environment?.toLocaleLowerCase() === "production":
         setCurrentStep("branch");
         setCurrentStepProgress(1);
+        scrollToRef(welcomeMessage);
         break;
-      case environment?.toLocaleLowerCase() === "staging" &&
+      case environment?.toLocaleLowerCase() !== "production" &&
         sessionStorageType === "file":
         setCurrentStep("redis");
         setCurrentStepProgress(2);
+        scrollToRef(welcomeMessage);
         break;
-      case environment?.toLocaleLowerCase() === "staging" &&
+      case environment?.toLocaleLowerCase() !== "production" &&
         sessionStorageType === "redis":
         setCurrentStep("merge-production");
         setCurrentStepProgress(3);
+        scrollToRef(stepMergeProduction);
         break;
       case environment?.toLocaleLowerCase() === "production" &&
         sessionStorageType === "redis":
         setCurrentStep("complete");
         setCurrentStepProgress(4);
+        scrollToRef(stepAllComplete);
         break;
       default:
         setCurrentStep("complete");
         setCurrentStepProgress(4);
+        scrollToRef(stepAllComplete);
         break;
     }
   }, [environment, sessionStorageType]);
@@ -108,17 +129,18 @@ services:
             sessionStorageType={sessionStorageType}
           />
           <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
-            <div className="content-intro sm:w-3/4 mx-auto mt-12 mb-12">
-              <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
-                Welcome to your Upsun Demo Guide project, a Python and Node.js multiapp designed to run on Upsun and teach you about it’s unique features.
-              </div>
+            <div ref={welcomeMessage} className="content-intro sm:w-3/4 mx-auto mt-12 mb-12">
+                <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
+                  Welcome to your Upsun Demo Guide project, a Python and Node.js multiapp designed to run on Upsun and teach you about it’s unique features.
+                </div>
 
-              <EnvironmentIntroduction environment={environment} />
+              {currentStepProgress < 3 && <EnvironmentIntroduction environment={environment} />}
 
               {/* STEP 1 - INITIAL DEPLOYMENT CONFIRMATION */}
               <div className="pt-8 flex flex-col gap-2">
                 <FeatureStep
                   data-testid="branch"
+                  ref={stepCreateProduction}
                   icon={<DoneIcon className="w-10 h-10 p-1" />}
                   title={"1. Deploy to Upsun"}
                   isDisabled // This step is always completed because the app is intended to be viewed on Upsun
@@ -150,6 +172,7 @@ services:
                 {/* STEP 2 - CREATE A PREVIEW ENVIRONMENT */}
                 <FeatureStep
                   data-testid="branch"
+                  ref={stepCreateBranch}
                   icon={<BranchIcon className="w-10 h-10 p-1" />}
                   title={"2. Create your first preview environment"}
                   isDisabled={currentStep !== "branch"}
@@ -182,6 +205,7 @@ services:
                 {/* STEP 3 - PUSH SERVICE TO THE PREVIEW ENVIRONMENT */}
                 <FeatureStep
                   data-testid="add-redis"
+                  ref={stepCreateService}
                   icon={<RedisIcon className="w-10 h-10" />}
                   title={"3. Add a Redis service"}
                   isDisabled={currentStep !== "redis"}
@@ -271,6 +295,7 @@ services:
 
                 {/* STEP 3 - MERGE PREVIEW ENVIRONMENT INTO PRODUCTION */}
                 <FeatureStep
+                  ref={stepMergeProduction}
                   icon={<MergeIcon className="w-10 h-10" />}
                   title={"4. Merge staging into production"}
                   isDisabled={currentStep !== "merge-production"}
@@ -315,6 +340,7 @@ services:
 
                 {/* Step 5 - DEMO COMPLETED */}
                 <FeatureStep
+                  ref={stepAllComplete}
                   icon={<DoneIcon className="w-10 h-10 p-1" />}
                   title={"5. You did it!"}
                   isDisabled={currentStep !== "complete"}
