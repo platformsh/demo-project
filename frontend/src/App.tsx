@@ -147,19 +147,19 @@ services:
                 >
                   <>
                     <p className="mb-4">
-                      <strong>Congrats!</strong> You now have a production environment deployed with the Demo Project.
+                      <strong>Congrats!</strong> You now have the Upsun Demo Guide deployed to a production environment.
                     </p>
                     <div className="mb-4">
                       By this point you have:
                       <br />
-                      <ul>
-                        <li className="mt-2 ml-6">   - Created a <em>project</em>, the Upsun counterpart to a <em>repository</em>.</li>
-                        <li className="mt-2 ml-6">   - Installed the Upsun CLI</li>
-                        <li className="mt-2 ml-6">   - Cloned the demo: <code className="ml-2 px-4">git clone git@github.com:platformsh/demo-project.git</code></li>
-                        <li className="mt-2 ml-6">   - Connected to Upsun: <code className="ml-2 px-4">upsun project:set-remote {process.env.REACT_APP_PROJECT_ID}</code></li>
-                        <li className="mt-2 ml-6">   - Pushed to Upsun: <code className="ml-2 px-4">upsun push</code></li>
-                        <li className="mt-2 ml-6">   - Defined deployment resources: <code className="ml-2 px-4">upsun resources:set --size '*:1'</code></li>
-                        <li className="mt-2 ml-6">   - Retrieved the deployed environment URL: <code className="ml-2 px-4">upsun url --primary</code></li>
+                      <ul className="list-disc list-inside">
+                        <li className="mt-2 ml-6">Created a <em>project</em>, the Upsun counterpart to a <em>repository</em>.</li>
+                        <li className="mt-2 ml-6">Installed the Upsun CLI</li>
+                        <li className="mt-2 ml-6">Cloned the demo: <code className="ml-2 px-4">git clone git@github.com:platformsh/demo-project.git</code></li>
+                        <li className="mt-2 ml-6">Connected to Upsun: <code className="ml-2 px-4">upsun project:set-remote {process.env.REACT_APP_PROJECT_ID}</code></li>
+                        <li className="mt-2 ml-6">Pushed to Upsun: <code className="ml-2 px-4">upsun push</code></li>
+                        <li className="mt-2 ml-6">Defined deployment resources: <code className="ml-2 px-4">upsun resources:set --size '*:1'</code></li>
+                        <li className="mt-2 ml-6">Retrieved the deployed environment URL: <code className="ml-2 px-4">upsun url --primary</code></li>
                       </ul>
                     </div>
                     <p className="mb-2">
@@ -184,19 +184,21 @@ services:
                       bugfixes.
                     </p>
                     <p className="mb-2">
-                      Before you make your first revision, create a new preview environment called <code className="px-4">staging</code> with the command below:
+                      Before you make your first revision, create a new preview environment called <code className="px-2">staging</code>.
                     </p>
-                    <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun branch staging --type staging">
-                        <code className="px-4">upsun branch staging --type staging</code>
+                    <h4 className="mt-5 text-lg font-semibold">Next Step:</h4>
+                    <p className="mb-2 mt-2">
+                      <span>Create environment: </span>
+                      <CopyButton className="pl-1 hidden sm:inline-block w" copyText="upsun branch staging --type staging">
+                        <code className="px-2 py-1">upsun branch staging --type staging</code>
                       </CopyButton>
                     </p>
-                    <p className="mb-2 mt-4">
-                      When the activity has completed, you can access the preview environment by running the command below:
-                    </p>
-                    <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun url --primary">
-                        <code className="px-4">upsun url --primary</code>
+                    <p className="mb-2 mt-2">
+                    <span>
+                      Once deployed, visit the hosted environment:
+                    </span>
+                      <CopyButton className="pl-1 hidden sm:inline-block w" copyText="upsun url --primary">
+                        <code className="px-2 py-1">upsun url --primary</code>
                       </CopyButton>
                     </p>
                   </>

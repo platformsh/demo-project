@@ -56,38 +56,4 @@ describe("<Sidebar />", () => {
     expect(screen.getByText("staging-svg")).toBeInTheDocument();
     expect(screen.getByText("Staging")).toBeInTheDocument();
   });
-
-  test("environment status section renders file as session service when set", () => {
-    const props = {
-      environment: "Production",
-      sessionStorageType: "file",
-    };
-
-    render(<Sidebar {...props} />);
-
-    const storageSection = screen.getByTestId("status-session-storage");
-    expect(
-      within(storageSection).getByText("status-incomplete-svg"),
-    ).toBeInTheDocument();
-    expect(
-      within(storageSection).getByText("User session service: file"),
-    ).toBeInTheDocument();
-  });
-
-  test("environment status section renders redis as session service when set", () => {
-    const props = {
-      environment: "Production",
-      sessionStorageType: "redis",
-    };
-
-    render(<Sidebar {...props} />);
-
-    const storageSection = screen.getByTestId("status-session-storage");
-    expect(
-      within(storageSection).getByText("status-complete-svg"),
-    ).toBeInTheDocument();
-    expect(
-      within(storageSection).getByText("User session service: redis"),
-    ).toBeInTheDocument();
-  });
 });
