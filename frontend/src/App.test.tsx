@@ -21,7 +21,6 @@ describe("<App />", () => {
   it("should successfully fetch environment data and set the state", async () => {
     const mockData = {
       type: "staging",
-      instance_count: 3,
       session_storage: "redis",
     };
 
@@ -39,13 +38,11 @@ describe("<App />", () => {
       screen.getByText(`User session service: ${mockData.session_storage}`),
     ).toBeInTheDocument();
     expect(screen.getByText(`Scaling: Ready`)).toBeInTheDocument();
-    expect(screen.getByText(`App scaled horizontally`)).toBeInTheDocument();
   });
 
   it("uses production intro for production", async () => {
     const mockData = {
       type: "production",
-      instance_count: 3,
       session_storage: "redis",
     };
 
@@ -64,7 +61,6 @@ describe("<App />", () => {
   it("uses staging copy for non-production", async () => {
     const mockData = {
       type: "other",
-      instance_count: 3,
       session_storage: "redis",
     };
 
@@ -83,7 +79,6 @@ describe("<App />", () => {
   it("highlights Deploy to Upsun and Creat preview environment on production and session_storage is file", async () => {
     const mockData = {
       type: "production",
-      instance_count: 1,
       session_storage: "file",
     };
 
@@ -120,7 +115,6 @@ describe("<App />", () => {
   it("highlights redis step on file storage in staging", async () => {
     const mockData = {
       type: "staging",
-      instance_count: 1,
       session_storage: "file",
     };
 
@@ -157,7 +151,6 @@ describe("<App />", () => {
   it("highlights merge step to on redis storage set in staging", async () => {
     const mockData = {
       type: "staging",
-      instance_count: 1,
       session_storage: "redis",
     };
 
@@ -193,10 +186,9 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
   });
 
-  it("highlights all steps completed in production when redis storage set and instance count 1", async () => {
+  it("highlights all steps completed in production when redis storage set", async () => {
     const mockData = {
       type: "production",
-      instance_count: 1,
       session_storage: "redis",
     };
 
