@@ -167,14 +167,6 @@ services:
                       <p className="mb-2">
                         Before you make your first revision, create a new preview environment called <code className="px-4">staging</code> with the command below:
                       </p>
-                      {/* <p className="mb-2">
-                        Upsun is unique in that you can version-control your app
-                        services—MariaDB, Redis, and more.
-                      </p>
-                      <p className="mb-2">
-                        We'll guide you through adding a Redis service and merging
-                        back into production. Simply run:{" "}
-                      </p> */}
                       <p className="mb-2 mt-4">
                         <CopyButton className="hidden sm:inline-block w" copyText="upsun branch staging --type staging">
                           <code className="px-4">upsun branch staging --type staging</code>
@@ -301,10 +293,6 @@ services:
                         can be implemented here or in other preview
                         environments.
                       </p>
-                      {/* <p className="">
-                        Return to <code className="px-2 py-1">upsun demo</code>{" "}
-                        in your terminal to continue your tour of Upsun.
-                      </p> */}
                       <p className="mb-2 mt-4">
                         Now that the service has been added in the isolated preview environment, you can promote it to production. Run: 
                       </p>

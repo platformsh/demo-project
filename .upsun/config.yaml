@@ -37,8 +37,6 @@ applications:
                     rules:
                         static\/*:
                             expires: 365d
-                        dynamic\/*:
-                            expires: -1
 
     # App 2: Backend (Python)
     backend:
