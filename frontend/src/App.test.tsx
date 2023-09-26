@@ -40,10 +40,10 @@ describe("<App />", () => {
     expect(screen.getByText(`Scaling: Ready`)).toBeInTheDocument();
   });
 
-  it("uses production intro for production", async () => {
+  it("uses production intro for production when no changes have been made", async () => {
     const mockData = {
       type: "production",
-      session_storage: "redis",
+      session_storage: "file",
     };
 
     // Use mockImplementationOnce
@@ -58,10 +58,32 @@ describe("<App />", () => {
     expect(element).toBeInTheDocument();
   });
 
-  it("uses staging copy for non-production", async () => {
+  it("hides production intro for production after changes have been made", async () => {
+    const mockData = {
+      type: "production",
+      session_storage: "redis",
+    };
+
+    // Use mockImplementationOnce
+    mockedFetchEnvironment.mockImplementationOnce(() =>
+      Promise.resolve(mockData),
+    );
+
+    // eslint-disable-next-line testing-library/no-unnecessary-act
+    await act(async () => {
+      render(<App />);
+    });    
+    
+    const element = screen.queryByText(
+      /This app is the React frontend of your demo/i,
+    );
+    expect(element).not.toBeInTheDocument();
+  });
+
+  it("uses staging copy for non-production when no other changes have been made", async () => {
     const mockData = {
       type: "other",
-      session_storage: "redis",
+      session_storage: "file",
     };
 
     // Use mockImplementationOnce
@@ -74,6 +96,29 @@ describe("<App />", () => {
       /This space represents your byte-for-byte copy of production/i,
     );
     expect(element).toBeInTheDocument();
+  });
+
+
+  it("hides staging copy for non-production when changes have been made", async () => {
+    const mockData = {
+      type: "other",
+      session_storage: "redis",
+    };
+
+    // Use mockImplementationOnce
+    mockedFetchEnvironment.mockImplementationOnce(() =>
+      Promise.resolve(mockData),
+    );
+
+    // eslint-disable-next-line testing-library/no-unnecessary-act
+    await act(async () => {
+      render(<App />);
+    });    
+    
+    const element = screen.queryByText(
+      /This space represents your byte-for-byte copy of production/i,
+    );
+    expect(element).not.toBeInTheDocument();
   });
 
   it("highlights Deploy to Upsun and Creat preview environment on production and session_storage is file", async () => {
@@ -92,7 +137,7 @@ describe("<App />", () => {
 
     expect(
       screen.getByText("1. Deploy to Upsun").parentElement?.parentElement,
-    ).not.toHaveClass("is-disabled");
+    ).toHaveClass("is-disabled");
 
     expect(
       screen.getByText("2. Create your first preview environment").parentElement?.parentElement,
