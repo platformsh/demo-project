@@ -361,8 +361,8 @@ services:
                       With the demo complete, feel free to delete this project if you wish with the command below.
                     </p>
                     <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun project:delete -p {process.env.REACT_APP_PROJECT_ID}">
-                        <code className="px-4">upsun project:delete -p {process.env.REACT_APP_PROJECT_ID}</code>
+                      <CopyButton className="hidden sm:inline-block w" copyText="upsun project:delete">
+                        <code className="px-4">upsun project:delete</code>
                       </CopyButton>
                     </p>
                     <div className="mb-2 mt-4">
