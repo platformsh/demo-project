@@ -184,7 +184,7 @@ services:
                       bugfixes.
                     </p>
                     <p className="mb-2">
-                      Before you make your first revision, create a new preview environment called <code className="px-2">staging</code>.
+                      Before you make your first revision, let's create a new preview environment called <code className="px-2">staging</code>.
                     </p>
                     <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
@@ -233,7 +233,7 @@ services:
                 >
                   <>
                     <p className="mb-2">
-                      Great! Your preview environment <code className="px-1">staging</code> is live and mirrors your production setup.
+                      Great! Your preview environment {environment?.toLocaleLowerCase() === "production" ? "" : <code className="px-1">staging</code>} is live and mirrors your production setup.
                     </p>
                     <p className="mb-2">
                       We'll use this preview environment as a sandbox to stage the addition of a Redis service. Once happy, we'll bring it into production using <code className='px-1'>git merge</code>.
@@ -251,17 +251,17 @@ services:
                             language='yaml'
                             showLineNumbers={true}
                             theme={dracula}
-                            startingLineNumber={72}
+                            startingLineNumber={66}
                           />
                         </p>
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Commit and push</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={`git commit -am "Create a redis service"; \nupsun push`}>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={`git commit -am "Create a redis service"\nupsun push`}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={`git commit -am "Create a redis service";\nupsun push`}
+                                text={`git commit -am "Create a redis service"\nupsun push`}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -302,10 +302,18 @@ services:
                 >
                   <>
                     <p className="mb-2">
-                      Awesome! Your changes are live in {environment?.toLocaleLowerCase()}.
+                      {environment?.toLocaleLowerCase() === "production"
+                        ? <>Awesome! Your changes are live.</>
+                        : <>Awesome! Your changes are live in {environment?.toLocaleLowerCase()}.</>
+                      }
                     </p>
                     <p className="mb-2">
-                      Use this or other preview environments to stage any future updates.
+
+                    {environment?.toLocaleLowerCase() === "production"
+                        ? "Use your preview environments to stage any future updates."
+                        : "Use this or other preview environments to stage any future updates."
+                      }
+                      
                     </p>
                     <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
