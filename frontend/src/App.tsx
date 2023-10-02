@@ -26,8 +26,8 @@ function App() {
   >("redis");
   const [currentStepProgress, setCurrentStepProgress] = useState<number>(1);
 
-  const welcomeMessage =  useRef<HTMLDivElement>(null);
-  const stepCreateProduction =  useRef<HTMLDivElement>(null);
+  const welcomeMessage = useRef<HTMLDivElement>(null);
+  const stepCreateProduction = useRef<HTMLDivElement>(null);
   const stepCreateBranch = useRef<HTMLDivElement>(null);
   const stepCreateService = useRef<HTMLDivElement>(null);
   const stepMergeProduction = useRef<HTMLDivElement>(null);
@@ -63,8 +63,8 @@ services:
   }, []);
 
   useEffect(() => {
-    if(environment === null) return
-    if(sessionStorageType === null) return
+    if (environment === null) return
+    if (sessionStorageType === null) return
 
     switch (true) {
       case sessionStorageType === "file" &&
@@ -130,9 +130,9 @@ services:
           />
           <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
             <div ref={welcomeMessage} className="content-intro sm:w-3/4 mx-auto mt-12 mb-12">
-                <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
-                  Welcome to your Upsun Demo Guide project, a Python and Node.js multiapp designed to run on Upsun and teach you about it’s unique features.
-                </div>
+              <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
+                Welcome to your Upsun Demo Guide project, a Python and Node.js multiapp designed to run on Upsun and teach you about it’s unique features.
+              </div>
 
               {currentStepProgress < 3 && <EnvironmentIntroduction environment={environment} />}
 
@@ -187,20 +187,38 @@ services:
                       Before you make your first revision, create a new preview environment called <code className="px-2">staging</code>.
                     </p>
                     <h4 className="mt-5 text-lg font-semibold">Next Step:</h4>
-                    <p className="mb-2 mt-2">
-                      <span>Create environment: </span>
-                      <CopyButton className="pl-1 hidden sm:inline-block w" copyText="upsun branch staging --type staging">
-                        <code className="px-2 py-1">upsun branch staging --type staging</code>
-                      </CopyButton>
-                    </p>
-                    <p className="mb-2 mt-2">
-                    <span>
-                      Once deployed, visit the hosted environment:
-                    </span>
-                      <CopyButton className="pl-1 hidden sm:inline-block w" copyText="upsun url --primary">
-                        <code className="px-2 py-1">upsun url --primary</code>
-                      </CopyButton>
-                    </p>
+                    <ol className="list-decimal list-outside ml-4 mt-2">
+                      <li className="">
+                        <p className="mb-2 mt-2">
+                          <span>Create environment</span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun branch staging --type staging">
+                            <p className="mb-2 mt-2 code-block">
+                              <CodeBlock
+                                text="upsun branch staging --type staging"
+                                showLineNumbers={false}
+                                theme={dracula}
+                              />
+                            </p>
+                          </CopyButton>
+                        </p>
+                      </li>
+                      <li>
+                        <p className="mb-2 mt-2">
+                          <span>
+                            Once deployed, open environment in browser
+                          </span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun url --primary">
+                            <p className="mb-2 mt-2 code-block">
+                              <CodeBlock
+                                text="upsun url --primary"
+                                showLineNumbers={false}
+                                theme={dracula}
+                              />
+                            </p>
+                          </CopyButton>
+                        </p>
+                      </li>
+                    </ol>
                   </>
                 </FeatureStep>
 
@@ -215,84 +233,63 @@ services:
                 >
                   <>
                     <p className="mb-2">
-                      You now have a dedicated preview environment <code className="px-4">staging</code> that is ready for you to push revisions to.
-                      It is a true staging environment.
-                      That is, it is a <em>byte-level copy</em> of your production environment <code className="px-4">main</code>.
+                      Great! Your preview environment <code className="px-1">staging</code> is live and mirrors your production setup.
                     </p>
                     <p className="mb-2">
-                      You have exact copies of the application containers in this new isolated, <em>"as-much-like-production-as-possible"</em> space
-                      to verify that changes made here will behave identically when promoted to production.
+                      We'll use this preview environment as a sandbox to stage the addition of a Redis service. Once happy, we'll bring it into production using <code className='px-1'>git merge</code>.
                     </p>
-                    <p className="mb-2">
-                      Locally, you should be checked out to the <code className="px-4">staging</code> branch, which you can verify by running
-                      <CopyButton className="hidden sm:inline-block w" copyText="git branch">
-                        <code className="px-4">git branch</code>.
-                      </CopyButton>
-                      In a your editor, open the <code className="px-4">.upsun/config.yaml</code> file, which acts as the primary configuration file
-                      for deploying things on Upsun.
-                    </p>
-                    <p className="mb-2">
-                      There are three top-level keys that configure the environment: <code className="px-4">applications</code>
-                      (which contains configuration for the two apps in the project, <code className="px-4">frontend</code> and <code className="px-4">backend</code>),
-                      <code className="px-4">routes</code> (which defines how traffic is directed to those two apps), and <code className="px-4">services</code>
-                      which you will define now.
-                    </p>
-                    <p className="mb-2">
-                      Upsun provides <em>managed services</em> that can quickly be added to your project with a few lines of YAML, rather than with length provisioning configuration.
-                    </p>
-                    <p className="mb-2">
-                      Towards the bottom of that file, uncomment the section titled <code className="px-4">Step 3: Add a service</code> so it appears like the snippet below
-                    </p>
-
-                    <p className="mb-2 code-block">
-                      <CodeBlock
-                        text={servicesText}
-                        language='yaml'
-                        showLineNumbers={true}
-                        theme={dracula}
-                        startingLineNumber={72}
-                      />
-                    </p>
-
-                    <p className="mb-2 mt-4">
-                      Once you have done so, commit those changes:
-                    </p>
-                    <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="git commit -am 'Add Redis service and relationship.'">
-                        <code className="px-4">git commit -am 'Add Redis service and relationship.'</code>
-                      </CopyButton>
-                    </p>
-                    <p className="mb-2 mt-4">
-                      And then push to Upsun:
-                    </p>
-                    <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun push">
-                        <code className="px-4">upsun push</code>
-                      </CopyButton>
-                    </p>
-                    <blockquote className="mb-2 mt-4 p-4 rounded-md border border-upsun-violet-600 bg-upsun-violet-900">
-                      <p className="mb-2 mt-2">
-                        <strong>Heads up!</strong>
-                      </p>
-                      <p className="mb-2 mt-2">
-                        Once you push this service, Upsun will build and <em>attempt</em> to deploy your project.
-                        <em>However</em>, until you define the resources you would like to make available for that service,
-                        the deployment will fail. Run the next command to define resources and move onto the next step.
-                      </p>
-                    </blockquote>
-                    <p className="mb-2 mt-4">
-                      Once Upsun asks for the resources definition for Redis, run:
-                    </p>
-                    <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512">
-                        <code className="px-4">upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512</code>
-                      </CopyButton>
-                    </p>
-                    <p className="mb-2 mt-4">
-                      When the activity has completed, just refresh this page.
-                    </p>
+                    <h4 className="mt-5 text-lg font-semibold">Next Step:</h4>
+                    <ol className="list-decimal list-outside ml-4 mt-2">
+                      <li className="">
+                        <p className="mb-2">
+                          Create the relationship. Open <CopyButton className="inline-block" copyText=".upsun/config.yaml">
+                            <code className="px-2">.upsun/config.yaml</code></CopyButton> and uncomment the following lines
+                        </p>
+                        <p className="mb-2 code-block">
+                          <CodeBlock
+                            text={servicesText}
+                            language='yaml'
+                            showLineNumbers={true}
+                            theme={dracula}
+                            startingLineNumber={72}
+                          />
+                        </p>
+                      </li>
+                      <li>
+                        <p className="mb-2 mt-2">
+                          <span>Commit and push</span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={`git commit -am "Create a redis service"; \nupsun push`}>
+                            <p className="mb-2 mt-2 code-block">
+                              <CodeBlock
+                                text={`git commit -am "Create a redis service";\nupsun push`}
+                                showLineNumbers={false}
+                                theme={dracula}
+                              />
+                            </p>
+                          </CopyButton>
+                        </p>
+                      </li>
+                      <li>
+                        <p className="mb-2 mt-2">
+                          <span>Allocate Redis resources</span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={`upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512`}>
+                            <p className="mb-2 mt-2 code-block">
+                              <CodeBlock
+                                text={`upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512`}
+                                showLineNumbers={false}
+                                theme={dracula}
+                              />
+                            </p>
+                          </CopyButton>
+                        </p>
+                      </li>
+                      <li>
+                        <p className="mb-2 mt-2">
+                          <span>Refresh this page when done.</span>
+                        </p>
+                      </li>
+                    </ol>
                   </>
-
                 </FeatureStep>
 
                 {/* STEP 3 - MERGE PREVIEW ENVIRONMENT INTO PRODUCTION */}
@@ -305,38 +302,56 @@ services:
                 >
                   <>
                     <p className="mb-2">
-                      Great! You've made the required changes and deployed
-                      them to {environment?.toLocaleLowerCase()}.
+                      Awesome! Your changes are live in {environment?.toLocaleLowerCase()}.
                     </p>
                     <p className="mb-2">
-                      In the future, any further changes that you want to make
-                      can be implemented here or in other preview
-                      environments.
+                      Use this or other preview environments for any future updates.
                     </p>
-                    <p className="mb-2 mt-4">
-                      Now that the service has been added in the isolated preview environment, you can promote it to production. Run:
-                    </p>
-                    <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun merge staging">
-                        <code className="px-4">upsun merge staging</code>
-                      </CopyButton>
-                    </p>
-                    <p className="mb-2 mt-4">
-                      You will once again need to set the resources for the production environment and its new service, so rerun the command below
-                    </p>
-                    <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512 -e main">
-                        <code className="px-4">upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512 -e main</code>
-                      </CopyButton>
-                    </p>
-                    <p className="mb-2 mt-4">
-                      When the activity has completed, you can revisit the production environment state by running the command below:
-                    </p>
-                    <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun url --primary -e main">
-                        <code className="px-4">upsun url --primary -e main</code>
-                      </CopyButton>
-                    </p>
+                    <h4 className="mt-5 text-lg font-semibold">Next Step:</h4>
+                    <ol className="list-decimal list-outside ml-4 mt-2">
+                      <li>
+                        <p className="mb-2">
+                          <span>Deploy staging changes to production</span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun merge staging">
+                            <p className="mb-2 mt-2 code-block">
+                              <CodeBlock
+                                text="upsun merge staging"
+                                showLineNumbers={false}
+                                theme={dracula}
+                              />
+                            </p>
+                          </CopyButton>
+                        </p>
+                      </li>
+                      <li>
+                        <p className="mb-2 mt-2">
+                          <span>Allocate resources to Redis in production</span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={`upsun resources:set\n\t--size redis_persistent:0.5\n\t--disk redis_persistent:512\n\t -e main`}>
+                            <p className="mb-2 mt-2 code-block">
+                              <CodeBlock
+                                text={`upsun resources:set\n\t--size redis_persistent:0.5\n\t--disk redis_persistent:512\n\t -e main`}
+                                showLineNumbers={false}
+                                theme={dracula}
+                              />
+                            </p>
+                          </CopyButton>
+                        </p>
+                      </li>
+                      <li>
+                        <p className="mb-2 mt-2">
+                          <span>Open production frontend in your browser</span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun url --primary -e main">
+                            <p className="mb-2 mt-2 code-block">
+                              <CodeBlock
+                                text="upsun url --primary -e main"
+                                showLineNumbers={false}
+                                theme={dracula}
+                              />
+                            </p>
+                          </CopyButton>
+                        </p>
+                      </li>
+                    </ol>
                   </>
                 </FeatureStep>
 
