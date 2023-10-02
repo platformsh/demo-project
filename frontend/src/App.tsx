@@ -337,10 +337,10 @@ services:
                         </p>
                         <p className="mb-2 mt-2">
                           <span>Allocate resources to Redis in production.</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={`upsun resources:set\n\t--size redis_persistent:0.5\n\t--disk redis_persistent:512\n\t -e main`}>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={`upsun resources:set \\\n\t--size redis_persistent:0.5 \\\n\t--disk redis_persistent:512 \\\n\t-e main`}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={`upsun resources:set\n\t--size redis_persistent:0.5\n\t--disk redis_persistent:512\n\t -e main`}
+                                text={`upsun resources:set \\\n\t--size redis_persistent:0.5 \\\n\t--disk redis_persistent:512 \\\n\t-e main`}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
