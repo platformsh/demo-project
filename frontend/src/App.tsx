@@ -333,7 +333,10 @@ services:
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
-                          <span>Allocate resources to Redis in production</span>
+                        The previous step will complete, but exit with the message: <span className="text-red-400 font-mono">Resources must be configured before deployment</span>.
+                        </p>
+                        <p className="mb-2 mt-2">
+                          <span>Allocate resources to Redis in production.</span>
                           <CopyButton className="pl-1 inline-block w-full" copyText={`upsun resources:set\n\t--size redis_persistent:0.5\n\t--disk redis_persistent:512\n\t -e main`}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
