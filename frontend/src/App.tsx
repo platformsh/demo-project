@@ -444,7 +444,7 @@ const ProductionIntroduction = () => {
       <p className="text-sm leading-6 mt-2">
         This app is the React frontend of your demo project’s production
         environment, which is associated with the default branch of the repository: <code className="px-2 py-1">main</code>.
-        With it now deployed, we can add features, services, and runtimes from preview environments -
+        With it now deployed, we can add features, services, and runtimes in preview environments -
         which are byte-for-byte copies of production.<br /><br />
         Follow the steps below to get started!
       </p>
