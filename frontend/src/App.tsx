@@ -465,7 +465,7 @@ const StagingIntroduction = () => {
       </p>
       <p className="text-sm leading-6 mt-2">
         This app uses the Upsun environment variable{" "}
-        <code className="px-2 py-1">$UPSUN_ENVIRONMENT="staging"</code> to
+        <code className="px-2 py-1">$PLATFORM_ENVIRONMENT="staging"</code> to
         modify the content of this page.
       </p>
       <p className="text-sm leading-6 mt-2">
