@@ -131,7 +131,7 @@ services:
           <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
             <div ref={welcomeMessage} className="content-intro sm:w-3/4 mx-auto mt-12 mb-12">
               <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
-                Welcome to your Upsun Demo Guide project, a Python and Node.js multiapp designed to run on Upsun and teach you about it’s unique features.
+                Welcome to your Upsun Demo Guide project, a Python and Node.js multiapp designed to run on Upsun and teach you about its unique features.
               </div>
 
               {currentStepProgress < 3 && <EnvironmentIntroduction environment={environment} />}
