@@ -401,7 +401,7 @@ services:
                         Share your thoughts and connect with us <a href="https://docs.upsun.com/learn/overview/get-support.html#community">on Discord</a>.
                       </li>
                       <li className="mt-2">
-                        Explore our scalability features <a href="https://docs.upsun.com/learn/overview/get-support.html#community">on Discord</a>.
+                        Explore Upsun's <a href="https://docs.upsun.com/manage-resources.html#horizontal-scaling">horizontal scalability features</a>.
                       </li>
                     </ul>
                     <p className="mb-2 mt-4 font-semibold">Welcome to the Upsun Community!</p>
