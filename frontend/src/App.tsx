@@ -186,7 +186,7 @@ services:
                     <p className="mb-2">
                       Before you make your first revision, create a new preview environment called <code className="px-2">staging</code>.
                     </p>
-                    <h4 className="mt-5 text-lg font-semibold">Next Step:</h4>
+                    <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
                       <li className="">
                         <p className="mb-2 mt-2">
@@ -238,7 +238,7 @@ services:
                     <p className="mb-2">
                       We'll use this preview environment as a sandbox to stage the addition of a Redis service. Once happy, we'll bring it into production using <code className='px-1'>git merge</code>.
                     </p>
-                    <h4 className="mt-5 text-lg font-semibold">Next Step:</h4>
+                    <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
                       <li className="">
                         <p className="mb-2">
@@ -307,7 +307,7 @@ services:
                     <p className="mb-2">
                       Use this or other preview environments to stage any future updates.
                     </p>
-                    <h4 className="mt-5 text-lg font-semibold">Next Step:</h4>
+                    <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
                       <li>
                         <p className="mb-2">
@@ -381,7 +381,7 @@ services:
                         </p>
                       </CopyButton>
                     </p>
-                    <h4 className="mt-5 text-lg font-semibold">What's next? Dive deeper:</h4>
+                    <h4 className="mt-5 text-lg font-semibold">What's next? Dive deeper</h4>
                     <ul className="list-disc list-outside ml-8 mt-2">
                       <li>
                         <a href="https://docs.upsun.com/get-started.html">Migrate your application</a>
