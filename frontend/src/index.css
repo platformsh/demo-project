@@ -53,7 +53,6 @@
     }
 
     a {
-      color: var(--upsun-colors-yellow-400);
-      text-decoration: underline;
+      @apply text-upsun-yellow-400 underline
     }
   }

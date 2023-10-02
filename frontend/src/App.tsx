@@ -305,7 +305,7 @@ services:
                       Awesome! Your changes are live in {environment?.toLocaleLowerCase()}.
                     </p>
                     <p className="mb-2">
-                      Use this or other preview environments for any future updates.
+                      Use this or other preview environments to stage any future updates.
                     </p>
                     <h4 className="mt-5 text-lg font-semibold">Next Step:</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
@@ -365,34 +365,37 @@ services:
                   hideContent={currentStepProgress !== 4}
                 >
                   <>
-                    <p className="mb-2 mt-2">
-                      Congratulations! You’ve connected the service and explored the basic workflow of Upsun.
-                      With everything - including infrastructure - based in Git, you can branch and experiment in
-                      preview environments prior to merging that change into your production site.
+                    <p className="mb-2 mt-2 font-bold">🎉 Kudos! You've aced the Upsun Demo!</p>
+                    <p className="mb-2">
+                      You've just experienced the power of Upsun's Git-based workflow to stage and deploy Redis seamlessly.
                     </p>
-                    <p className="mb-2 mt-4">
-                      All the while, you have strict control over the resources available to each container and environment,
-                      for either replicating production exactly, or using fewer resources in non-production environments.
-                    </p>
-                    <p className="mb-2 mt-4">
-                      With the demo complete, feel free to delete this project if you wish with the command below.
-                    </p>
-                    <p className="mb-2 mt-4">
-                      <CopyButton className="hidden sm:inline-block w" copyText="upsun project:delete -p {process.env.REACT_APP_PROJECT_ID}">
-                        <code className="px-4">upsun project:delete -p {process.env.REACT_APP_PROJECT_ID}</code>
+                    <p className="mb-2 mt-5">
+                      <span>Delete this project when ready using:</span>
+                      <CopyButton className="pl-1 inline-block w-full" copyText="upsun project:delete">
+                        <p className="mb-2 mt-2 code-block">
+                          <CodeBlock
+                            text="upsun project:delete"
+                            showLineNumbers={false}
+                            theme={dracula}
+                          />
+                        </p>
                       </CopyButton>
                     </p>
-                    <div className="mb-2 mt-4">
-                      Otherwise, here are a few things you can do next!<br />
-                      <ul>
-                        <li className="mt-2 ml-6">   - <strong><a href="https://docs.upsun.com/get-started.html">Migrate your own project</a>:</strong> Visit the <a href="https://docs.upsun.com/get-started.html">Upsun documentation</a> for a collection of Getting started guides for a number of common frameworks.</li>
-                        <li className="mt-2 ml-6">   - <strong><a href="#">Join us on Discord</a>:</strong> Let us know what you thought of this demo, what your experience has been like working with Upsun, and just come and say "Hi" by <a href="#">joining us on Discord</a>!</li>
-                      </ul>
-                    </div>
-                    <p className="mb-2 mt-4">
-                      <strong>Welcome to the Upsun community!</strong>
-                    </p>
+                    <h4 className="mt-5 text-lg font-semibold">What's next? Dive deeper:</h4>
+                    <ul className="list-disc list-outside ml-8 mt-2">
+                      <li>
+                        <a href="https://docs.upsun.com/get-started.html">Migrate your application</a>
+                      </li>
+                      <li className="mt-2">
+                        Share your thoughts and connect with us <a href="https://docs.upsun.com/learn/overview/get-support.html#community">on Discord</a>.
+                      </li>
+                      <li className="mt-2">
+                        Explore our scalability features <a href="https://docs.upsun.com/learn/overview/get-support.html#community">on Discord</a>.
+                      </li>
+                    </ul>
+                    <p className="mb-2 mt-4 font-semibold">Welcome to the Upsun Community!</p>
                   </>
+
                 </FeatureStep>
               </div>
             </div>
