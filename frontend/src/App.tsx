@@ -42,8 +42,8 @@ function App() {
   const servicesText = `###############################################################
 # Step 3: Add a service. Uncomment this section.
 ###############################################################
-      relationships:
-          redis_session: "redis_persistent:redis"
+        relationships:
+            redis_session: "redis_persistent:redis"
       
 services:
     redis_persistent:
@@ -51,15 +51,17 @@ services:
 ###############################################################`
 
   useEffect(() => {
-    fetchEnvironment()
-      .then((envResponse) => {
-        const { type, session_storage } = envResponse;
-        setEnvironment(type && type.charAt(0).toUpperCase() + type.slice(1));
-        setSessionStorageType(session_storage);
-      })
-      .catch((error) =>
-        setFatalErrorMessage("There was a problem fetching environment data."),
-      );
+    setEnvironment('staging')
+    setSessionStorageType('file')
+    // fetchEnvironment()
+    //   .then((envResponse) => {
+    //     const { type, session_storage } = envResponse;
+    //     setEnvironment(type && type.charAt(0).toUpperCase() + type.slice(1));
+    //     setSessionStorageType(session_storage);
+    //   })
+    //   .catch((error) =>
+    //     setFatalErrorMessage("There was a problem fetching environment data."),
+    //   );
   }, []);
 
   useEffect(() => {
