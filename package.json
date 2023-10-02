@@ -10,8 +10,6 @@
     "start:backend": "cd backend && ./scripts/start.sh",
     "start:frontend": "cd frontend && npm run build && npm run start",
     "start": "clear && cross-env FORCE_COLOR=1 npm-run-all -l -p start:*",
-    "preinstall": "cross-env FORCE_COLOR=1 npm-run-all -l preinstall:*",
-    "preinstall:req-platform": "./utils/setup_platform.sh",
     "postinstall": "cross-env FORCE_COLOR=1 npm-run-all -l postinstall:*",
     "postinstall:backend": "cd backend && ./scripts/build.sh",
     "postinstall:frontend": "cd frontend && npm install",
@@ -36,9 +34,9 @@
     "npm-run-all": "^4.1.5"
   },
   "otherDependencies": {
-    "platform": "4.10.0 (Wrapped)"
+    "upsun": "4.10.0 (Wrapped)"
   },
   "engines": {
-    "node": "v18.16"
+    "node": ">=18.0.0"
   }
 }
