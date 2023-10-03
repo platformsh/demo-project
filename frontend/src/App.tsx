@@ -236,7 +236,7 @@ services:
                       Great! Your preview environment {environment?.toLocaleLowerCase() === "production" ? "" : <code className="px-1">staging</code>} is live and mirrors your production setup.
                     </p>
                     <p className="mb-2">
-                      We'll use this preview environment as a sandbox to stage the addition of a Redis service. Once happy, we'll bring it into production using <code className='px-1'>git merge</code>.
+                      We'll use this preview environment as a sandbox to stage the addition of a Redis service. Once happy, we'll  commit the changes using <code className='px-1'>git</code> and then merge it into production.
                     </p>
                     <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
