@@ -392,7 +392,7 @@ services:
                         </p>
                       </CopyButton>
                     </p>
-                    <h4 className="mt-5 text-lg font-semibold">What's next? Dive deeper</h4>
+                    <h4 className="mt-5 text-lg font-semibold">What's next?</h4>
                     <ul className="list-disc list-outside ml-8 mt-2">
                       <li>
                         <a href="https://docs.upsun.com/get-started.html">Migrate your application</a>
