@@ -49,14 +49,10 @@
     }
 
     .code-block > span > code {
-      display: block;
-      font-family: "Overpass Mono", monospace !important;
-      font-size: 0.75rem !important;
-      line-height: 1.25rem !important;
+      @apply block !font-mono !text-xs w-full text-left;
     }
 
     a {
-      color: var(--upsun-colors-yellow-400);
-      text-decoration: underline;
+      @apply text-upsun-yellow-400 underline
     }
   }

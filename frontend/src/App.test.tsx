@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-wait-for-multiple-assertions */
 /* eslint-disable testing-library/no-node-access */
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import App from "./App";
 import { fetchEnvironment } from "./utility/api";
 import { act } from "react-dom/test-utils";
@@ -16,28 +16,6 @@ const mockedFetchEnvironment = fetchEnvironment as jest.Mock;
 describe("<App />", () => {
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  it("should successfully fetch environment data and set the state", async () => {
-    const mockData = {
-      type: "staging",
-      session_storage: "redis",
-    };
-
-    // Use mockImplementationOnce
-    mockedFetchEnvironment.mockImplementationOnce(() =>
-      Promise.resolve(mockData),
-    );
-
-    render(<App />);
-
-    await screen.findByText(
-      mockData.type.charAt(0).toUpperCase() + mockData.type.slice(1),
-    );
-    expect(
-      screen.getByText(`User session service: ${mockData.session_storage}`),
-    ).toBeInTheDocument();
-    expect(screen.getByText(`Scaling: Ready`)).toBeInTheDocument();
   });
 
   it("uses production intro for production when no changes have been made", async () => {

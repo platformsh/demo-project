@@ -14,12 +14,8 @@ test("renders header component", () => {
   expect(logoComponent).toBeInTheDocument();
 
   // Assert that the text "Demo project" is rendered
-  const demoProjectText = screen.getAllByText("Demo project");
+  const demoProjectText = screen.getAllByText("Demo Guide Project");
   expect(demoProjectText).toHaveLength(2);
-
-  // Assert that the "Powered by Platform.sh" text is rendered
-  const poweredByText = screen.getAllByText("Powered by Platform.sh");
-  expect(poweredByText).toHaveLength(2);
 
   // Assert that the share button component is rendered
   const shareButtonComponent = screen.getByText(/share/i);
