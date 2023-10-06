@@ -186,7 +186,7 @@ services:
                     <p className="mb-2">
                       Before you make your first revision, let's create a new preview environment called <code className="px-2">staging</code>.
                     </p>
-                    <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
+                    <h4 className="mt-5 text-lg font-semibold">Next step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
                       <li className="">
                         <p className="mb-2 mt-2">
@@ -238,7 +238,7 @@ services:
                     <p className="mb-2">
                       We'll use this preview environment as a sandbox to stage the addition of a Redis service. Once happy, we'll  commit the changes using <code className='px-1'>git</code> and then merge it into production.
                     </p>
-                    <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
+                    <h4 className="mt-5 text-lg font-semibold">Next step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
                       <li className="">
                         <p className="mb-2">
@@ -315,7 +315,7 @@ services:
                       }
                       
                     </p>
-                    <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
+                    <h4 className="mt-5 text-lg font-semibold">Next step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
                       <li>
                         <p className="mb-2">
