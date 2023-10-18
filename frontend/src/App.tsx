@@ -158,7 +158,7 @@ services:
                         <li className="mt-2 ml-6">Cloned the demo: <code className="ml-2 px-4">git clone git@github.com:platformsh/demo-project.git</code></li>
                         <li className="mt-2 ml-6">Connected to Upsun: <code className="ml-2 px-4">upsun project:set-remote {process.env.REACT_APP_PROJECT_ID}</code></li>
                         <li className="mt-2 ml-6">Pushed to Upsun: <code className="ml-2 px-4">upsun push</code></li>
-                        <li className="mt-2 ml-6">Defined deployment resources: <code className="ml-2 px-4">upsun resources:set --size '*:1'</code></li>
+                        <li className="mt-2 ml-6">Defined deployment resources: <code className="ml-2 px-4">upsun resources:set --size '*:0.1'</code></li>
                         <li className="mt-2 ml-6">Retrieved the deployed environment URL: <code className="ml-2 px-4">upsun url --primary</code></li>
                       </ul>
                     </div>
