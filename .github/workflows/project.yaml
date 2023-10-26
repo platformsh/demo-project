@@ -1,0 +1,41 @@
+name: Upsun CI
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [labeled,opened,reopened,synchronize]
+  # label:
+  #   types: [created, deleted, edited]
+
+env:
+  UPSUN_CLI_NO_INTERACTION: 1
+  TEST_ORG_NAME: demo-test-org
+  TEST_PROJECT_TITLE: demo-test-project
+  TEST_PROJECT_REGION: "ca-1.platform.sh"
+  TEST_PROJECT_DEFAULT_BRANCH: "main"
+
+  TEST_PROJECT_TEST_BRANCH: "main"
+  TEST_PROJECT_BACKEND_PATH: "api/v1/environment"
+
+  TEST_PROJECT_REPO: "platformsh/demo-project"
+  TEST_PROJECT_LOCALDIR: "upsun-demo"
+
+  TEST_PROJECT_STAGING_ENV: "staging"
+
+jobs:
+
+  # deactivate_forked_environment:
+  #   runs-on: ubuntu-latest
+  #   if: >-
+  #     github.event.pull_request.head.repo.id != 686099066 &&
+  #     contains(github.event.pull_request.labels.*.name, 'demo-runthrough')
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          echo "::notice::Installing Upsun CLI via HomeBrew."
+          brew install platformsh/tap/upsun-cli
