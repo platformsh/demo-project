@@ -1,9 +1,14 @@
 name: Upsun CI
 
 on:
-  pull_request_target:
-    branches: [main]
-    types: [labeled,opened,reopened,synchronize]
+  pull_request:
+    branches:
+    - main 
+
+# on:
+#   pull_request_target:
+#     branches: [main]
+#     types: [labeled,opened,reopened,synchronize]
   # label:
   #   types: [created, deleted, edited]
 
