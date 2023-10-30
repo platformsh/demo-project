@@ -1,13 +1,9 @@
 name: Node.js CI
 
-# on:
-#   pull_request:
-#     branches:
-#     - main 
-
 on:
-  label:
-    types: [created, deleted]
+  pull_request:
+    branches:
+    - main 
 
 jobs:
   build:

@@ -1,46 +1,421 @@
-name: Upsun CI
+################################################################################################
+# This workflow attempts to test the steps a user is instructed to go through while deploying
+#   the Upsun demo project.
+################################################################################################
 
-on:
-  pull_request:
-    branches:
-    - main 
-
-# on:
-#   pull_request_target:
-#     branches: [main]
-#     types: [labeled,opened,reopened,synchronize]
-  # label:
-  #   types: [created, deleted, edited]
-
+name: Upsun Demo CI
+'on':
+    pull_request:
+        branches:
+            - main
 env:
-  UPSUN_CLI_NO_INTERACTION: 1
-  TEST_ORG_NAME: demo-test-org
-  TEST_PROJECT_TITLE: demo-test-project
-  TEST_PROJECT_REGION: "ca-1.platform.sh"
-  TEST_PROJECT_DEFAULT_BRANCH: "main"
+    UPSUN_CLI_NO_INTERACTION: 1
+    UPSUN_CLI_TOKEN: ${{secrets.DEVREL_USER_UPSUN_TOKEN}}
 
-  TEST_PROJECT_TEST_BRANCH: "main"
-  TEST_PROJECT_BACKEND_PATH: "api/v1/environment"
+    UPSUN_HOST_REGION: "ca-1"
+    UPSUN_HOST_SUFFIX: "platform.sh"
+    UPSUN_USERNAME: "devrel-projects"
 
-  TEST_PROJECT_REPO: "platformsh/demo-project"
-  TEST_PROJECT_LOCALDIR: "upsun-demo"
+    GIT_USER_EMAIL: "devrel@internal.platform.sh"
+    GIT_USER_NAME: "DevRel Team Bot"
 
-  TEST_PROJECT_STAGING_ENV: "staging"
+    TEST_PATH: "utils/tests"
+
+    ORG_NAME: "demo-test-org"
+
+    PROJECT_LOCALDIR: "upsun-demo"
+    PROJECT_REPO: "platformsh/demo-project"
+    PROJECT_TITLE: 'Demo Test Run (pr-${{ github.ref_name }})'
+
+    DEFAULT_BRANCH: '${{ github.event.pull_request.head.ref }}'
+    STAGING_BRANCH: '${{ github.event.pull_request.head.ref }}-staging'
+
+    BACKEND_PATH: "api/v1/environment"
 
 jobs:
+    demo-runthrough:
+        runs-on: ubuntu-latest
+        steps:
+            ################################################################################################
+            # A. Setup Upsun CLI.
+            - name: "[setup_cli] 1. Retrieve local files."
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+            - name: "[setup_cli] 2. Set up Homebrew."
+              id: set-up-homebrew
+              uses: Homebrew/actions/setup-homebrew@master
+            - name: "[setup_cli] 3. Install Upsun CLI."
+              run: |
+                  echo "::notice::Installing Upsun CLI via HomeBrew."
+                  brew install platformsh/tap/upsun-cli
+            - name: "[setup_cli] 4. Test: The Upsun CLI should be installed and executable."
+              run: |
+                  echo "::notice::Verifying CLI is installed correctly."
+                  ./$TEST_PATH/command_installed.sh upsun
 
-  # deactivate_forked_environment:
-  #   runs-on: ubuntu-latest
-  #   if: >-
-  #     github.event.pull_request.head.repo.id != 686099066 &&
-  #     contains(github.event.pull_request.labels.*.name, 'demo-runthrough')
+            ################################################################################################
+            # B. Setup authenticated Upsun CLI user.
+            - name: "[setup_cli_auth] 1. Test: an authenticated CLI can retrieve bot user info."
+              run: |
+                  echo "::notice::Verifying CLI auth - bot can access user info."
+                  RESULT=$(upsun auth:info username)
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$UPSUN_USERNAME" "Authenticate Upsun CLI user"
+            - name: "[setup_cli_auth] 2. Test: an authenticated CLI can retrieve organization info."
+              run: |
+                  echo "::notice::Verifying CLI auth - bot can access test organization info."
+                  RESULT=$(upsun org:info -o $ORG_NAME name)
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$ORG_NAME" "Authenticate Upsun CLI user"
+            - name: "[setup_cli_auth] 2. Authenticate Upsun CLI to allow push from workflow."
+              run: |
+                  echo "::notice::Generating SSH certificate for Upsun CLI."
+                  upsun ssh-cert:load --new -y
+                  touch ~/.ssh/known_hosts
+                  chmod 644 ~/.ssh/known_hosts
+                  ssh-keyscan ssh.$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX -v >> ~/.ssh/known_hosts
+                  ssh-keyscan git.$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX -v >> ~/.ssh/known_hosts
 
-  test:
+            ################################################################################################
+            # C. Setup local repo.
+            - name: "[setup_repo] 1. Clone repository into runner."
+              run: |
+                  echo "::notice::Cloning repo copy into runner."
+                  git clone -b $DEFAULT_BRANCH \
+                      https://github.com/$PROJECT_REPO.git \
+                      $PROJECT_LOCALDIR
+            - name: "[setup_repo] 2. Setup runner Git user."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  echo "::notice::Setting up Git user."
+                  git config --global user.email "$GIT_USER_EMAIL"
+                  git config --global user.name "$GIT_USER_NAME"
+                  git branch --show-current
+            - name: "[setup_repo] 3. Test: Verify Git settings."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  echo "::notice::Verifying Git settings."
+                  RESULT=$(git config --global user.email)
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$GIT_USER_EMAIL" "Git config (email)"
+                  RESULT=$(git config --global user.name)
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$GIT_USER_NAME" "Git config (name)"
+                  RESULT=$(git branch --show-current)
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$DEFAULT_BRANCH" "Git branch"
 
-    runs-on: ubuntu-latest
+            ################################################################################################
+            # D. Create project. Connect to local repo. Provide access to bot user to the project.
+            - name: "[create_project] 1. Create a project in the test organization."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                echo "::notice::Creating a project in the test organization."
+                echo "::notice::The project should become a remote repository for the local repo automatically."
+                upsun project:create -o "$ORG_NAME" \
+                    --title "$PROJECT_TITLE" \
+                    --region "$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX" \
+                    --default-branch $DEFAULT_BRANCH
+            - name: "[create_project] 2. Test: The create project activity should complete."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH project.create state complete "create_project"
+            - name: "[create_project] 3. Test: The create project activity should succeed."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH project.create result success "create_project"
+            - name: "[create_project] 4. Test: project remote has been set."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                ADDRESS=$(git config remote.upsun.url)
+                PROJECT_ID=$(upsun project:info id)
+                EXPECTED="$PROJECT_ID@git.$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX:$PROJECT_ID.git"
+                ./$TEST_PATH/compare_strings.sh "$ADDRESS" "$EXPECTED" "project:set-remote git_address"
+            - name: "[create_project] 5. Test: project remote has been set. Ensure only a single project is defined in org for the current PR."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                # Failure here indicates that a project for another run on the same PR still exists in the org.
+                EXPECTED=$(upsun project:list -o "$ORG_NAME" --title "$PROJECT_TITLE" --pipe)
+                RESULT=$(upsun project:info id)
+                ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "project:set-remote local"
+            - name: "[create_project] 6. Remove remote origin."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  git remote remove origin
+            # @todo: I can't quite get this test to work.
+            # - name: "[create_project] 7. Test: project is only remote defined on repo."
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       # @todo: this test breaks on failure, rather than providing a testable, empty string.
+            #       ADDRESS=$(git config remote.origin.url)
+            #       EXPECTED=""
+            #       ./$TEST_PATH/compare_strings.sh "$ADDRESS" "$EXPECTED" "remote remove origin"
+            - name: "[create_project] 7. Update production environment name."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  upsun environment:info title "Production ($DEFAULT_BRANCH)" -e $DEFAULT_BRANCH
+            # @todo: The tests here are sound, but it takes a moment to get the final complete/success. Some kind of wait is probably
+            #   needed here to 1) if pending --> wait until max, 2) if success, pass test, 3) if fail, fail test.
+            #   The wait logic can be applied for all activity outcomes for 'state'.
+            # - name: "[create_project] 8. Test: The create production environment access should complete."
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #     # @todo: a sleep seems to be required here.
+            #     sleep 5
+            #     upsun activity:list
+            #     ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment_type.access.create state complete "add_bot_user"
+            # - name: "[create_project] 9. Test: The create production environment access should succeed."
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #     ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment_type.access.create result success "add_bot_user"
+            - name: "[create_project] 10. Test: verify user has been granted access to project."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ACTIVITY_TYPE="environment_type.access.create"
+                  ACTIVITY_ID=$(upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
+                  EXPECTED=$(upsun activity:get $ACTIVITY_ID -P parameters.target)
+                  RESULT=$(upsun auth:info id)
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add access"
+                  ACTIVITY_TYPE="environment_type.access.create"
+                  ACTIVITY_ID=$(upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
+                  EXPECTED=$(upsun activity:get $ACTIVITY_ID -P parameters.role)
+                  RESULT="admin"
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add role"
 
-    steps:
-      - uses: actions/checkout@v4
-      - run: |
-          echo "::notice::Installing Upsun CLI via HomeBrew."
-          brew install platformsh/tap/upsun-cli
+            ################################################################################################
+            # E. First code deploy.
+            - name: "[first_deploy] 1. Deploy the demo application to Upsun."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  echo "::notice::First push to project."
+                  # @todo: Push through Git, not the CLI, so the exit doesn't break the workflow.
+                  git push --force upsun $DEFAULT_BRANCH
+                  # upsun push -f -y
+            - name: "[first_deploy] 2. Test: The first deploy activity should complete."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |    
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push state complete "first_push"  
+            - name: "[first_deploy] 3. Test: The first deploy activity should fail."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result failure "first_push"
+
+            ################################################################################################
+            # F. Set initial resources.
+            - name: "[init_resources] 1. Set initial resources."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  upsun resources:set --size '*:0.1' -y
+            - name: "[init_resources] 2. Test: The update environment resources activity should complete."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update state complete "init_resources"
+            - name: "[init_resources] 3. Test: The update environment resources activity should succeed."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
+            - name: "[init_resources] 4. Test: Updating environment resources should result in a 200 on the frontend production app."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED_STATUS="200"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
+            - name: "[init_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED_STATUS="200"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
+            - name: "[init_resources]  6. Test: endpoint data (session_storage)"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="file"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+                  RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.session_storage')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data session_storage"
+            - name: "[init_resources] 7. Test: endpoint data (environment_type)"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="production"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+                  RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
+
+            ################################################################################################
+            # G. Create staging environment.
+            - name: "[environment_branch] 1. Create preview environment"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  upsun branch $STAGING_BRANCH --type staging
+            - name: "[environment_branch] 2. Test: The environment_branch activity should complete."     
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.branch state complete "environment_branch"
+            - name: "[environment_branch] 3. Test: The environment_branch activity should succeed."        
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.branch result success "environment_branch"
+            - name: "[environment_branch] 4. Test: Creating staging env should result in a 200 on the frontend staging app." 
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED_STATUS="200"
+                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  ./utils/tests/url_status.sh $STAG_URL_FRONTEND $EXPECTED_STATUS "staging frontend deployment (environment_branch)"
+            - name: "[environment_branch] 5. Test: Creating staging env should result in a 200 on the backend staging app."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED_STATUS="200"
+                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+                  ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (environment_branch)"
+            - name: "[environment_branch] 6. Test: endpoint data (session_storage)"  
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="file"
+                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+                  RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.session_storage')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data session_storage"
+            - name: "[environment_branch] 7. Test: endpoint data (environment_type)"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="staging"
+                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+                  RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.type')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
+            - name: "[environment_branch] 8. Update staging environment name."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  upsun environment:info title "Staging ($STAGING_BRANCH)" -e $STAGING_BRANCH
+            ################################################################################################
+            # H. Add a service.
+            - name: "[add_service] 1. Uncomment service configuration block. Commit & push new service."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/uncomment.sh .upsun/config.yaml add_service
+                  git commit -am "Create a redis service."
+                  # Push through Git, not the CLI, so the exit doesn't break the workflow.
+                  git push --force upsun $STAGING_BRANCH
+                  # upsun push -f -y
+            - name: "[add_service] 2. Test: The add_service activity should complete."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |    
+                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push state complete "add_service"  
+            - name: "[add_service] 3. Test: The add_service activity should fail."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push result failure "add_service"
+                
+            ################################################################################################
+            # I. Define service resources.
+            - name: "[add_service_resources] 1. Set Redis' resources."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512
+            - name: "[add_service_resources] 2. Test: The add_service_resources activity should complete."     
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update state complete "add_service_resources"
+            - name: "[add_service_resources] 3. Test: The update environment resources activity should succeed."        
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update result success "add_service_resources"
+            - name: "[add_service_resources] 4. Test: The update environment resources activity should result in a 200 on the frontend staging app." 
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED_STATUS="200"
+                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  ./utils/tests/url_status.sh $STAG_URL_FRONTEND $EXPECTED_STATUS "staging frontend deployment (add_service_resources)"
+            - name: "[add_service_resources] 5. Test: The update environment resources activity should result in a 200 on the backend staging app."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED_STATUS="200"
+                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+                  ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (add_service_resources)"
+            - name: "[add_service_resources] 6. Test: endpoint data (session_storage)"  
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="redis"
+                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+                  RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.session_storage')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data session_storage"
+            - name: "[add_service_resources] 7. Test: endpoint data (environment_type)"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="staging"
+                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+                  RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.type')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
+
+            ################################################################################################
+            # I. Promote revision to production.
+            - name: "[merge] 1. Merge staging into production."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  git checkout $DEFAULT_BRANCH
+                  git merge $STAGING_BRANCH
+                  # Push through Git, not the CLI, so the exit doesn't break the workflow.
+                  git push --force upsun $DEFAULT_BRANCH
+                  # upsun merge staging -y
+            - name: "[merge] 2. Test: The merge activity should complete."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |    
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push state complete "merge"  
+            - name: "[merge] 3. Test: The merge activity should fail."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result failure "merge"
+                
+            ################################################################################################
+            # J. Define production service resources.
+            - name: "[prod_service_resources] 1. Set Redis' resources on production."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512 -e $DEFAULT_BRANCH
+            - name: "[prod_service_resources] 2. Test: The update environment resources activity should complete."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update state complete "init_resources"
+            - name: "[prod_service_resources] 3. Test: The update environment resources activity should succeed."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
+            - name: "[prod_service_resources] 4. Test: Updating environment resources should result in a 200 on the frontend production app."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED_STATUS="200"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
+            - name: "[prod_service_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED_STATUS="200"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
+            - name: "[prod_service_resources]  6. Test: endpoint data (session_storage)"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="redis"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+                  RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.session_storage')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data session_storage"
+            - name: "[prod_service_resources] 7. Test: endpoint data (environment_type)"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="production"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+                  RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
+
+            ################################################################################################
+            # K. Clean up test project.
+            - name: "[cleanup] 1. Delete project."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  upsun project:delete -y

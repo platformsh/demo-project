@@ -4,3 +4,5 @@ upsun-demo
 commands.yaml
 wait.sh
 auto.sh
+pretty.yaml
+http:

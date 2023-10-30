@@ -1,0 +1,457 @@
+name: Upsun Demo CI
+
+on:
+  pull_request:
+    branches:
+    - main 
+
+# on:
+#   pull_request_target:
+#     branches: [main]
+#     types: [labeled,opened,reopened,synchronize]
+  # label:
+  #   types: [created, deleted, edited]
+
+env:
+  UPSUN_CLI_NO_INTERACTION: 1
+  UPSUN_CLI_TOKEN: ${{secrets.DEVREL_USER_UPSUN_TOKEN}}
+
+  GIT_USER_EMAIL: "devrel@internal.platform.sh"
+  GIT_USER_NAME: "DevRel Team Bot"
+
+  TEST_ORG_NAME: demo-test-org
+  TEST_PROJECT_TITLE: "Demo Test Run (pr-${{ github.ref_name }})"
+  
+  TEST_PROJECT_REGION: "ca-1"
+  TEST_PROJECT_REGION_SUFFIX: "platform.sh"
+
+  TEST_PROJECT_REPO: "platformsh/demo-project"
+  TEST_PROJECT_LOCALDIR: "upsun-demo"
+  
+  TEST_PROJECT_DEFAULT_BRANCH: ${{ github.event.pull_request.head.ref }}
+  TEST_PROJECT_STAGING_ENV: ${{ github.event.pull_request.head.ref }}-staging
+
+  TEST_PROJECT_BACKEND_PATH: "api/v1/environment"
+
+jobs:
+
+  # deactivate_forked_environment:
+  #   runs-on: ubuntu-latest
+  #   if: >-
+  #     github.event.pull_request.head.repo.id != 686099066 &&
+  #     contains(github.event.pull_request.labels.*.name, 'demo-runthrough')
+
+  'demo-runthrough':
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      ################################################################################################
+      # A. Setting up tools and authentication to test project/organization.
+      - name: "[setup] 1. Checkout repo"
+        run: |
+          git clone -b $TEST_PROJECT_DEFAULT_BRANCH \
+            https://github.com/$TEST_PROJECT_REPO.git \
+            $TEST_PROJECT_LOCALDIR \
+            && cd $TEST_PROJECT_LOCALDIR
+
+        # uses: actions/checkout@v4
+        # with:
+        #   ref: ${{ github.event.pull_request.head.sha }}
+      - name: "[setup] 2. Set up Homebrew"
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - name: "[setup] 3. Install Upsun CLI"
+        run: |
+          echo "::notice::Installing Upsun CLI via HomeBrew."
+          brew install platformsh/tap/upsun-cli
+      - name: "[setup] 4. Verify Upsun CLI installation"
+        run: |
+          echo "::notice::Verifying CLI is installed correctly."
+          upsun org:info -h
+      - name: "[setup] 5. Verify Upsun CLI authentication"
+        run: |
+          echo "::notice::Verifying CLI is authenticated correctly."
+          # upsun auth:api-token-login
+          upsun org:info -o $TEST_ORG_NAME name
+      - name: "[setup] 6. Authenticate Upsun CLI for pushes"
+        run: |
+          upsun ssh-cert:load --new -y  
+          touch ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          ssh-keyscan ssh.$TEST_PROJECT_REGION.platform.sh -v >> ~/.ssh/known_hosts
+          ssh-keyscan git.$TEST_PROJECT_REGION.platform.sh -v >> ~/.ssh/known_hosts
+
+      ################################################################################################
+      # B. Setting up test project.
+      - name: "[create_project] 1. Create a project in the test org, update prod branch title."
+        run: |
+          echo "::notice::Create a project in the test org."
+          upsun project:create -o "$TEST_ORG_NAME" \
+              --title "$TEST_PROJECT_TITLE" \
+              --region "$TEST_PROJECT_REGION.$TEST_PROJECT_REGION_SUFFIX" \
+              --default-branch $TEST_PROJECT_DEFAULT_BRANCH \
+              --no-set-remote \
+              -y
+          # @todo: export this var, so we don't have to redefined it during set-remote & delete project.
+          TEST_PROJECT_ID=$(upsun project:list -o "$TEST_ORG_NAME" --title "$TEST_PROJECT_TITLE" --pipe)
+          upsun environment:info title "Production ($TEST_PROJECT_DEFAULT_BRANCH)" \
+              -e $TEST_PROJECT_DEFAULT_BRANCH \
+              -p $TEST_PROJECT_ID
+      - name: "[create_project] 2. Verify local repo and branch."
+        run: |
+          echo "::notice::Verifying local repo."
+          ls -a
+          cd $TEST_PROJECT_LOCALDIR
+          git config --global user.email "$TEST_USER_EMAIL"
+          git config --global user.name "$TEST_USER_NAME"
+          git branch
+      - name: "[create_project] 3. Set remote to the Upsun test project."
+        run: |
+          echo "::notice::Setting remote for the project locally."
+          TEST_PROJECT_ID=$(upsun project:list -o "$TEST_ORG_NAME" --title "$TEST_PROJECT_TITLE" --pipe)
+          cd $TEST_PROJECT_LOCALDIR
+          upsun project:set-remote $TEST_PROJECT_ID
+          git remote remove origin
+          git remote -v
+
+      ################################################################################################
+      # C. First deploy.
+      - name: "[first_deploy] 1. Deploy the demo application to Upsun."
+        run: |
+          echo "::notice::First push to project."
+          cd $TEST_PROJECT_LOCALDIR
+          git branch
+          # Push through Git, not the CLI, so the exit doesn't break the workflow.
+          git push --force upsun $TEST_PROJECT_DEFAULT_BRANCH
+          # upsun push -f -y
+      - name: "[first_deploy] 2. Test: The first deploy activity should complete."
+        run: |    
+          cd $TEST_PROJECT_LOCALDIR
+          ./utils/tests/activity_outcome.sh $TEST_PROJECT_DEFAULT_BRANCH push state complete "first_push"  
+      - name: "[first_deploy] 3. Test: The first deploy activity should fail."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+          ./utils/tests/activity_outcome.sh $TEST_PROJECT_DEFAULT_BRANCH push result failure "first_push"
+
+      ################################################################################################
+      # D. Set initial resources.
+      - name: "[init_resources] 1. Set initial resources."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+          upsun resources:set --size '*:0.1' -y
+      - name: "[init_resources] 2. Test: The update environment resources activity should complete."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+          ./utils/tests/activity_outcome.sh $TEST_PROJECT_DEFAULT_BRANCH environment.resources.update state complete "init_resources"
+      - name: "[init_resources] 3. Test: The update environment resources activity should succeed."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+          ./utils/tests/activity_outcome.sh $TEST_PROJECT_DEFAULT_BRANCH environment.resources.update result success "init_resources"
+      - name: "[init_resources] 4. Test: Updating environment resources should result in a 200 on the frontend production app."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+          TEST_PROJECT_PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+          ./utils/tests/url_status.sh $TEST_PROJECT_PROD_URL_FRONTEND '200' "production frontend deployment (init_resources)"
+      - name: "[init_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+          TEST_PROJECT_PROD_URL_BACKEND=$TEST_PROJECT_PROD_URL_FRONTEND$TEST_PROJECT_BACKEND_PATH
+          ./utils/tests/url_status.sh $TEST_PROJECT_PROD_URL_BACKEND '200' "production backend deployment (init_resources)"
+
+      - name: "[init_resources] 6. Test: endpoint data."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+          
+          EXPECTED_STATUS="file"
+          STATUS_DATA=$(curl -s $TEST_PROJECT_PROD_URL_BACKEND | jq -r '.session_storage')
+          if [ "$STATUS_DATA" != "$EXPECTED_STATUS" ]; then
+              echo "::notice::Backend data session_storage is not the expected value ($EXPECTED_STATUS/$STATUS_DATA). Exiting."
+              exit 1
+          else
+              echo "::notice::Backend data session_storage as expected."
+          fi
+
+          EXPECTED_STATUS="production"
+          STATUS_DATA=$(curl -s $TEST_PROJECT_PROD_URL_BACKEND | jq -r '.type')
+          if [ "$STATUS_DATA" != "$EXPECTED_STATUS" ]; then
+              echo "::notice::Backend data environment type is not the expected value ($EXPECTED_STATUS/$STATUS_DATA). Exiting."
+              exit 1
+          else
+              echo "::notice::Backend data environment type as expected."
+          fi
+
+      ################################################################################################
+      # D. Create staging environment.
+      - name: "[branch] 1. Create preview environment"
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+          upsun branch $TEST_PROJECT_STAGING_ENV --type staging
+          TEST_PROJECT_ID=$(upsun project:list -o "$TEST_ORG_NAME" --title "$TEST_PROJECT_TITLE" --pipe)
+          upsun environment:info title "Staging ($TEST_PROJECT_STAGING_ENV)" \
+              -e $TEST_PROJECT_STAGING_ENV \
+              -p $TEST_PROJECT_ID
+      - name: "[branch] 2. Test: Verify branch activity success."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+          
+          ACTIVITY_ID=$(upsun activity:list --type environment.branch -e $TEST_PROJECT_STAGING_ENV --no-header --columns=id --format plain)
+          ACTIVITY_STATE=$(upsun activity:get $ACTIVITY_ID -P state)
+          echo "::notice::Attempting to retrieve environment.branch activity state. Current state is: ${ACTIVITY_STATE}"
+          if [ "${ACTIVITY_STATE}" = "complete" ]; then
+              echo "::notice::Activity is complete."
+          fi
+
+          # 3. Verify that the activity has succeeded.
+          ACTIVITY_RESULT=$(upsun activity:get $ACTIVITY_ID -P result)
+          echo "::notice::Result retrieved: ${ACTIVITY_RESULT}"
+          if [ "$ACTIVITY_RESULT" != "success" ]; then
+              echo "::notice::Branching has failed. Exiting."
+              exit 1
+          else
+              echo "::notice::Branching successful."
+          fi
+      - name: "[branch] 3. Test: staging URLS & endpoint data."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          TEST_PROJECT_STAGING_URL_FRONTEND=$(upsun url --primary --pipe)
+          STATUS=$(curl --silent --head $TEST_PROJECT_STAGING_URL_FRONTEND | awk '/^HTTP/{print $2}')
+          if [ "$STATUS" != "200" ]; then
+              echo "::notice::Frontend deployment did not succeed. Exiting."
+              exit 1
+          else
+              echo "::notice::Frontend deployment successful."
+          fi
+
+          TEST_PROJECT_STAGING_URL_BACKEND=$TEST_PROJECT_STAGING_URL_FRONTEND$TEST_PROJECT_BACKEND_PATH
+          STATUS=$(curl --silent --head $TEST_PROJECT_STAGING_URL_BACKEND | awk '/^HTTP/{print $2}')
+          if [ "$STATUS" != "200" ]; then
+              echo "::notice::Backend deployment did not succeed. Exiting."
+              exit 1
+          else
+              echo "::notice::Backend deployment successful."
+          fi
+
+          EXPECTED_STATUS="file"
+          STATUS_DATA=$(curl -s $TEST_PROJECT_STAGING_URL_BACKEND | jq -r '.session_storage')
+          if [ "$STATUS_DATA" != "$EXPECTED_STATUS" ]; then
+              echo "::notice::Backend data session_storage is not the expected value ($EXPECTED_STATUS/$STATUS_DATA). Exiting."
+              exit 1
+          else
+              echo "::notice::Backend data session_storage as expected."
+          fi
+
+          EXPECTED_STATUS="staging"
+          STATUS_DATA=$(curl -s $TEST_PROJECT_STAGING_URL_BACKEND | jq -r '.type')
+          if [ "$STATUS_DATA" != "$EXPECTED_STATUS" ]; then
+              echo "::notice::Backend data environment type is not the expected value ($EXPECTED_STATUS/$STATUS_DATA). Exiting."
+              exit 1
+          else
+              echo "::notice::Backend data environment type as expected."
+          fi
+
+      ################################################################################################
+      # E. Add a service.
+      - name: "[add_service] 1. Uncomment service configuration block. Commit & push new service."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          ./utils/uncomment.sh .upsun/config.yaml add_service
+          git commit -am "Create a redis service."
+
+          # Push through Git, not the CLI, so the exit doesn't break the workflow.
+          git push --force upsun $TEST_PROJECT_STAGING_ENV
+          # upsun push -f -y
+      - name: "[add_service] 2. Test: Verify first failure."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          ACTIVITY_ID=$(upsun activity:list --type push -e $TEST_PROJECT_STAGING_ENV --no-header --columns=id --format plain)
+          ACTIVITY_STATE=$(upsun activity:get $ACTIVITY_ID -P state)
+          echo "::notice::Attempting to retrieve new service push activity state. Current state is: ${ACTIVITY_STATE}"
+          if [ "${ACTIVITY_STATE}" = "complete" ]; then
+              echo "::notice::Activity is complete."
+          fi
+
+          ACTIVITY_RESULT=$(upsun activity:get $ACTIVITY_ID -P result)
+          echo "::notice::Result retrieved: ${ACTIVITY_RESULT}"
+          if [ "$ACTIVITY_RESULT" != "failure" ]; then
+              echo "::notice::First push did not fail as expected. Exiting."
+              exit 1
+          else
+              echo "::notice::First push failed as expected."
+          fi
+      - name: "[add_service] 3. Set Redis' resources."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512
+      - name: "[add_service] 4. Test: verify activity completed."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          ACTIVITY_ID=$(upsun activity:list -e $TEST_PROJECT_STAGING_ENV --type environment.resources.update --no-header --columns=id --format plain)
+          ACTIVITY_STATE=$(upsun activity:get $ACTIVITY_ID -P state)
+          echo "::notice::Attempting to retrieve staging resources.set activity state. Current state is: ${ACTIVITY_STATE}"
+          if [ "${ACTIVITY_STATE}" = "complete" ]; then
+              echo "::notice::Activity is complete."
+          fi
+      - name: "[add_service] 5. Test: verify activity has succeeded."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          ACTIVITY_ID=$(upsun activity:list -e $TEST_PROJECT_STAGING_ENV --type environment.resources.update --no-header --columns=id --format plain)
+          ACTIVITY_RESULT=$(upsun activity:get $ACTIVITY_ID -P result)
+          if [ "$ACTIVITY_RESULT" != "success" ]; then
+              echo "::notice::Resources set on staging has failed. Exiting."
+              exit 1
+          else
+              echo "::notice::Resources set on staging successful."
+          fi
+      - name: "[add_service] 6. Test: staging URLS & endpoint data."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          TEST_PROJECT_STAGING_URL_FRONTEND=$(upsun url --primary --pipe)
+          STATUS=$(curl --silent --head $TEST_PROJECT_STAGING_URL_FRONTEND | awk '/^HTTP/{print $2}')
+          if [ "$STATUS" != "200" ]; then
+              echo "::notice::Frontend deployment did not succeed. Exiting."
+              exit 1
+          else
+              echo "::notice::Frontend deployment successful."
+          fi
+
+          TEST_PROJECT_STAGING_URL_BACKEND=$TEST_PROJECT_STAGING_URL_FRONTEND$TEST_PROJECT_BACKEND_PATH
+          STATUS=$(curl --silent --head $TEST_PROJECT_STAGING_URL_BACKEND | awk '/^HTTP/{print $2}')
+          if [ "$STATUS" != "200" ]; then
+              echo "::notice::Backend deployment did not succeed. Exiting."
+              exit 1
+          else
+              echo "::notice::Backend deployment successful."
+          fi
+
+          EXPECTED_STATUS="redis"
+          STATUS_DATA=$(curl -s $TEST_PROJECT_STAGING_URL_BACKEND | jq -r '.session_storage')
+          if [ "$STATUS_DATA" != "$EXPECTED_STATUS" ]; then
+              echo "::notice::Backend data session_storage is not the expected value ($EXPECTED_STATUS/$STATUS_DATA). Exiting."
+              exit 1
+          else
+              echo "::notice::Backend data session_storage as expected."
+          fi
+
+          EXPECTED_STATUS="staging"
+          STATUS_DATA=$(curl -s $TEST_PROJECT_STAGING_URL_BACKEND | jq -r '.type')
+          if [ "$STATUS_DATA" != "$EXPECTED_STATUS" ]; then
+              echo "::notice::Backend data environment type is not the expected value ($EXPECTED_STATUS/$STATUS_DATA). Exiting."
+              exit 1
+          else
+              echo "::notice::Backend data environment type as expected."
+          fi
+
+      ################################################################################################
+      # F. Promote revision to production.
+      - name: "[merge] 1. Merge staging into production."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          # Merge through Git, not the CLI, so the exit doesn't break the workflow.
+          git checkout $TEST_PROJECT_DEFAULT_BRANCH
+          git merge $TEST_PROJECT_STAGING_ENV
+          git push --force upsun $TEST_PROJECT_DEFAULT_BRANCH
+          # upsun merge staging -y
+      - name: "[merge] 2. Test: Verify first failure."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          ACTIVITY_ID=$(upsun activity:list --type push -e $TEST_PROJECT_DEFAULT_BRANCH --no-header --columns=id --format plain)
+          ACTIVITY_STATE=$(upsun activity:get $ACTIVITY_ID -P state)
+          echo "::notice::Attempting to retrieve merge activity state. Current state is: ${ACTIVITY_STATE}"
+          if [ "${ACTIVITY_STATE}" = "complete" ]; then
+              echo "::notice::Activity is complete."
+          fi
+
+          ACTIVITY_RESULT=$(upsun activity:get $ACTIVITY_ID -P result)
+          echo "::notice::Result retrieved: ${ACTIVITY_RESULT}"
+          if [ "$ACTIVITY_RESULT" != "failure" ]; then
+              echo "::notice::Merge did not fail as expected. Exiting."
+              exit 1
+          else
+              echo "::notice::Merge failed as expected."
+          fi
+      - name: "[add_service] 3. Set Redis' resources."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512 -e $TEST_PROJECT_DEFAULT_BRANCH
+      - name: "[add_service] 4. Test: verify activity completed."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          ACTIVITY_ID=$(upsun activity:list -e $TEST_PROJECT_DEFAULT_BRANCH --type environment.resources.update --limit 1 --no-header --columns=id --format plain)
+          ACTIVITY_STATE=$(upsun activity:get $TEST_PROJECT_DEFAULT_BRANCH -P state)
+          echo "::notice::Attempting to retrieve production resources.set activity state. Current state is: ${ACTIVITY_STATE}"
+          if [ "${ACTIVITY_STATE}" = "complete" ]; then
+              echo "::notice::Activity is complete."
+          fi
+      - name: "[add_service] 5. Test: verify activity has succeeded."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+
+          ACTIVITY_ID=$(upsun activity:list -e $TEST_PROJECT_DEFAULT_BRANCH --type environment.resources.update --limit 1 --no-header --columns=id --format plain)
+          ACTIVITY_RESULT=$(upsun activity:get $ACTIVITY_ID -P result)
+          if [ "$ACTIVITY_RESULT" != "success" ]; then
+              echo "::notice::Resources set on production has failed. Exiting."
+              exit 1
+          else
+              echo "::notice::Resources set on production successful."
+          fi
+      - name: "[merge] 6. Test: production URLS & endpoint data."
+        run: |
+          cd $TEST_PROJECT_LOCALDIR
+          TEST_PROJECT_PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+          STATUS=$(curl --silent --head $TEST_PROJECT_PROD_URL_FRONTEND | awk '/^HTTP/{print $2}')
+          if [ "$STATUS" != "200" ]; then
+              echo "::notice::Frontend deployment did not succeed. Exiting."
+              exit 1
+          else
+              echo "::notice::Frontend deployment successful."
+          fi
+
+          TEST_PROJECT_PROD_URL_BACKEND=$TEST_PROJECT_PROD_URL_FRONTEND$TEST_PROJECT_BACKEND_PATH
+          STATUS=$(curl --silent --head $TEST_PROJECT_PROD_URL_BACKEND | awk '/^HTTP/{print $2}')
+          if [ "$STATUS" != "200" ]; then
+              echo "::notice::Backend deployment did not succeed. Exiting."
+              exit 1
+          else
+              echo "::notice::Backend deployment successful."
+          fi
+
+          EXPECTED_STATUS="redis"
+          STATUS_DATA=$(curl -s $TEST_PROJECT_PROD_URL_BACKEND | jq -r '.session_storage')
+          if [ "$STATUS_DATA" != "$EXPECTED_STATUS" ]; then
+              echo "::notice::Backend data session_storage is not the expected value ($EXPECTED_STATUS/$STATUS_DATA). Exiting."
+              exit 1
+          else
+              echo "::notice::Backend data session_storage as expected."
+          fi
+
+          EXPECTED_STATUS="production"
+          STATUS_DATA=$(curl -s $TEST_PROJECT_PROD_URL_BACKEND | jq -r '.type')
+          if [ "$STATUS_DATA" != "$EXPECTED_STATUS" ]; then
+              echo "::notice::Backend data environment type is not the expected value ($EXPECTED_STATUS/$STATUS_DATA). Exiting."
+              exit 1
+          else
+              echo "::notice::Backend data environment type as expected."
+          fi
+
+      ################################################################################################
+      # # G. Cleanup.
+      # - name: "[CLEANUP] 1. Delete project."
+      #   run: |
+      #     sleep 30
+      #     echo "::notice::Cleaning up after successful run."
+      #     TEST_PROJECT_ID=$(upsun project:list -o "$TEST_ORG_NAME" --title "$TEST_PROJECT_TITLE" --pipe)
+      #     echo "::notice::Deleting project: ${TEST_PROJECT_ID}"
+      #     upsun project:delete -p $TEST_PROJECT_ID -y
