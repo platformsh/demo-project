@@ -1,8 +1,4 @@
 node_modules
 https:
-upsun-demo
-commands.yaml
-wait.sh
-auto.sh
-pretty.yaml
 http:
+upsun-demo
