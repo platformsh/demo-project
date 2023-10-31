@@ -5,6 +5,10 @@ on:
     branches:
     - main 
 
+env:
+    MAX_HIGH: 0
+    MAX_CRITICAL: 0
+
 jobs:
   build:
 
@@ -12,20 +16,76 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x, 20.x]
+        # These versions match Upsun support
+        #   Node.js: https://docs.upsun.com/languages/nodejs.html#supported-versions
+        node-version: [16.x, 18.x, 20.x]
+        #   Python: https://docs.upsun.com/languages/python.html#supported-versions
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      ################################################################################################
+      # A. Setup workflow.
+      - name: "1. Retrieve local files."
+        uses: actions/checkout@v4
+        with:
+            ref: ${{ github.event.pull_request.head.sha }}
+      - name: "2. Set up Node.js."
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: actions/setup-python@v4 
+      - name: "3. Python."
+        uses: actions/setup-python@v4 
         with:
-          python-version: '3.11'
+          python-version: ${{ matrix.python-version }}
           cache: 'pip'
-      - run: |
+
+      ################################################################################################
+      # B. Test repo.
+      - name: "4. Run Frontend tests."
+        run: |
+          echo "::notice::Running react-scripts tests."
           export CI=true
           npm install cross-env npm-run-all -g
           npm install
           npm run test
+
+      ################################################################################################
+      # C. Ensure no vulnerabilities.
+      - name: "5. Test: there should be no Python vulnerabilities."
+        run: |
+          echo "::notice::Checking for vulnerabilities in backend Python app dependencies."
+          cd backend
+          python3 -m venv env
+          source env/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          # pip-audit will exit 1 if vulnerabilities found (https://github.com/pypa/pip-audit#exit-codes)
+          pip-audit -r requirements.txt
+      - name: "6. Test: there should be no HIGH Node.js vulnerabilities."
+        run: |
+          echo "::notice::Checking for high vulnerabilities in frontend Node.js app dependencies."
+          cd frontend
+          export CI=true
+          HIGH_VULN_ALLOWED=${{ env.MAX_HIGH }}
+          HIGH_VULN=$(npm audit --json | jq '.metadata.vulnerabilities.high')
+          if [ "$HIGH_VULN" -gt "$HIGH_VULN_ALLOWED" ]; then
+              echo "::error::NPM HIGH vulnerabilities exceed allowed budget."
+              npm audit
+              exit 1
+          else
+              echo "::notice::No HIGH vulnerabilities found on frontend app."
+          fi
+      - name: "7. Test: there should be no CRITICAL Node.js vulnerabilities."
+        run: |
+          echo "::notice::Checking for critical vulnerabilities in frontend Node.js app dependencies."
+          cd frontend
+          export CI=true
+          CRITICAL_VULN_ALLOWED=${{ env.MAX_CRITICAL }}
+          CRITICAL_VULN=$(npm audit --json | jq '.metadata.vulnerabilities.high')
+          if [ "$CRITICAL_VULN" -gt "$CRITICAL_VULN_ALLOWED" ]; then
+              echo "::error::NPM CRITICAL vulnerabilities exceed allowed budget."
+              npm audit
+              exit 1
+          else
+              echo "::notice::No CRITICAL vulnerabilities found on frontend app."
+          fi
