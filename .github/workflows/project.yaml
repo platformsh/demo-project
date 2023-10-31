@@ -257,8 +257,10 @@ jobs:
             - name: "[environment_branch] 4. Test: Creating staging env should result in a 200 on the frontend staging app." 
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
+                  sleep 2
                   EXPECTED_STATUS="200"
                   STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  echo $STAG_URL_FRONTEND
                   ./utils/tests/url_status.sh $STAG_URL_FRONTEND $EXPECTED_STATUS "staging frontend deployment (environment_branch)"
             - name: "[environment_branch] 5. Test: Creating staging env should result in a 200 on the backend staging app."
               working-directory: ${{ env.PROJECT_LOCALDIR }}

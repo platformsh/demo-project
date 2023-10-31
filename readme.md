@@ -1,16 +1,8 @@
-<h1 align="center">Try Upsun today!</h1>
-
-<!-- <p align="center">
-<strong>Contribute, request a feature, or check out our resources</strong>
-<br />
-<br />
-<a href="https://community.platform.sh"><strong>Join our community</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-<a href="https://docs.platform.sh"><strong>Documentation</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-<a href="https://platform.sh/blog"><strong>Blog</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-<a href="https://github.com/platformsh-templates/drupal9/issues/new?assignees=&labels=bug&template=bug_report.yml"><strong>Report a bug</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-<a href="https://github.com/platformsh-templates/drupal9/issues/new?assignees=&labels=feature+request&template=improvements.yml"><strong>Request a feature</strong></a>
-<br /><br />
-</p> -->
+<p align="center">
+<a href="https://www.upsun.com/">
+<img src="utils/logo.svg" width="500px">
+</a>
+</p>
 
 <p align="center">
 <a href="https://github.com/platformsh/demo-project/issues">
@@ -24,7 +16,39 @@
 </a>&nbsp&nbsp
 <br /><br />
 
-This is a simple demo project meant to take a user on a bit of a product tour. 
+<p align="center">
+<strong>Contribute, request a feature, or check out our resources</strong>
+<br />
+<br />
+<!-- <a href="https://community.platform.sh"><strong>Join our community</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp -->
+<a href="https://upsun.com/"><strong>Website</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://upsun.com/features/"><strong>Features</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://docs.upsun.com"><strong>Documentation</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://upsun.com/pricing/"><strong>Pricing</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://upsun.com/blog/"><strong>Blog</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<br /><br />
+</p>
+
+<h2 align="center">Try the Upsun demo</h2>
+
+## About
+
+This is a simple demo project meant to take users through a product tour of Upsun.
+
+## Getting started
+
+If you already have access to Upsun:
+
+- Visit the Upsun Console (https://console.upsun.com/projects/create-project) to create a new project
+- Create or select an organization to run the demo on
+- Click **Explore Upsun** to start the demo
+
+> [!NOTE]
+> Upsun is currently in [beta](https://upsun.com/register/), but will become more available in the coming year. 
+>
+> You can find more information about Upsun, how it [relates to Platform.sh](https://upsun.com/blog/upsun-origin-story/), [notable features](https://upsun.com/features/), and [pricing](https://upsun.com/pricing/) on our website.
+> 
+> If you'd like to sign up for early access to Upsun, [register on our website](https://upsun.com/register/). 
 
 ## Resume the demo
 
@@ -89,116 +113,11 @@ If for some reason you close your browser and lose your place, however, you can 
 
 Welcome to Upsun!
 
-## Testing the demo on Upsun
+## Contributing
 
-### Part 1: Replicating what is provided in Console
+Checkout the [Contributing guide](CONTRIBUTING.md) guide for more details.
 
-1. Clone the repository, and create an organization and a project on Upsun we'll deploy it to:
-
-- ```
-  git clone git@github.com:platformsh/demo-project.git upsun-demo && cd upsun-demo
-  ```
-- ```
-  upsun organization:create --label "Upsun Testing" --name upsun-testing
-  ```
-- ```
-  upsun create --org upsun-testing --title "Upsun demo" --region "org.recreation.plat.farm" --plan flexible --default-branch main --no-set-remote -y
-  ```
-
-2. Set the remote for the project, and first push:
-
-- ```
-  PROJECT_ID=$(upsun project:list --title "Upsun demo" --pipe)
-  ```
-- ```
-  upsun project:set-remote $PROJECT_ID
-  ```
-- ```
-  upsun push -y
-  ```
-
-> [!IMPORTANT]
-> This first push will take a moment to build _and_ will fail.
-> This is expected, so follow the next step (3) to setup the initial resources.
-
-3. Configure resources for production, and verify the deployment:
-
-- ```
-  upsun resources:set --size '*:1'
-  ```
-- ```
-  upsun url --primary
-  ```
-
-### Part 2: Listing what is described within the Demo Project
-
-The steps below are provided for you within the deployed environment.
-They are listed here just in case you get lost.
-
-1. Create a staging (preview) environment:
-
-- ```
-  upsun branch staging --type staging
-  ```
-- ```
-  upsun url --primary
-  ```
-
-2. Push a Redis service
-
-  Uncomment the `backend.relationships` and `services` block in `.upsun/config.yaml`, so it looks like the following:
-
-  ```yaml
-  #####################################################################################
-  # Step 3: Add a service. Uncomment this section.
-  #####################################################################################
-          relationships:
-              redis_session: "redis_persistent:redis"
-
-  services:
-    redis_persistent:
-        type: "redis-persistent:7.0"
-  #####################################################################################
-  ```
-
-  Commit that change, push, and define resources for the change:
-
-  - ```
-    git commit -am 'Add Redis service and relationship.'
-    ```
-  - ```
-    upsun push
-    ```
-  - ```
-    upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
-    ```
-
-3. Merge the preview environment into production:
-
-- ```
-  git checkout main
-  ```
-- ```
-  upsun merge staging
-  ```
-- ```
-  upsun resources:set --size redis_persistent:0.5 --disk redis_persistent:512
-  ```
-
-> [!IMPORTANT]
-> Post-merge, you _do_ need to _redefine_ resources for Redis on the production environment, as shown above.
-
-4. Scale the backend app container (Python):
-
-- ```
-  upsun resources:set --count backend:3
-  ```
-
-> [!IMPORTANT]
-> This final change should produce a "Demo complete" page to the user.
-> The transition is still in testing for reliability. 
-
-## Using this project locally
+### Running this project locally
 
 There is a root package `@platformsh/demo-project` that controls both the backend and frontend app setup.
 NPM is required. 
