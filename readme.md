@@ -21,8 +21,11 @@
 <br />
 <br />
 <!-- <a href="https://community.platform.sh"><strong>Join our community</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp -->
+<a href="https://upsun.com/"><strong>Website</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://upsun.com/features/"><strong>Features</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 <a href="https://docs.upsun.com"><strong>Documentation</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-<a href="https://upsun.com/blog"><strong>Blog</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://upsun.com/pricing/"><strong>Pricing</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<a href="https://upsun.com/blog/"><strong>Blog</strong></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 <br /><br />
 </p>
 
@@ -33,8 +36,6 @@
 This is a simple demo project meant to take users through a product tour of Upsun.
 
 ## Getting started
-
-Upsun is currently in [beta](https://upsun.com/register/), but will become more available in the coming year. 
 
 If you already have access to Upsun:
 
