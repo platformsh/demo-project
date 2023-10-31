@@ -81,10 +81,11 @@ routes:
     "https://{default}/":
         id: frontend
         type: upstream
+        primary: true
         upstream: "frontend:http"
 
     "https://www.{default}":
-        id: www-redirect
+        id: frontend-redirect
         type: redirect
         to: "https://{default}/"
 
