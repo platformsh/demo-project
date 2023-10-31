@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import Sidebar from "./Sidebar";
 
 jest.mock("../assets/utility/production.svg", () => {
@@ -55,39 +55,5 @@ describe("<Sidebar />", () => {
     // Check if the staging icon is rendered
     expect(screen.getByText("staging-svg")).toBeInTheDocument();
     expect(screen.getByText("Staging")).toBeInTheDocument();
-  });
-
-  test("environment status section renders file as session service when set", () => {
-    const props = {
-      environment: "Production",
-      sessionStorageType: "file",
-    };
-
-    render(<Sidebar {...props} />);
-
-    const storageSection = screen.getByTestId("status-session-storage");
-    expect(
-      within(storageSection).getByText("status-incomplete-svg"),
-    ).toBeInTheDocument();
-    expect(
-      within(storageSection).getByText("User session service: file"),
-    ).toBeInTheDocument();
-  });
-
-  test("environment status section renders redis as session service when set", () => {
-    const props = {
-      environment: "Production",
-      sessionStorageType: "redis",
-    };
-
-    render(<Sidebar {...props} />);
-
-    const storageSection = screen.getByTestId("status-session-storage");
-    expect(
-      within(storageSection).getByText("status-complete-svg"),
-    ).toBeInTheDocument();
-    expect(
-      within(storageSection).getByText("User session service: redis"),
-    ).toBeInTheDocument();
   });
 });

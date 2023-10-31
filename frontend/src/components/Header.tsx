@@ -12,10 +12,7 @@ function Header() {
             title="Powered by Upsun"
           />
           <span className="hidden md:inline-block font-sans-strong text-sm font-medium">
-            Demo project
-          </span>
-          <span className="hidden md:inline-block font-sans-strong text-sm font-normal pl-[1.5rem] pr-[1.125rem] border-l-[1px] border-upsun-black-900">
-            Powered by Platform.sh
+            Demo Guide Project
           </span>
         </div>
         <div className="pull-right">
@@ -24,10 +21,7 @@ function Header() {
       </div>
       <div className="w-full md:hidden pt-3">
         <span className="font-sans-strong text-sm font-medium">
-          Demo project
-        </span>
-        <span className="font-sans-strong text-sm font-normal pl-[1.5rem] pr-[1.125rem] border-l-[1px] border-upsun-black-900">
-          Powered by Platform.sh
+          Demo Guide Project
         </span>
       </div>
     </header>
