@@ -1,0 +1,30 @@
+{
+    "first_deploy": {
+        "user": {
+            "clone": "git clone git@github.com:platformsh/demo-project.git",
+            "set_remote": "upsun project:set-remote",
+            "push": "upsun push",
+            "resources_set": "upsun resources:set --size '*:0.1'",
+            "get_url": "upsun url --primary"
+        }
+    },
+    "error": {
+        "user": {
+            "get_logs": "upsun environment:log"
+        }
+    },
+    "branch": {
+        "user": {
+            "branch": "upsun branch staging --type staging",
+            "get_url": "upsun url --primary"
+        },
+        "test": {
+            "branch": "upsun branch staging --type staging",
+            "get_url": "upsun url --primary"
+        }
+    },
+    "redis": false,
+    "merge-production": false,
+    "scale": false,
+    "complete": false
+}

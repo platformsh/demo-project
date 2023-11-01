@@ -15,7 +15,10 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import FeatureStep from "./components/FeatureStep";
 import { CodeBlock, dracula } from "react-code-blocks";
-import CopyBlock from "react-code-blocks/dist/components/CopyBlock";
+
+import { PROJECT_ID } from "./config";
+
+import commands from "./commands.json";
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>(null);
@@ -109,9 +112,6 @@ services:
         <p className="mt-2 mb-2">
           {" "}
           There was an error fetching data from your Python backend at{" "}
-          {/* <code className="px-2 py-1">
-            {API_BASE_URL}/{ENVIRONMENT_PATH}
-          </code> */}
         </p>
         <p>
         <code className="px-2 py-1">
@@ -123,7 +123,7 @@ services:
           Please check your app logs using{" "}
         </p>
         <p>
-        <code className="px-2 py-1">upsun environment:log</code>
+        <code className="px-2 py-1">{commands.error.user.get_logs}</code>
         </p>
       </ErrorPage>
     );
@@ -141,9 +141,6 @@ services:
           />
           <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
             <div ref={welcomeMessage} className="content-intro sm:w-3/4 mx-auto mt-6 mb-12">
-              {/* <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
-                Welcome to your Upsun Demo Guide project, a Python and Node.js multiapp designed to run on Upsun and teach you about its unique features.
-              </div> */}
               <div className="aside-title flex flex-row gap-4 items-center mb-2">
                 {environment?.toLowerCase() === "production" ? (
                   <ProductionIcon className="w-[32px] h-[32px]" />
@@ -174,11 +171,11 @@ services:
                       <ul className="list-disc list-inside">
                         <li className="mt-2 ml-6">Created a <em>project</em>, the Upsun counterpart to a <em>repository</em>.</li>
                         <li className="mt-2 ml-6">Installed the Upsun CLI</li>
-                        <li className="mt-2 ml-6">Cloned the demo: <code className="ml-2 px-4">git clone git@github.com:platformsh/demo-project.git</code></li>
-                        <li className="mt-2 ml-6">Connected to Upsun: <code className="ml-2 px-4">upsun project:set-remote {process.env.REACT_APP_PROJECT_ID}</code></li>
-                        <li className="mt-2 ml-6">Pushed to Upsun: <code className="ml-2 px-4">upsun push</code></li>
-                        <li className="mt-2 ml-6">Defined deployment resources: <code className="ml-2 px-4">upsun resources:set --size '*:0.1'</code></li>
-                        <li className="mt-2 ml-6">Retrieved the deployed environment URL: <code className="ml-2 px-4">upsun url --primary</code></li>
+                        <li className="mt-2 ml-6">Cloned the demo: <code className="ml-2 px-4">{commands.first_deploy.user.clone}</code></li>
+                        <li className="mt-2 ml-6">Connected to Upsun: <code className="ml-2 px-4">{commands.first_deploy.user.set_remote} {PROJECT_ID}</code></li>
+                        <li className="mt-2 ml-6">Pushed to Upsun: <code className="ml-2 px-4">{commands.first_deploy.user.push}</code></li>
+                        <li className="mt-2 ml-6">Defined deployment resources: <code className="ml-2 px-4">{commands.first_deploy.user.resources_set}</code></li>
+                        <li className="mt-2 ml-6">Retrieved the deployed environment URL: <code className="ml-2 px-4">{commands.first_deploy.user.get_url}</code></li>
                       </ul>
                     </div>
                     <p className="mb-2">
@@ -210,10 +207,10 @@ services:
                       <li className="">
                         <p className="mb-2 mt-2">
                           <span>Create environment</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun branch staging --type staging">
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.branch.user.branch}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text="upsun branch staging --type staging"
+                                text={commands.branch.user.branch}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
