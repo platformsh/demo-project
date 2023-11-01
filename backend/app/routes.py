@@ -11,7 +11,7 @@ API_PREFIX = '/api/v1'
 def environment():
     return jsonify(type=getPlatformEnvironment(), session_storage=getSessionStorageType())
 
-@bp.route('/')
+@bp.route('/api')
 def home():
     return "Hello from the Python backend!"
 
