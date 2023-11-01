@@ -14,6 +14,12 @@ function Header() {
           <span className="hidden md:inline-block font-sans-strong text-sm font-medium">
             Demo Guide Project
           </span>
+          <span className="hidden md:inline-block font-sans-strong text-sm font-medium">
+            |
+          </span>
+          <span className="hidden md:inline-block font-sans-strong text-sm font-medium">
+            Powered by Platform.sh
+          </span>
         </div>
         <div className="pull-right">
           <ShareButton />

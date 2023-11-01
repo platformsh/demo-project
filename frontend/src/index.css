@@ -16,6 +16,8 @@
 @layer base {
     body {
       @apply bg-black text-default text-sm font-sans-soft;
+      font-size: 14px;
+      line-height: 24px;
     }
     h1 {
       @apply font-bold
@@ -32,7 +34,7 @@
     }
 
     code {
-      @apply p-0 font-mono inline-flex justify-center items-center rounded-md bg-upsun-black-800 text-xs text-upsun-yellow-400 leading-5
+      @apply p-0 font-mono inline-flex justify-center items-center rounded-md bg-black text-xs text-upsun-yellow-400 leading-5
     }
 
     .TooltipContent {
@@ -46,6 +48,10 @@
 
     .is-disabled {
       @apply select-none pointer-events-none opacity-25
+    }
+
+    .is-disabled:hover {
+      @apply opacity-100
     }
 
     .code-block > span > code {

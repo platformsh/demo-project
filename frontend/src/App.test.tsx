@@ -122,7 +122,7 @@ describe("<App />", () => {
     ).not.toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("3. Add a Redis service").parentElement?.parentElement,
+      screen.getByText("3. Add Redis to staging").parentElement?.parentElement,
     ).toHaveClass("is-disabled");
 
     expect(
@@ -158,7 +158,7 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("3. Add a Redis service").parentElement?.parentElement,
+      screen.getByText("3. Add Redis to staging").parentElement?.parentElement,
     ).not.toHaveClass("is-disabled");
 
     expect(
@@ -196,7 +196,7 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("3. Add a Redis service").parentElement?.parentElement,
+      screen.getByText("3. Add Redis to staging").parentElement?.parentElement,
     ).toHaveClass("is-disabled");
 
     expect(
@@ -234,7 +234,7 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("3. Add a Redis service").parentElement?.parentElement,
+      screen.getByText("3. Add Redis to staging").parentElement?.parentElement,
     ).toHaveClass("is-disabled");
 
     expect(

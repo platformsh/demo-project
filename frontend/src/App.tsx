@@ -5,6 +5,9 @@ import { ReactComponent as DoneIcon } from "./assets/utility/done.svg";
 import { ReactComponent as MergeIcon } from "./assets/utility/merge.svg";
 import { ReactComponent as BranchIcon } from "./assets/utility/branch.svg";
 
+import { ReactComponent as ProductionIcon } from "./assets/utility/production.svg";
+import { ReactComponent as StagingIcon } from "./assets/utility/staging.svg";
+
 import CopyButton from "./components/CopyButton";
 import { API_BASE_URL } from "./config";
 import ErrorPage from "./page/ErrorPage";
@@ -12,6 +15,10 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import FeatureStep from "./components/FeatureStep";
 import { CodeBlock, dracula } from "react-code-blocks";
+
+import { PROJECT_ID } from "./config";
+
+import commands from "./commands.json";
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>(null);
@@ -102,17 +109,21 @@ services:
   if (fatalErrorMessage)
     return (
       <ErrorPage header="We cannot fetch your data">
-        <p className="mb-2">
+        <p className="mt-2 mb-2">
           {" "}
           There was an error fetching data from your Python backend at{" "}
-          <code className="px-2 py-1">
+        </p>
+        <p>
+        <code className="px-2 py-1">
             {API_BASE_URL}/{ENVIRONMENT_PATH}
           </code>
         </p>
-        <p className="">
+        <p className="mt-2 mb-2">
           {" "}
           Please check your app logs using{" "}
-          <code className="px-2 py-1">upsun environment:log</code>
+        </p>
+        <p>
+        <code className="px-2 py-1">{commands.error.user.get_logs}</code>
         </p>
       </ErrorPage>
     );
@@ -129,9 +140,14 @@ services:
             sessionStorageType={sessionStorageType}
           />
           <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
-            <div ref={welcomeMessage} className="content-intro sm:w-3/4 mx-auto mt-12 mb-12">
-              <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
-                Welcome to your Upsun Demo Guide project, a Python and Node.js multiapp designed to run on Upsun and teach you about its unique features.
+            <div ref={welcomeMessage} className="content-intro sm:w-3/4 mx-auto mt-6 mb-12">
+              <div className="aside-title flex flex-row gap-4 items-center mb-2">
+                {environment?.toLowerCase() === "production" ? (
+                  <ProductionIcon className="w-[32px] h-[32px]" />
+                ) : (
+                  <StagingIcon className="w-[32px] h-[32px]" />
+                )}
+                <h1 className="text-xl">{environment}</h1>
               </div>
 
               {currentStepProgress < 3 && <EnvironmentIntroduction environment={environment} />}
@@ -155,11 +171,11 @@ services:
                       <ul className="list-disc list-inside">
                         <li className="mt-2 ml-6">Created a <em>project</em>, the Upsun counterpart to a <em>repository</em>.</li>
                         <li className="mt-2 ml-6">Installed the Upsun CLI</li>
-                        <li className="mt-2 ml-6">Cloned the demo: <code className="ml-2 px-4">git clone git@github.com:platformsh/demo-project.git</code></li>
-                        <li className="mt-2 ml-6">Connected to Upsun: <code className="ml-2 px-4">upsun project:set-remote {process.env.REACT_APP_PROJECT_ID}</code></li>
-                        <li className="mt-2 ml-6">Pushed to Upsun: <code className="ml-2 px-4">upsun push</code></li>
-                        <li className="mt-2 ml-6">Defined deployment resources: <code className="ml-2 px-4">upsun resources:set --size '*:0.1'</code></li>
-                        <li className="mt-2 ml-6">Retrieved the deployed environment URL: <code className="ml-2 px-4">upsun url --primary</code></li>
+                        <li className="mt-2 ml-6">Cloned the demo: <code className="ml-2 px-4">{commands.first_deploy.user.clone}</code></li>
+                        <li className="mt-2 ml-6">Connected to Upsun: <code className="ml-2 px-4">{commands.first_deploy.user.set_remote} {PROJECT_ID}</code></li>
+                        <li className="mt-2 ml-6">Pushed to Upsun: <code className="ml-2 px-4">{commands.first_deploy.user.push}</code></li>
+                        <li className="mt-2 ml-6">Defined deployment resources: <code className="ml-2 px-4">{commands.first_deploy.user.resources_set}</code></li>
+                        <li className="mt-2 ml-6">Retrieved the deployed environment URL: <code className="ml-2 px-4">{commands.first_deploy.user.get_url}</code></li>
                       </ul>
                     </div>
                     <p className="mb-2">
@@ -184,17 +200,17 @@ services:
                       bugfixes.
                     </p>
                     <p className="mb-2">
-                      Before you make your first revision, let's create a new preview environment called <code className="px-2">staging</code>.
+                      Before you make your first revision, let's create a new preview environment called <strong>Staging</strong>.
                     </p>
                     <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
                       <li className="">
                         <p className="mb-2 mt-2">
                           <span>Create environment</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun branch staging --type staging">
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.branch.user.branch}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text="upsun branch staging --type staging"
+                                text={commands.branch.user.branch}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -207,10 +223,10 @@ services:
                           <span>
                             Once deployed, open environment in browser
                           </span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun url --primary">
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.branch.user.get_url}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text="upsun url --primary"
+                                text={commands.branch.user.get_url}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -227,7 +243,7 @@ services:
                   data-testid="add-redis"
                   ref={stepCreateService}
                   icon={<RedisIcon className="w-10 h-10" />}
-                  title={"3. Add a Redis service"}
+                  title={"3. Add Redis to staging"}
                   isDisabled={currentStep !== "redis"}
                   hideContent={currentStepProgress < 2}
                 >
@@ -251,17 +267,31 @@ services:
                             language='yaml'
                             showLineNumbers={true}
                             theme={dracula}
-                            startingLineNumber={66}
+                            startingLineNumber={67}
                           />
                         </p>
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
-                          <span>Commit and push</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={`git commit -am "Create a redis service"\nupsun push`}>
+                          <span>Commit</span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.redis.user.commit}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={`git commit -am "Create a redis service"\nupsun push`}
+                                text={commands.redis.user.commit}
+                                showLineNumbers={false}
+                                theme={dracula}
+                              />
+                            </p>
+                          </CopyButton>
+                        </p>
+                      </li>
+                      <li>
+                        <p className="mb-2 mt-2">
+                          <span>Push</span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.redis.user.push}>
+                            <p className="mb-2 mt-2 code-block">
+                              <CodeBlock
+                                text={commands.redis.user.push}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -272,10 +302,10 @@ services:
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Allocate Redis resources</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={`upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512`}>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.redis.user.push}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={`upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512`}
+                                text={commands.redis.user.resources_set}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -320,10 +350,10 @@ services:
                       <li>
                         <p className="mb-2">
                           <span>Deploy staging changes to production</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun merge staging">
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge_production"].user.merge}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text="upsun merge staging"
+                                text={commands["merge_production"].user.merge}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -337,10 +367,10 @@ services:
                         </p>
                         <p className="mb-2 mt-2">
                           <span>Allocate resources to Redis in production.</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={`upsun resources:set \\\n\t--size redis_persistent:0.1 \\\n\t--disk redis_persistent:512 \\\n\t-e main`}>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge_production"].user.resources_set}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={`upsun resources:set \\\n\t--size redis_persistent:0.1 \\\n\t--disk redis_persistent:512 \\\n\t-e main`}
+                                text={commands["merge_production"].user.resources_set}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -351,10 +381,10 @@ services:
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Open production frontend in your browser</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun url --primary -e main">
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge_production"].user.get_url}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text="upsun url --primary -e main"
+                                text={commands["merge_production"].user.get_url}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -382,10 +412,10 @@ services:
                     </p>
                     <p className="mb-2 mt-5">
                       <span>Delete this project when ready using:</span>
-                      <CopyButton className="pl-1 inline-block w-full" copyText="upsun project:delete">
+                      <CopyButton className="pl-1 inline-block w-full" copyText={commands.complete.user.delete_project}>
                         <p className="mb-2 mt-2 code-block">
                           <CodeBlock
-                            text="upsun project:delete"
+                            text={commands.complete.user.delete_project}
                             showLineNumbers={false}
                             theme={dracula}
                           />
@@ -398,7 +428,7 @@ services:
                         <a href="https://docs.upsun.com/get-started.html">Migrate your application</a>
                       </li>
                       <li className="mt-2">
-                        Share your thoughts and connect with us <a href="https://docs.upsun.com/learn/overview/get-support.html#community">on Discord</a>.
+                        Share your thoughts and connect with us on Discord.
                       </li>
                       <li className="mt-2">
                         Explore Upsun's <a href="https://docs.upsun.com/manage-resources.html#horizontal-scaling">horizontal scalability features</a>.
@@ -428,6 +458,7 @@ const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({
   if (environment === null) return <></>;
 
   return (
+    <div className={`rounded-lg mt-4 p-4 bg-upsun-black-900`}>
     <>
       {environment && environment.toLocaleLowerCase() === "production" ? (
         <ProductionIntroduction />
@@ -435,21 +466,21 @@ const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({
         <StagingIntroduction />
       )}
     </>
+    </div>
   );
 };
 
 const ProductionIntroduction = () => {
   return (
     <>
-      <p className="text-sm leading-6 mt-6 mb-4 text-lg font-bold">
+      <p className="text-sm leading-6 text-lg mb-2">
         Congrats! You’ve deployed the Upsun Demo Guide project to a production environment 🎉
       </p>
-      <p className="text-sm leading-6 mt-2">
+      <p className="text-sm leading-6">
         This app is the React frontend of your demo project’s production
         environment, which is associated with the default branch of the repository: <code className="px-2 py-1">main</code>.
         With it now deployed, we can add features, services, and runtimes in preview environments -
-        which are byte-for-byte copies of production.<br /><br />
-        Follow the steps below to get started!
+        which are byte-for-byte copies of production.
       </p>
     </>
   );
@@ -458,20 +489,20 @@ const ProductionIntroduction = () => {
 const StagingIntroduction = () => {
   return (
     <>
-      <p className="text-sm leading-6 mt-6 mb-4 text-lg font-bold">
+      <p className="text-sm leading-6 text-lg mb-2">
         Congrats! You’ve created your staging environment 🎉
       </p>
-      <p className="text-sm leading-6 mt-2">
+      <p className="text-sm leading-6">
         This space represents your byte-for-byte copy of production. You can use
         staging and development environments to preview and share changes prior
         to pushing them to production.
       </p>
-      <p className="text-sm leading-6 mt-2">
+      <p className="text-sm leading-6">
         This app uses the Upsun environment variable{" "}
         <code className="px-2 py-1">$PLATFORM_ENVIRONMENT="staging"</code> to
         modify the content of this page.
       </p>
-      <p className="text-sm leading-6 mt-2">
+      <p className="text-sm leading-6">
         Return to the steps below to continue adding your Redis service.
       </p>
     </>
