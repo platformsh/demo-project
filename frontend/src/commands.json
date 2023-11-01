@@ -1,7 +1,8 @@
 {
-    "test": {
+    "test": false,
+    "error": {
         "user": {
-            "list": "git clone -b $DEFAULT_BRANCH https://github.com/platformsh/demo-project.git $PROJECT_LOCALDIR"
+            "get_logs": "upsun environment:log"
         }
     },
     "first_deploy": {
@@ -15,11 +16,6 @@
         "test": {
             "clone": "git clone -b $DEFAULT_BRANCH https://github.com/platformsh/demo-project.git $PROJECT_LOCALDIR",
             "push": "git push --force upsun $DEFAULT_BRANCH"
-        }
-    },
-    "error": {
-        "user": {
-            "get_logs": "upsun environment:log"
         }
     },
     "branch": {
