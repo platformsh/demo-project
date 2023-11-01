@@ -5,6 +5,9 @@ import { ReactComponent as DoneIcon } from "./assets/utility/done.svg";
 import { ReactComponent as MergeIcon } from "./assets/utility/merge.svg";
 import { ReactComponent as BranchIcon } from "./assets/utility/branch.svg";
 
+import { ReactComponent as ProductionIcon } from "./assets/utility/production.svg";
+import { ReactComponent as StagingIcon } from "./assets/utility/staging.svg";
+
 import CopyButton from "./components/CopyButton";
 import { API_BASE_URL } from "./config";
 import ErrorPage from "./page/ErrorPage";
@@ -12,6 +15,7 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import FeatureStep from "./components/FeatureStep";
 import { CodeBlock, dracula } from "react-code-blocks";
+import CopyBlock from "react-code-blocks/dist/components/CopyBlock";
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>(null);
@@ -102,17 +106,24 @@ services:
   if (fatalErrorMessage)
     return (
       <ErrorPage header="We cannot fetch your data">
-        <p className="mb-2">
+        <p className="mt-2 mb-2">
           {" "}
           There was an error fetching data from your Python backend at{" "}
-          <code className="px-2 py-1">
+          {/* <code className="px-2 py-1">
+            {API_BASE_URL}/{ENVIRONMENT_PATH}
+          </code> */}
+        </p>
+        <p>
+        <code className="px-2 py-1">
             {API_BASE_URL}/{ENVIRONMENT_PATH}
           </code>
         </p>
-        <p className="">
+        <p className="mt-2 mb-2">
           {" "}
           Please check your app logs using{" "}
-          <code className="px-2 py-1">upsun environment:log</code>
+        </p>
+        <p>
+        <code className="px-2 py-1">upsun environment:log</code>
         </p>
       </ErrorPage>
     );
@@ -129,9 +140,17 @@ services:
             sessionStorageType={sessionStorageType}
           />
           <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
-            <div ref={welcomeMessage} className="content-intro sm:w-3/4 mx-auto mt-12 mb-12">
-              <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
+            <div ref={welcomeMessage} className="content-intro sm:w-3/4 mx-auto mt-6 mb-12">
+              {/* <div className="welcome-message flex p-4 justify-center items-center space-x-2.5 rounded-md border border-upsun-violet-600 bg-upsun-violet-900 font-mono text-xs leading-6 ">
                 Welcome to your Upsun Demo Guide project, a Python and Node.js multiapp designed to run on Upsun and teach you about its unique features.
+              </div> */}
+              <div className="aside-title flex flex-row gap-4 items-center mb-2">
+                {environment?.toLowerCase() === "production" ? (
+                  <ProductionIcon className="w-[32px] h-[32px]" />
+                ) : (
+                  <StagingIcon className="w-[32px] h-[32px]" />
+                )}
+                <h1 className="text-xl">{environment}</h1>
               </div>
 
               {currentStepProgress < 3 && <EnvironmentIntroduction environment={environment} />}
@@ -184,7 +203,7 @@ services:
                       bugfixes.
                     </p>
                     <p className="mb-2">
-                      Before you make your first revision, let's create a new preview environment called <code className="px-2">staging</code>.
+                      Before you make your first revision, let's create a new preview environment called <strong>Staging</strong>.
                     </p>
                     <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
@@ -227,7 +246,7 @@ services:
                   data-testid="add-redis"
                   ref={stepCreateService}
                   icon={<RedisIcon className="w-10 h-10" />}
-                  title={"3. Add a Redis service"}
+                  title={"3. Add Redis to staging"}
                   isDisabled={currentStep !== "redis"}
                   hideContent={currentStepProgress < 2}
                 >
@@ -398,7 +417,7 @@ services:
                         <a href="https://docs.upsun.com/get-started.html">Migrate your application</a>
                       </li>
                       <li className="mt-2">
-                        Share your thoughts and connect with us <a href="https://docs.upsun.com/learn/overview/get-support.html#community">on Discord</a>.
+                        Share your thoughts and connect with us on Discord.
                       </li>
                       <li className="mt-2">
                         Explore Upsun's <a href="https://docs.upsun.com/manage-resources.html#horizontal-scaling">horizontal scalability features</a>.
@@ -428,6 +447,7 @@ const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({
   if (environment === null) return <></>;
 
   return (
+    <div className={`rounded-lg mt-4 p-4 bg-upsun-black-900`}>
     <>
       {environment && environment.toLocaleLowerCase() === "production" ? (
         <ProductionIntroduction />
@@ -435,21 +455,21 @@ const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({
         <StagingIntroduction />
       )}
     </>
+    </div>
   );
 };
 
 const ProductionIntroduction = () => {
   return (
     <>
-      <p className="text-sm leading-6 mt-6 mb-4 text-lg font-bold">
+      <p className="text-sm leading-6 text-lg mb-2">
         Congrats! You’ve deployed the Upsun Demo Guide project to a production environment 🎉
       </p>
-      <p className="text-sm leading-6 mt-2">
+      <p className="text-sm leading-6">
         This app is the React frontend of your demo project’s production
         environment, which is associated with the default branch of the repository: <code className="px-2 py-1">main</code>.
         With it now deployed, we can add features, services, and runtimes in preview environments -
-        which are byte-for-byte copies of production.<br /><br />
-        Follow the steps below to get started!
+        which are byte-for-byte copies of production.
       </p>
     </>
   );

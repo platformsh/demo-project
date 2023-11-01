@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { ReactComponent as Unavailable } from "../assets/utility/unavailable.svg";
+import { ReactComponent as Unavailable } from "../assets/utility/unavailable_v2.svg";
 import { ReactComponent as Logo } from "../assets/logo/upsun_horizontal.svg";
 
 interface ErrorPageProps {
