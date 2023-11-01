@@ -223,10 +223,10 @@ services:
                           <span>
                             Once deployed, open environment in browser
                           </span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun url --primary">
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.branch.user.get_url}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text="upsun url --primary"
+                                text={commands.branch.user.get_url}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -267,17 +267,31 @@ services:
                             language='yaml'
                             showLineNumbers={true}
                             theme={dracula}
-                            startingLineNumber={66}
+                            startingLineNumber={67}
                           />
                         </p>
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
-                          <span>Commit and push</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={`git commit -am "Create a redis service"\nupsun push`}>
+                          <span>Commit</span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.redis.user.commit}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={`git commit -am "Create a redis service"\nupsun push`}
+                                text={commands.redis.user.commit}
+                                showLineNumbers={false}
+                                theme={dracula}
+                              />
+                            </p>
+                          </CopyButton>
+                        </p>
+                      </li>
+                      <li>
+                        <p className="mb-2 mt-2">
+                          <span>Push</span>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.redis.user.push}>
+                            <p className="mb-2 mt-2 code-block">
+                              <CodeBlock
+                                text={commands.redis.user.push}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -288,10 +302,10 @@ services:
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Allocate Redis resources</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={`upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512`}>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.redis.user.push}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={`upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512`}
+                                text={commands.redis.user.resources_set}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -336,10 +350,10 @@ services:
                       <li>
                         <p className="mb-2">
                           <span>Deploy staging changes to production</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun merge staging">
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge-production"].user.merge}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text="upsun merge staging"
+                                text={commands["merge-production"].user.merge}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -353,10 +367,10 @@ services:
                         </p>
                         <p className="mb-2 mt-2">
                           <span>Allocate resources to Redis in production.</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={`upsun resources:set \\\n\t--size redis_persistent:0.1 \\\n\t--disk redis_persistent:512 \\\n\t-e main`}>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge-production"].user.resources_set}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={`upsun resources:set \\\n\t--size redis_persistent:0.1 \\\n\t--disk redis_persistent:512 \\\n\t-e main`}
+                                text={commands["merge-production"].user.resources_set}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -367,10 +381,10 @@ services:
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Open production frontend in your browser</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText="upsun url --primary -e main">
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge-production"].user.get_url}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text="upsun url --primary -e main"
+                                text={commands["merge-production"].user.get_url}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -398,10 +412,10 @@ services:
                     </p>
                     <p className="mb-2 mt-5">
                       <span>Delete this project when ready using:</span>
-                      <CopyButton className="pl-1 inline-block w-full" copyText="upsun project:delete">
+                      <CopyButton className="pl-1 inline-block w-full" copyText={commands.complete.user.delete_project}>
                         <p className="mb-2 mt-2 code-block">
                           <CodeBlock
-                            text="upsun project:delete"
+                            text={commands.complete.user.delete_project}
                             showLineNumbers={false}
                             theme={dracula}
                           />
@@ -475,20 +489,20 @@ const ProductionIntroduction = () => {
 const StagingIntroduction = () => {
   return (
     <>
-      <p className="text-sm leading-6 mt-6 mb-4 text-lg font-bold">
+      <p className="text-sm leading-6 text-lg mb-2">
         Congrats! You’ve created your staging environment 🎉
       </p>
-      <p className="text-sm leading-6 mt-2">
+      <p className="text-sm leading-6">
         This space represents your byte-for-byte copy of production. You can use
         staging and development environments to preview and share changes prior
         to pushing them to production.
       </p>
-      <p className="text-sm leading-6 mt-2">
+      <p className="text-sm leading-6">
         This app uses the Upsun environment variable{" "}
         <code className="px-2 py-1">$PLATFORM_ENVIRONMENT="staging"</code> to
         modify the content of this page.
       </p>
-      <p className="text-sm leading-6 mt-2">
+      <p className="text-sm leading-6">
         Return to the steps below to continue adding your Redis service.
       </p>
     </>

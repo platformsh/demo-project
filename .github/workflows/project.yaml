@@ -80,9 +80,8 @@ jobs:
             - name: "[setup_repo] 1. Clone repository into runner."
               run: |
                   echo "::notice::Cloning repo copy into runner."
-                  git clone -b $DEFAULT_BRANCH \
-                      https://github.com/$PROJECT_REPO.git \
-                      $PROJECT_LOCALDIR
+                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.test.clone") 
+                  eval "$cmd"
             - name: "[setup_repo] 2. Setup runner Git user."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -186,6 +185,8 @@ jobs:
                   echo "::notice::First push to project."
                   # @todo: Push through Git, not the CLI, so the exit doesn't break the workflow.
                   git push --force upsun $DEFAULT_BRANCH
+                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.test.push") 
+                  eval "$cmd"
                   # upsun push -f -y
             - name: "[first_deploy] 2. Test: The first deploy activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
@@ -201,7 +202,8 @@ jobs:
             - name: "[init_resources] 1. Set initial resources."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun resources:set --size '*:0.1' -y
+                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.resources_set") 
+                  eval "$cmd"
             - name: "[init_resources] 2. Test: The update environment resources activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -214,20 +216,26 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED_STATUS="200"
-                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
+                  eval "$cmd"
+                  PROD_URL_FRONTEND=$(eval "$cmd --pipe")
                   ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
             - name: "[init_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED_STATUS="200"
-                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
+                  eval "$cmd"
+                  PROD_URL_FRONTEND=$(eval "$cmd --pipe")
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
             - name: "[init_resources]  6. Test: endpoint data (session_storage)"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="file"
-                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
+                  eval "$cmd"
+                  PROD_URL_FRONTEND=$(eval "$cmd --pipe")
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.session_storage')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data session_storage"
@@ -235,7 +243,9 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="production"
-                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
+                  eval "$cmd"
+                  PROD_URL_FRONTEND=$(eval "$cmd --pipe")
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
@@ -295,10 +305,11 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/uncomment.sh .upsun/config.yaml add_service
-                  git commit -am "Create a redis service."
+                  cmd=$(cat frontend/src/commands.json | jq -r ".redis.user.commit") 
+                  eval "$cmd"
                   # Push through Git, not the CLI, so the exit doesn't break the workflow.
-                  git push --force upsun $STAGING_BRANCH
-                  # upsun push -f -y
+                  cmd=$(cat frontend/src/commands.json | jq -r ".redis.test.push") 
+                  eval "$cmd"
             - name: "[add_service] 2. Test: The add_service activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
@@ -314,6 +325,8 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512
+                  cmd=$(cat frontend/src/commands.json | jq -r ".redis.user.resources_set") 
+                  eval "$cmd"
             - name: "[add_service_resources] 2. Test: The add_service_resources activity should complete."     
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -357,11 +370,8 @@ jobs:
             - name: "[merge] 1. Merge staging into production."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  git checkout $DEFAULT_BRANCH
-                  git merge $STAGING_BRANCH
-                  # Push through Git, not the CLI, so the exit doesn't break the workflow.
-                  git push --force upsun $DEFAULT_BRANCH
-                  # upsun merge staging -y
+                  cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.test.merge") 
+                  eval "$cmd"
             - name: "[merge] 2. Test: The merge activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
@@ -376,7 +386,9 @@ jobs:
             - name: "[prod_service_resources] 1. Set Redis' resources on production."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512 -e $DEFAULT_BRANCH
+                  # upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512 -e $DEFAULT_BRANCH
+                  cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.user.resources_set") 
+                  eval "$cmd"
             - name: "[prod_service_resources] 2. Test: The update environment resources activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -420,4 +432,6 @@ jobs:
             - name: "[cleanup] 1. Delete project."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun project:delete -y
+                  # upsun project:delete -y
+                  cmd=$(cat frontend/src/commands.json | jq -r ".complete.user.delete_project") 
+                  eval "$cmd"

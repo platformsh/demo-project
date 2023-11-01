@@ -18,15 +18,20 @@ export const fetchEnvironment = async (): Promise<EnvironmentResponseType> => {
   let data;
 
   // If updating the design locally, this variable can help you quickly switch between steps.
-  let override_state = "branch"
-  // let override_state = "redis"
-  // let override_state = "merge-production"
-  // let override_state = "scale"
-  // let override_state = "complete"
+  //  Note: this value MUST be returned to "default" when pushed to the project repo, or else tests will fail.
+  // let override_state = "default";
+  // let override_state = "branch";
+  // let override_state = "redis";
+  // let override_state = "merge-production";
+  // let override_state = "scale";
+  // let override_state = "error_state"
+  let override_state = "complete";
 
   if (BASE_PATH == "http://localhost:8000/") {
 
-    if (override_state == "branch") {
+    if (override_state == "default") {
+      data = await response.json();
+    } else if (override_state == "branch") {
       data = {
         "session_storage": "file",
         "type": "production"
@@ -48,6 +53,7 @@ export const fetchEnvironment = async (): Promise<EnvironmentResponseType> => {
       }
     }
 
+  // Default behavior of the production app.
   } else {
     data = await response.json();
   }
