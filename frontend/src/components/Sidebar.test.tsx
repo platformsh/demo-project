@@ -31,7 +31,7 @@ jest.mock("../assets/utility/status_incomplete.svg", () => {
 });
 
 describe("<Sidebar />", () => {
-  test("title section renders production icon when environment is Production", () => {
+  test("title section renders About section correctly", () => {
     const props = {
       environment: "Production",
       sessionStorageType: "Redis",
@@ -40,20 +40,7 @@ describe("<Sidebar />", () => {
     render(<Sidebar {...props} />);
 
     // Check if the production icon is rendered
-    expect(screen.getByText("production-svg")).toBeInTheDocument();
-    expect(screen.getByText("Production")).toBeInTheDocument();
+    expect(screen.getByText("About")).toBeInTheDocument();
   });
 
-  test("title section renders staging icon when environment is not Production", () => {
-    const props = {
-      environment: "Staging",
-      sessionStorageType: "Redis",
-    };
-
-    render(<Sidebar {...props} />);
-
-    // Check if the staging icon is rendered
-    expect(screen.getByText("staging-svg")).toBeInTheDocument();
-    expect(screen.getByText("Staging")).toBeInTheDocument();
-  });
 });

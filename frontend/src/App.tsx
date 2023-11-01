@@ -350,10 +350,10 @@ services:
                       <li>
                         <p className="mb-2">
                           <span>Deploy staging changes to production</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge-production"].user.merge}>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge_production"].user.merge}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={commands["merge-production"].user.merge}
+                                text={commands["merge_production"].user.merge}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -367,10 +367,10 @@ services:
                         </p>
                         <p className="mb-2 mt-2">
                           <span>Allocate resources to Redis in production.</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge-production"].user.resources_set}>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge_production"].user.resources_set}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={commands["merge-production"].user.resources_set}
+                                text={commands["merge_production"].user.resources_set}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />
@@ -381,10 +381,10 @@ services:
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Open production frontend in your browser</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge-production"].user.get_url}>
+                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge_production"].user.get_url}>
                             <p className="mb-2 mt-2 code-block">
                               <CodeBlock
-                                text={commands["merge-production"].user.get_url}
+                                text={commands["merge_production"].user.get_url}
                                 showLineNumbers={false}
                                 theme={dracula}
                               />

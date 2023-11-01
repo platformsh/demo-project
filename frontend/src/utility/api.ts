@@ -19,13 +19,13 @@ export const fetchEnvironment = async (): Promise<EnvironmentResponseType> => {
 
   // If updating the design locally, this variable can help you quickly switch between steps.
   //  Note: this value MUST be returned to "default" when pushed to the project repo, or else tests will fail.
-  // let override_state = "default";
+  let override_state = "default";
   // let override_state = "branch";
   // let override_state = "redis";
   // let override_state = "merge-production";
   // let override_state = "scale";
   // let override_state = "error_state"
-  let override_state = "complete";
+  // let override_state = "complete";
 
   if (BASE_PATH == "http://localhost:8000/") {
 
