@@ -434,4 +434,4 @@ jobs:
               run: |
                   # upsun project:delete -y
                   cmd=$(cat frontend/src/commands.json | jq -r ".complete.user.delete_project") 
-                  eval "$cmd"
+                  eval "$cmd -y"
