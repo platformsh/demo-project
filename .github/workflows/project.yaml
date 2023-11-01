@@ -387,7 +387,7 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   # upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512 -e $DEFAULT_BRANCH
-                  cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.user.resources_set") 
+                  cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.test.resources_set") 
                   eval "$cmd"
             - name: "[prod_service_resources] 2. Test: The update environment resources activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}

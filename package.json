@@ -13,7 +13,7 @@
     "postinstall": "cross-env FORCE_COLOR=1 npm-run-all -l postinstall:*",
     "postinstall:backend": "cd backend && ./scripts/build.sh",
     "postinstall:frontend": "cd frontend && npm install",
-    "test:frontend": "cd frontend && npm run test -- --watchAll",
+    "test:frontend": "cd frontend && npm run test",
     "test:backend": "cd backend && ./scripts/test.sh"
   },
   "repository": {

@@ -49,7 +49,8 @@
             "get_url": "upsun url --primary -e main"
         },
         "test": {
-            "merge": "git checkout $DEFAULT_BRANCH && git merge $STAGING_BRANCH && git push --force upsun $DEFAULT_BRANCH"
+            "merge": "git checkout $DEFAULT_BRANCH && git merge $STAGING_BRANCH && git push --force upsun $DEFAULT_BRANCH",
+            "resources_set": "upsun resources:set \\\n\t--size redis_persistent:0.1 \\\n\t--disk redis_persistent:512"
         }
     },
     "scale": false,

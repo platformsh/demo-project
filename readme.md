@@ -202,7 +202,7 @@ Before pushing your changes to the repository (or if your PR is failing), please
 1. Run frontend React tests.
 
     ```bash
-    npm run test:frontend
+    npm run test:frontend -- --watchAll
     ```
 
     > [!NOTE]
