@@ -220,6 +220,7 @@ jobs:
                   eval "$cmd"
                   PROD_URL_FRONTEND=$(eval "$cmd --pipe")
                   ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
+
             - name: "[init_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -227,6 +228,11 @@ jobs:
                   cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
                   eval "$cmd"
                   PROD_URL_FRONTEND=$(eval "$cmd --pipe")
+                  # Base path.
+                  BASE_PATH="api/"
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
+                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend base path (init_resources)"
+                  # Data path
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
             - name: "[init_resources]  6. Test: endpoint data (session_storage)"
@@ -249,6 +255,17 @@ jobs:
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
+            - name: "[init_resources] 8. Test: backend base path"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="Hello from the Python backend!"
+                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
+                  eval "$cmd"
+                  PROD_URL_FRONTEND=$(eval "$cmd --pipe")
+                  BASE_PATH="api/"
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
+                  RESULT=$(curl -s $PROD_URL_BACKEND)
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend base path response"
 
             ################################################################################################
             # G. Create staging environment.
@@ -277,6 +294,11 @@ jobs:
               run: |
                   EXPECTED_STATUS="200"
                   STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  # Base path
+                  BASE_PATH="api/"
+                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
+                  ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (environment_branch)"
+                  # Data path 
                   STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
                   ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (environment_branch)"
             - name: "[environment_branch] 6. Test: endpoint data (session_storage)"  
@@ -295,7 +317,16 @@ jobs:
                   STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.type')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
-            - name: "[environment_branch] 8. Update staging environment name."
+            - name: "[environment_branch] 8. Test: backend base path"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="Hello from the Python backend!"
+                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  BASE_PATH="api/"
+                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
+                  RESULT=$(curl -s $STAG_URL_BACKEND)
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend base path"
+            - name: "[environment_branch] 9. Update staging environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   upsun environment:info title "Staging ($STAGING_BRANCH)" -e $STAGING_BRANCH
@@ -346,6 +377,11 @@ jobs:
               run: |
                   EXPECTED_STATUS="200"
                   STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  # Base path
+                  BASE_PATH="api/"
+                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
+                  ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (add_service_resources)"
+                  # Data path 
                   STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
                   ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (add_service_resources)"
             - name: "[add_service_resources] 6. Test: endpoint data (session_storage)"  
@@ -363,6 +399,15 @@ jobs:
                   STAG_URL_FRONTEND=$(upsun url --primary --pipe)
                   STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.type')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
+            - name: "[add_service_resources] 8. Test: backend base path"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="Hello from the Python backend!"
+                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+                  BASE_PATH="api/"
+                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
+                  RESULT=$(curl -s $STAG_URL_BACKEND)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
 
             ################################################################################################
@@ -408,6 +453,11 @@ jobs:
               run: |
                   EXPECTED_STATUS="200"
                   PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  # Base path
+                  BASE_PATH="api/"
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
+                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"              
+                  # Data path 
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
             - name: "[prod_service_resources]  6. Test: endpoint data (session_storage)"
@@ -426,7 +476,15 @@ jobs:
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
-
+            - name: "[prod_service_resources] 8. Test: backend base path"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="Hello from the Python backend!"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  BASE_PATH="api/"
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
+                  RESULT=$(curl -s $PROD_URL_BACKEND)
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
             ################################################################################################
             # K. Clean up test project.
             - name: "[cleanup] 1. Delete project."
