@@ -7,6 +7,7 @@
 URL=$1
 EXPECTED_STATUS=$2
 URL_DESCRIPTOR=$3
+echo "::notice::Testing URL $URL_DESCRIPTOR (Expecting $EXPECTED_STATUS)."
 
 STATUS=$(curl --silent --head $URL | awk '/^HTTP/{print $2}')
 if [ "$STATUS" != "$EXPECTED_STATUS" ]; then

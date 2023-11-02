@@ -230,7 +230,7 @@ jobs:
                   PROD_URL_FRONTEND=$(eval "$cmd --pipe")
                   # Base path.
                   PROD_URL_BACKEND=$PROD_URL_FRONTENDapi/
-                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
+                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend base path (init_resources)"
                   # Data path
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
