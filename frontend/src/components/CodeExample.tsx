@@ -60,11 +60,9 @@ const CodeExample: React.FC<CodeExampleProps> = ({
     >
       <p className="mb-2 mt-2 code-block group/copy-box">
         <code className="px-2 py-1.5 w-full flex flex-row">
-          {doWrapLines ? (
-            <pre className="w-full text-left">{codeExampleText}</pre>
-          ) : (
-            <span className="w-full text-left whitespace-nowrap overflow-auto">{codeExampleText}</span>
-          )}
+          <span className={`w-full text-left ${doWrapLines ? 'whitespace-pre-wrap' : 'whitespace-nowrap overflow-auto'}`}>
+            {codeExampleText}
+          </span>
           <span className="text-white flex flex-row items-center">
             <span
               className={`h-full transition-opacity duration-300 ${
