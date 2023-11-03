@@ -13,7 +13,8 @@ import ErrorPage from "./page/ErrorPage";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import FeatureStep from "./components/FeatureStep";
-import { CodeBlock, dracula } from "react-code-blocks";
+import { CodeBlock } from 'react-code-blocks'
+import UpsunCodeTheme from './theme/code'
 import CodeExample from "./components/CodeExample";
 
 import { PROJECT_ID } from "./config";
@@ -247,7 +248,7 @@ services:
                             text={servicesText}
                             language='yaml'
                             showLineNumbers={true}
-                            theme={dracula}
+                            theme={UpsunCodeTheme}
                             startingLineNumber={67}
                           />
                         </p>
