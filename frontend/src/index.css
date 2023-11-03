@@ -61,4 +61,30 @@
     a {
       @apply text-upsun-yellow-400 underline
     }
+
+    .bottom-right-cut-corner {
+        /**
+            1. Create the bottom-right corner:
+              - We are using clip-paths from-top: 81% and from-left: 84% to chop off the bottom right corner.
+            2. To apply a border to the cut corner, create a pseudo element that is the same size and position as this element.
+              - width & height 100%; position:absolute
+            3. In the pseudo element, use the same percentages (81% and 84%) to chop of the inverse corner (top right)
+              - bottom-right corner: polygon(0 0, 100% 0, 100% 81%, 84% 100%, 0 100%, 0% 50%);
+              - pseudo class top-left corner: polygon(0 0, 100% 0, 100% 81%, 84% 100%, 0 100%, 0% 50%);
+         */
+        clip-path: polygon(0 0, 100% 0, 100% 81%, 84% 100%, 0 100%, 0% 50%);
+        @apply relative;
+    }
+
+    .bottom-right-cut-corner:before {
+        content: '';
+        @apply bg-upsun-violet-600 w-full h-full absolute bottom-0 right-0;
+        clip-path: polygon(100% 81%, 84% 100%, 100% 100%);
+        /*position:absolute;*/
+        /*z-index: 5;*/
+        /*bottom: -1px;*/
+        /*right: -1px;*/
+        /*content:'';*/
+        /*@apply border-b-[40px] border-l-[50px] border-b-upsun-violet-600 border-l-transparent;*/
+    }
   }
