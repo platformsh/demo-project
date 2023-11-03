@@ -47,6 +47,7 @@ jobs:
           export CI=true
           npm install cross-env npm-run-all -g
           npm install
+          npm run lint:frontend
           npm run test:frontend
 
       ################################################################################################
