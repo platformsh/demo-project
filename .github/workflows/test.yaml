@@ -59,7 +59,9 @@ jobs:
         run: npm run test:frontend
       - name: "8. Run Backend linting"
         run: |
-          pip install pylint 
+          cd backend
+          pip install -r requirements.txt
+          cd ..
           npm run lint:backend
 
       ################################################################################################
