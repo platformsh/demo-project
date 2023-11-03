@@ -1,3 +1,5 @@
+"""This module provides the routes for the application."""
+
 import os
 from flask import Blueprint, jsonify
 import base64
