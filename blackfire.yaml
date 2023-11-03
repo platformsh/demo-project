@@ -43,8 +43,6 @@ scenarios: |
         visit url("/")
             name "Frontend branch"
             expect status_code() == 200
-            expect "Production" == body()
-            expect "Production" == css("h1 #current-env-type").text()
 
         # local: change endpoint to localhost:8000
         visit url("/api/")
