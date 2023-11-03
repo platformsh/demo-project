@@ -23,9 +23,9 @@ export const fetchEnvironment = async (): Promise<EnvironmentResponseType> => {
   // let override_state = "branch";
   // let override_state = "redis";
   // let override_state = "merge-production";
-  // let override_state = "scale";
   // let override_state = "error_state"
   // let override_state = "complete";
+  // let override_state = "scale";
 
   if (BASE_PATH == "http://localhost:8000/") {
 

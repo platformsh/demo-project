@@ -192,27 +192,19 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
                 ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push state complete "first_push"  
-            - name: "[first_deploy] 3. Test: The first deploy activity should fail."
+            - name: "[first_deploy] 3. Test: The first deploy activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result failure "first_push"
-
-            ################################################################################################
-            # F. Set initial resources.
-            - name: "[init_resources] 1. Set initial resources."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.resources_set") 
-                  eval "$cmd"
-            - name: "[init_resources] 2. Test: The update environment resources activity should complete."
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result success "first_push"
+            - name: "[first_deploy] 4. Test: The update environment resources activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update state complete "init_resources"
-            - name: "[init_resources] 3. Test: The update environment resources activity should succeed."
+            - name: "[first_deploy] 5. Test: The update environment resources activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
-            - name: "[init_resources] 4. Test: Updating environment resources should result in a 200 on the frontend production app."
+            - name: "[first_deploy] 6. Test: Updating environment resources should result in a 200 on the frontend production app."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED_STATUS="200"
@@ -220,8 +212,7 @@ jobs:
                   eval "$cmd"
                   PROD_URL_FRONTEND=$(eval "$cmd --pipe")
                   ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
-
-            - name: "[init_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
+            - name: "[first_deploy] 7. Test: Updating environment resources should result in a 200 on the backend production app."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED_STATUS="200"
@@ -235,7 +226,7 @@ jobs:
                   # Data path
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
-            - name: "[init_resources]  6. Test: endpoint data (session_storage)"
+            - name: "[first_deploy] 8. Test: endpoint data (session_storage)"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="file"
@@ -245,7 +236,7 @@ jobs:
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.session_storage')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data session_storage"
-            - name: "[init_resources] 7. Test: endpoint data (environment_type)"
+            - name: "[first_deploy] 9. Test: endpoint data (environment_type)"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="production"
@@ -255,7 +246,7 @@ jobs:
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
-            - name: "[init_resources] 8. Test: backend base path"
+            - name: "[first_deploy] 10. Test: backend base path"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="Hello from the Python backend!"
@@ -345,34 +336,25 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
                 ./utils/tests/activity_outcome.sh $STAGING_BRANCH push state complete "add_service"  
-            - name: "[add_service] 3. Test: The add_service activity should fail."
+            - name: "[add_service] 3. Test: The add_service activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push result failure "add_service"
-                
-            ################################################################################################
-            # I. Define service resources.
-            - name: "[add_service_resources] 1. Set Redis' resources."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512
-                  cmd=$(cat frontend/src/commands.json | jq -r ".redis.user.resources_set") 
-                  eval "$cmd"
-            - name: "[add_service_resources] 2. Test: The add_service_resources activity should complete."     
+                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push result success "add_service"
+            - name: "[add_service] 4. Test: The add_service_resources activity should complete."     
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update state complete "add_service_resources"
-            - name: "[add_service_resources] 3. Test: The update environment resources activity should succeed."        
+            - name: "[add_service] 5. Test: The update environment resources activity should succeed."        
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update result success "add_service_resources"
-            - name: "[add_service_resources] 4. Test: The update environment resources activity should result in a 200 on the frontend staging app." 
+            - name: "[add_service] 6. Test: The update environment resources activity should result in a 200 on the frontend staging app." 
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED_STATUS="200"
                   STAG_URL_FRONTEND=$(upsun url --primary --pipe)
                   ./utils/tests/url_status.sh $STAG_URL_FRONTEND $EXPECTED_STATUS "staging frontend deployment (add_service_resources)"
-            - name: "[add_service_resources] 5. Test: The update environment resources activity should result in a 200 on the backend staging app."
+            - name: "[add_service] 7. Test: The update environment resources activity should result in a 200 on the backend staging app."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED_STATUS="200"
@@ -384,7 +366,7 @@ jobs:
                   # Data path 
                   STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
                   ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (add_service_resources)"
-            - name: "[add_service_resources] 6. Test: endpoint data (session_storage)"  
+            - name: "[add_service] 8. Test: endpoint data (session_storage)"  
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="redis"
@@ -392,7 +374,7 @@ jobs:
                   STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.session_storage')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data session_storage"
-            - name: "[add_service_resources] 7. Test: endpoint data (environment_type)"
+            - name: "[add_service] 9. Test: endpoint data (environment_type)"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="staging"
@@ -400,7 +382,7 @@ jobs:
                   STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.type')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
-            - name: "[add_service_resources] 8. Test: backend base path"
+            - name: "[add_service] 10. Test: backend base path"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="Hello from the Python backend!"
@@ -421,34 +403,25 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
                 ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push state complete "merge"  
-            - name: "[merge] 3. Test: The merge activity should fail."
+            - name: "[merge] 3. Test: The merge activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result failure "merge"
-                
-            ################################################################################################
-            # J. Define production service resources.
-            - name: "[prod_service_resources] 1. Set Redis' resources on production."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  # upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512 -e $DEFAULT_BRANCH
-                  cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.test.resources_set") 
-                  eval "$cmd"
-            - name: "[prod_service_resources] 2. Test: The update environment resources activity should complete."
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result success "merge"
+            - name: "[merge] 4. Test: The update environment resources activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update state complete "init_resources"
-            - name: "[prod_service_resources] 3. Test: The update environment resources activity should succeed."
+            - name: "[merge] 5. Test: The update environment resources activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
-            - name: "[prod_service_resources] 4. Test: Updating environment resources should result in a 200 on the frontend production app."
+            - name: "[merge] 6. Test: Updating environment resources should result in a 200 on the frontend production app."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED_STATUS="200"
                   PROD_URL_FRONTEND=$(upsun url --primary --pipe)
                   ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
-            - name: "[prod_service_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
+            - name: "[merge] 7. Test: Updating environment resources should result in a 200 on the backend production app."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED_STATUS="200"
@@ -460,7 +433,7 @@ jobs:
                   # Data path 
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
-            - name: "[prod_service_resources]  6. Test: endpoint data (session_storage)"
+            - name: "[merge] 8. Test: endpoint data (session_storage)"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="redis"
@@ -468,7 +441,7 @@ jobs:
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.session_storage')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data session_storage"
-            - name: "[prod_service_resources] 7. Test: endpoint data (environment_type)"
+            - name: "[merge] 9. Test: endpoint data (environment_type)"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="production"
@@ -476,7 +449,7 @@ jobs:
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
                   RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
-            - name: "[prod_service_resources] 8. Test: backend base path"
+            - name: "[merge] 10. Test: backend base path"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   EXPECTED="Hello from the Python backend!"
@@ -485,8 +458,68 @@ jobs:
                   PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
                   RESULT=$(curl -s $PROD_URL_BACKEND)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
+
             ################################################################################################
-            # K. Clean up test project.
+            # L. Scale down to minimum resources
+            - name: "[scale] 1. Scale down to minimum resources for Redis"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  cmd=$(cat frontend/src/commands.json | jq -r ".scale.test.resources_set") 
+                  eval "$cmd"
+            - name: "[scale] 2. Test: The update environment resources activity should complete."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update state complete "init_resources"
+            - name: "[scale] 3. Test: The update environment resources activity should succeed."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
+            - name: "[scale] 4. Test: Updating environment resources should result in a 200 on the frontend production app."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED_STATUS="200"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
+            - name: "[scale] 5. Test: Updating environment resources should result in a 200 on the backend production app."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED_STATUS="200"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  # Base path
+                  BASE_PATH="api/"
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
+                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"              
+                  # Data path 
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
+            - name: "[scale] 6. Test: endpoint data (session_storage)"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="redis"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+                  RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.session_storage')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data session_storage"
+            - name: "[scale] 7. Test: endpoint data (environment_type)"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="production"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+                  RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
+            - name: "[scale] 8. Test: backend base path"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  EXPECTED="Hello from the Python backend!"
+                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+                  BASE_PATH="api/"
+                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
+                  RESULT=$(curl -s $PROD_URL_BACKEND)
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
+
+            ################################################################################################
+            # L. Clean up test project.
             - name: "[cleanup] 1. Delete project."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |

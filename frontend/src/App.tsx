@@ -174,7 +174,6 @@ services:
                         <li className="mt-2 ml-6">Cloned the demo: <code className="ml-2 px-4">{commands.first_deploy.user.clone}</code></li>
                         <li className="mt-2 ml-6">Connected to Upsun: <code className="ml-2 px-4">{commands.first_deploy.user.set_remote} {PROJECT_ID}</code></li>
                         <li className="mt-2 ml-6">Pushed to Upsun: <code className="ml-2 px-4">{commands.first_deploy.user.push}</code></li>
-                        <li className="mt-2 ml-6">Defined deployment resources: <code className="ml-2 px-4">{commands.first_deploy.user.resources_set}</code></li>
                         <li className="mt-2 ml-6">Retrieved the deployed environment URL: <code className="ml-2 px-4">{commands.first_deploy.user.get_url}</code></li>
                       </ul>
                     </div>
@@ -299,25 +298,6 @@ services:
                           </CopyButton>
                         </p>
                       </li>
-                      <li>
-                        <p className="mb-2 mt-2">
-                          <span>Allocate Redis resources</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.redis.user.push}>
-                            <p className="mb-2 mt-2 code-block">
-                              <CodeBlock
-                                text={commands.redis.user.resources_set}
-                                showLineNumbers={false}
-                                theme={dracula}
-                              />
-                            </p>
-                          </CopyButton>
-                        </p>
-                      </li>
-                      <li>
-                        <p className="mb-2 mt-2">
-                          <span>Refresh this page when done.</span>
-                        </p>
-                      </li>
                     </ol>
                   </>
                 </FeatureStep>
@@ -361,23 +341,7 @@ services:
                           </CopyButton>
                         </p>
                       </li>
-                      <li>
-                        <p className="mb-2 mt-2">
-                        The previous step will complete, but exit with the message: <span className="text-red-400 font-mono">Resources must be configured before deployment</span>.
-                        </p>
-                        <p className="mb-2 mt-2">
-                          <span>Allocate resources to Redis in production.</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge_production"].user.resources_set}>
-                            <p className="mb-2 mt-2 code-block">
-                              <CodeBlock
-                                text={commands["merge_production"].user.resources_set}
-                                showLineNumbers={false}
-                                theme={dracula}
-                              />
-                            </p>
-                          </CopyButton>
-                        </p>
-                      </li>
+
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Open production frontend in your browser</span>
@@ -409,6 +373,21 @@ services:
                     <p className="mb-2 mt-2 font-bold">🎉 Kudos! You've aced the Upsun Demo!</p>
                     <p className="mb-2">
                       You've just experienced the power of Upsun's Git-based workflow to stage and deploy Redis seamlessly.
+                    </p>
+                    <p className="mb-2 mt-5">
+                      <span>Upsun automatically allocated a set of default resources for each service in your project, but you can <strong>scale 
+                        those resources</strong> to whatever you need. For example, you can scale down the amount of resources on the
+                        Redis service container with the following command:
+                      </span>
+                      <CopyButton className="pl-1 inline-block w-full" copyText={commands.scale.user.resources_set}>
+                        <p className="mb-2 mt-2 code-block">
+                          <CodeBlock
+                            text={commands.scale.user.resources_set}
+                            showLineNumbers={false}
+                            theme={dracula}
+                          />
+                        </p>
+                      </CopyButton>
                     </p>
                     <p className="mb-2 mt-5">
                       <span>Delete this project when ready using:</span>
