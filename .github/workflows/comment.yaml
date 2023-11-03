@@ -1,3 +1,5 @@
+name: Review details
+
 on: pull_request
 
 env:
@@ -19,24 +21,28 @@ jobs:
           message: |
             Hello, and thank you for contributing to the Upsun demo project!
 
-            ## Reviewing these changes locally:
+            ### Setting up tests 
+
+            TBD
+
+            ### Reviewing these changes locally:
 
             1. Clone this repo 
 
                 ```bash
-                git clone -b $CURRENT_BRANCH git@github.com:platformsh/demo-project.git $TEST_DIR-$CURRENT_BRANCH && cd $TEST_DIR-$CURRENT_BRANCH
+                git clone -b ${{ env.CURRENT_BRANCH }} git@github.com:platformsh/demo-project.git ${{ env.TEST_DIR }}-${{ env.CURRENT_BRANCH }} && cd ${{ env.TEST_DIR }}-${{ env.CURRENT_BRANCH }}
                 ```
 
             1. Create a project on Upsun:
 
-              ```bash
-              upsun project:create --title $PROJECT_TITLE --default-branch $CURRENT_BRANCH
-              ```
+                ```bash
+                upsun project:create --title ${{ env.PROJECT_TITLE }} --default-branch ${{ env.CURRENT_BRANCH }}
+                ```
 
               This command will set the local repository remote automatically, but you will need to specific the organization and region.
 
             1. Push to Upsun:
 
-              ```bash
-              upsun push
-              ```
+                ```bash
+                upsun push
+                ```
