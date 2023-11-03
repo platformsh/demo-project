@@ -1,0 +1,60 @@
+name: Review details
+
+'on':
+    pull_request:
+        branches:
+            - main
+        types:
+            - opened
+
+env:
+    CURRENT_BRANCH: '${{ github.event.pull_request.head.ref }}'
+    PROJECT_TITLE: 'Demo Project test (pr-${{ github.ref_name }})'
+    TEST_DIR: 'demo-test'
+
+jobs:
+  commenton_on_pr:
+    runs-on: ubuntu-latest
+    name: Comment test details on PR
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            Hello, and thank you for contributing to the Upsun demo project!
+
+            ### Setting up tests 
+
+            Most tests will run automatically when you open a pull request, while others require contributors with write access to enable. 
+            Until all tests pass, a pull request will not be merged. 
+
+            _enable instructions tbd_
+
+            ### Failing tests 
+
+            If your PR is failing, see the [Running tests](https://github.com/platformsh/demo-project#running-tests) section of the README for troubleshooting details. 
+
+            ### Reviewing these changes locally:
+
+            1. Clone this repo 
+
+                ```bash
+                git clone -b ${{ env.CURRENT_BRANCH }} git@github.com:platformsh/demo-project.git ${{ env.TEST_DIR }}-${{ env.CURRENT_BRANCH }} && cd ${{ env.TEST_DIR }}-${{ env.CURRENT_BRANCH }}
+                ```
+
+            1. Create a project on Upsun:
+
+                ```bash
+                upsun project:create --title "${{ env.PROJECT_TITLE }}" --default-branch ${{ env.CURRENT_BRANCH }}
+                ```
+
+                This command will set the local repository remote automatically, but you will need to specify the organization and region.
+
+            1. Push to Upsun:
+
+                ```bash
+                upsun push
+                ```
