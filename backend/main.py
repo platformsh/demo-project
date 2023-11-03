@@ -11,7 +11,9 @@ from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
 from app import routes
+
 # from flask_session import Session
+
 
 def create_app():
     """
@@ -38,16 +40,16 @@ def create_app():
     #     sess = Session()
     #     sess.init_app(app)
 
-
     flask_app.register_blueprint(routes.bp)
 
     return flask_app
+
 
 app = create_app()
 CORS(app)
 
 if __name__ == "__main__":
-    flask_environment = os.environ.get('FLASK_ENV', 'local')
+    flask_environment = os.environ.get("FLASK_ENV", "local")
     enable_debug = flask_environment != "production"
-    web_port = os.environ.get('PORT', 8000)
+    web_port = os.environ.get("PORT", 8000)
     app.run(port=web_port, debug=enable_debug)
