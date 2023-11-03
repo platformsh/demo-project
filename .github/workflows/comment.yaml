@@ -1,6 +1,11 @@
 name: Review details
 
-on: pull_request
+'on':
+    pull_request:
+        branches:
+            - main
+        types:
+            - opened
 
 env:
     CURRENT_BRANCH: '${{ github.event.pull_request.head.ref }}'
