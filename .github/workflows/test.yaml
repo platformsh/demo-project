@@ -13,6 +13,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     strategy:
       matrix:
@@ -42,6 +43,7 @@ jobs:
       ################################################################################################
       # B. Prettify, lint, and test repo.
       - name: "4. Preparing"
+        timeout-minutes: 2
         run: |
           echo "::notice::Running react-scripts tests."
           export CI=true
