@@ -48,7 +48,9 @@ jobs:
           npm install cross-env npm-run-all -g
           npm install
       - name: "5. Verifying backend code is pretty"
-        run: npm run prettier:backend
+        run: | 
+          pip install black 
+          npm run prettier:backend
       - name: "6. Linting frontend"
         run: npm run lint:frontend
       - name: "7. Run Frontend tests"
