@@ -40,7 +40,7 @@ jobs:
           cache: 'pip'
 
       ################################################################################################
-      # B. Test repo.
+      # B. Lint & test repo.
       - name: "4. Run Frontend tests."
         run: |
           echo "::notice::Running react-scripts tests."
@@ -48,7 +48,10 @@ jobs:
           npm install cross-env npm-run-all -g
           npm install
           npm run lint:frontend
-          npm run test:frontend
+      - name: "5. Run Frontend tests"
+        run: npm run test:frontend
+      - name: "6. Lint Backend"
+        run: npm run lint:frontend
 
       ################################################################################################
       # C. Ensure no vulnerabilities.
