@@ -50,10 +50,6 @@
       @apply select-none pointer-events-none opacity-25
     }
 
-    .is-disabled:hover {
-      @apply opacity-100
-    }
-
     .code-block > span > code {
       @apply block !font-mono !text-xs w-full text-left;
     }
