@@ -58,7 +58,9 @@ jobs:
       - name: "8. Run Backend linting"
         run: npm run lint:backend
       - name: "9. Run Backend linting"
-        run: npm run lint:backend
+        run: |
+          pip install pylint 
+          npm run lint:backend
 
       ################################################################################################
       # C. Ensure no vulnerabilities.
