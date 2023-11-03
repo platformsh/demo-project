@@ -1,0 +1,42 @@
+on: pull_request
+
+env:
+    CURRENT_BRANCH: '${{ github.event.pull_request.head.ref }}'
+    PROJECT_TITLE: 'Demo Project test (pr-${{ github.ref_name }})'
+    TEST_DIR: 'demo-test'
+
+jobs:
+  commenton_on_pr:
+    runs-on: ubuntu-latest
+    name: Comment test details on PR
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            Hello, and thank you for contributing to the Upsun demo project!
+
+            ## Reviewing these changes locally:
+
+            1. Clone this repo 
+
+                ```bash
+                git clone -b $CURRENT_BRANCH git@github.com:platformsh/demo-project.git $TEST_DIR-$CURRENT_BRANCH && cd $TEST_DIR-$CURRENT_BRANCH
+                ```
+
+            1. Create a project on Upsun:
+
+              ```bash
+              upsun project:create --title $PROJECT_TITLE --default-branch $CURRENT_BRANCH
+              ```
+
+              This command will set the local repository remote automatically, but you will need to specific the organization and region.
+
+            1. Push to Upsun:
+
+              ```bash
+              upsun push
+              ```
