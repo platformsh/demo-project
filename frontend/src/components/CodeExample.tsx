@@ -5,14 +5,21 @@ import { ReactComponent as CopyIcon } from "../assets/utility/copy.svg";
 interface CodeExampleProps {
   copyText: string;
   codeExampleText: React.ReactNode;
+  wrapLines?: boolean
 }
 
 const CodeExample: React.FC<CodeExampleProps> = ({
   copyText,
   codeExampleText,
+  wrapLines
 }: CodeExampleProps) => {
   const [copied, setCopied] = useState(false);
   const [showCopiedText, setShowCopiedText] = useState(false);
+  const [doWrapLines, setDoWrapLines] = useState(wrapLines || false)
+
+  useEffect(() =>{
+    setDoWrapLines(wrapLines || false)
+  }, [wrapLines])
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -52,8 +59,12 @@ const CodeExample: React.FC<CodeExampleProps> = ({
       }}
     >
       <p className="mb-2 mt-2 code-block group/copy-box">
-        <code className="px-2 py-1 w-full flex flex-row">
-          <span className="w-full text-left">{codeExampleText}</span>
+        <code className="px-2 py-1.5 w-full flex flex-row">
+          {doWrapLines ? (
+            <pre className="w-full text-left">{codeExampleText}</pre>
+          ) : (
+            <span className="w-full text-left whitespace-nowrap overflow-auto">{codeExampleText}</span>
+          )}
           <span className="text-white flex flex-row items-center">
             <span
               className={`h-full transition-opacity duration-300 ${
