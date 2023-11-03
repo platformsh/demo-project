@@ -135,10 +135,7 @@ services:
       >
         <Header />
         <main className="border-t-[1px] border-upsun-violet-600 flex flex-col sm:flex-row">
-          <Sidebar
-            environment={environment}
-            sessionStorageType={sessionStorageType}
-          />
+          <Sidebar/>
           <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
             <div ref={welcomeMessage} className="content-intro sm:w-3/4 mx-auto mt-6 mb-12">
               <div className="aside-title flex flex-row gap-4 items-center mb-2">
