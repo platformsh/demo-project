@@ -36,10 +36,10 @@ jobs:
             1. Create a project on Upsun:
 
                 ```bash
-                upsun project:create --title ${{ env.PROJECT_TITLE }} --default-branch ${{ env.CURRENT_BRANCH }}
+                upsun project:create --title "${{ env.PROJECT_TITLE }}" --default-branch ${{ env.CURRENT_BRANCH }}
                 ```
 
-              This command will set the local repository remote automatically, but you will need to specific the organization and region.
+                This command will set the local repository remote automatically, but you will need to specific the organization and region.
 
             1. Push to Upsun:
 
