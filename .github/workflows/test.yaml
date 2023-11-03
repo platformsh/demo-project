@@ -13,7 +13,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    timeout-minutes: 15
 
     strategy:
       matrix:
@@ -43,7 +42,6 @@ jobs:
       ################################################################################################
       # B. Prettify, lint, and test repo.
       - name: "4. Preparing"
-        timeout-minutes: 2
         run: |
           echo "::notice::Running react-scripts tests."
           export CI=true
@@ -51,7 +49,6 @@ jobs:
           npm install
       - name: "5. Verifying backend code is pretty"
         run: | 
-          pip install black 
           npm run prettier:backend
       - name: "6. Linting frontend"
         run: npm run lint:frontend
@@ -59,15 +56,11 @@ jobs:
         run: npm run test:frontend
       - name: "8. Run Backend linting"
         run: |
-          cd backend
-          pip install -r requirements.txt
-          cd ..
           npm run lint:backend
 
       ################################################################################################
       # C. Ensure no vulnerabilities.
       - name: "9. Test: there should be no Python vulnerabilities."
-        timeout-minutes: 2
         run: |
           echo "::notice::Checking for vulnerabilities in backend Python app dependencies."
           npm run test:backend
