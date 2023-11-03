@@ -1,113 +1,75 @@
-# recommendations:
-#     php.security.avoid_vulnerable_dependencies:
-#         enabled: false
-#     php.drupal8.enable_apcu:
-#         enabled: false
-#     php.drupal8.twig_cache:
-#         enabled: false
-        
-tests:
-    'The homepage should be fast':
-        path: 
-          - '/'
-        assertions:
-            - 'main.wall_time <= 250ms'
+# This is a sample .blackfire.yaml file created by Blackfire.
+# You can read more about .blackfire.yaml here: https://blackfire.io/docs/cookbooks/tests
+# metrics:
+#     app.user_activity_calculation:
+#         label: "User activity calculation"
+#         timeline: true
+#         marker: true
+#         matching_calls:
+#             python:
+#                 - callee: '=bigfoot.models.User.get_recent_comments_count'
 
-    # 'Some Composer dependencies have known security issues and should be upgraded':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { expression: 'not has_vulnerable_dependencies()' }
+# tests:
+#     "The homepage should be fast":
+#         path: "/"
+#         assertions:
+#             - "main.wall_time < 100ms"
+    
+#     "The homepage should not consume too much memory":
+#         path: "/"
+#         assertions:
+#             - "main.peak_memory < 2mb"
 
-    # 'You should enable APCu for Drupal 8':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { label: null, expression: 'metrics.drupal8.fast_cache.count > 0' }
-    #     when: 'metrics.drupal8.installed.count > 0'
+#     "The number of created entities should be reasonable":
+#         path: "/.*"
+#         assertions:
+#             - "metrics.entities.created.count < 50"
 
-    # 'You should enable twig cache in Drupal 8':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { label: null, expression: 'metrics.drupal8.twig_cache.construct.count >= 1' }
-    #     when: 'metrics.drupal8.installed.count > 0'
+#     "The homepage should have a limited number of SQL queries":
+#         path: "/"
+#         assertions:
+#             - "metrics.sql.queries.count <= 5"
 
-    # '"assert.active" is a dev_only feature and should be disabled in production':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { expression: 'runtime.configuration.assert_active === false' }
-    # '"display_errors" should be disabled':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { expression: 'not is_configuration_enabled("display_errors")' }
-    # '"display_startup_errors" should not be enabled':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { expression: 'not is_configuration_enabled("display_startup_errors")' }
-    # '"max_execution_time" should be less than 30 seconds for Web requests':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { expression: 'runtime.configuration.max_execution_time <= 30' }
-    # '"session.use_strict_mode" should be enabled':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { expression: 'runtime.configuration.session_use_strict_mode === true' }
-    # '"zend.detect_unicode" should be disabled as BOMs are not portable':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { expression: 'runtime.configuration.zend_detect_unicode === false' }
-    # 'The realpath cache ttl should be more than one hour in production':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { expression: 'runtime.configuration.realpath_cache_ttl >= 3600' }
-    # 'The session garbage collector should be disabled in production':
-    #     path:
-    #         - '/.*'
-    #     assertions:
-    #         - { expression: 'runtime.configuration.session_gc_probability === 0' }
-
+# For writing scenarios, take a look at the documentation
+# https://blackfire.io/docs/cookbooks/scenarios
 scenarios: |
     #!blackfire-player
 
-    name "Drupal Standard installation (no content)"
+    scenario
+        name "User visit"
+        set step "branch"
 
-    group starter-root
-
-        # The root path.
-        visit url('/')
+        # local: change endpoint to localhost:3000
+        visit url("/")
+            name "Frontend branch"
             expect status_code() == 200
-        # The Drupal installer.
-        visit url('/core/install.php')
+            expect "Production" == body()
+            expect "Production" == css("h1 #current-env-type").text()
+
+        # local: change endpoint to localhost:8000
+        visit url("/api/")
+            name "Backend base path"
+            expect status_code() == 200
+            expect body() == "Hello from the Python backend!"
+
+        visit url("/api/v1/environment")
+            name "Backend data"
             expect status_code() == 200
 
-    group installer
-
-        # The root path.
-        visit url('/')
-            expect status_code() == 302
-        # The Drupal installer.
-        visit url('/core/install.php')
-            expect status_code() == 200
-
-    # load ".github/tests/status/groups/starter.bkf"
-
-    # scenario
-    #     include starter-root
-
-    # load ".github/tests/status/groups/standard.bkf"
-
-    # scenario
-    #     include standard-paths
-
-    # load ".github/tests/status/groups/jsonapi.bkf"
-
-    # scenario
-    #     include jsonapi-disabled
+        # blackfire-player run blackfire.yml --endpoint="http://localhost:3000/" --variable step=branch -vvv
+        when "branch" == step 
+            visit url("/api/v1/environment")
+                expect "file" == json("session_storage")
+                expect "production" == json("type")
+        when "redis" == step 
+            visit url("/api/v1/environment")
+                expect "file" == json("session_storage")
+                expect "staging" == json("type")
+        when "merge-production" == step 
+            visit url("/api/v1/environment")
+                expect "redis" == json("session_storage")
+                expect "staging" == json("type")
+        when "complete" == step 
+            visit url("/api/v1/environment")
+                expect "redis" == json("session_storage")
+                expect "production" == json("type")

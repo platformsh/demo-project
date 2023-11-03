@@ -12,6 +12,8 @@ env:
     UPSUN_CLI_NO_INTERACTION: 1
     UPSUN_CLI_TOKEN: ${{secrets.DEVREL_USER_UPSUN_TOKEN}}
 
+    PHP_VERSION: '8.2'
+
     UPSUN_HOST_REGION: "ca-1"
     UPSUN_HOST_SUFFIX: "platform.sh"
     UPSUN_USERNAME: "devrel-projects"
@@ -37,22 +39,28 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             ################################################################################################
-            # A. Setup Upsun CLI.
-            - name: "[setup_cli] 1. Retrieve local files."
+            # A. Setup Upsun CLI & other tools.
+            - name: "[tools] 1. Retrieve local files."
               uses: actions/checkout@v4
               with:
                   ref: ${{ github.event.pull_request.head.sha }}
-            - name: "[setup_cli] 2. Set up Homebrew."
+            - name: "[tools] 2. Set up Homebrew."
               id: set-up-homebrew
               uses: Homebrew/actions/setup-homebrew@master
-            - name: "[setup_cli] 3. Install Upsun CLI."
+            - name: "[tools] 3. Install Upsun CLI."
               run: |
                   echo "::notice::Installing Upsun CLI via HomeBrew."
                   brew install platformsh/tap/upsun-cli
-            - name: "[setup_cli] 4. Test: The Upsun CLI should be installed and executable."
+            - name: "[tools] 4. Test: The Upsun CLI should be installed and executable."
               run: |
                   echo "::notice::Verifying CLI is installed correctly."
                   ./$TEST_PATH/command_installed.sh upsun
+            - name: "[tools] 5. Test: Setup Blackfire."
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ env.PHP_VERSION }}
+                  extensions: 'blackfire, :xdebug'
+                  tools: 'blackfire, blackfire-player'
 
             ################################################################################################
             # B. Setup authenticated Upsun CLI user.
@@ -212,60 +220,68 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
-            - name: "[init_resources] 4. Test: Updating environment resources should result in a 200 on the frontend production app."
+            
+            - name: "[init_resources] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  EXPECTED_STATUS="200"
                   cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
                   eval "$cmd"
-                  PROD_URL_FRONTEND=$(eval "$cmd --pipe")
-                  ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
+                  URL=$(eval "$cmd --pipe")
+                  blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=branch -vvv
 
-            - name: "[init_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED_STATUS="200"
-                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
-                  eval "$cmd"
-                  PROD_URL_FRONTEND=$(eval "$cmd --pipe")
-                  # Base path.
-                  BASE_PATH="api/"
-                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
-                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend base path (init_resources)"
-                  # Data path
-                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
-                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
-            - name: "[init_resources]  6. Test: endpoint data (session_storage)"
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="file"
-                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
-                  eval "$cmd"
-                  PROD_URL_FRONTEND=$(eval "$cmd --pipe")
-                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
-                  RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.session_storage')
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data session_storage"
-            - name: "[init_resources] 7. Test: endpoint data (environment_type)"
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="production"
-                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
-                  eval "$cmd"
-                  PROD_URL_FRONTEND=$(eval "$cmd --pipe")
-                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
-                  RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
-            - name: "[init_resources] 8. Test: backend base path"
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="Hello from the Python backend!"
-                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
-                  eval "$cmd"
-                  PROD_URL_FRONTEND=$(eval "$cmd --pipe")
-                  BASE_PATH="api/"
-                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
-                  RESULT=$(curl -s $PROD_URL_BACKEND)
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend base path response"
+            # - name: "[init_resources] 4. Test: Updating environment resources should result in a 200 on the frontend production app."
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED_STATUS="200"
+            #       cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
+            #       eval "$cmd"
+            #       PROD_URL_FRONTEND=$(eval "$cmd --pipe")
+            #       ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
+            # - name: "[init_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED_STATUS="200"
+            #       cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
+            #       eval "$cmd"
+            #       PROD_URL_FRONTEND=$(eval "$cmd --pipe")
+            #       # Base path.
+            #       BASE_PATH="api/"
+            #       PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
+            #       ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend base path (init_resources)"
+            #       # Data path
+            #       PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+            #       ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
+            # - name: "[init_resources]  6. Test: endpoint data (session_storage)"
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="file"
+            #       cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
+            #       eval "$cmd"
+            #       PROD_URL_FRONTEND=$(eval "$cmd --pipe")
+            #       PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+            #       RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.session_storage')
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data session_storage"
+            # - name: "[init_resources] 7. Test: endpoint data (environment_type)"
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="production"
+            #       cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
+            #       eval "$cmd"
+            #       PROD_URL_FRONTEND=$(eval "$cmd --pipe")
+            #       PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+            #       RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
+            # - name: "[init_resources] 8. Test: backend base path"
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="Hello from the Python backend!"
+            #       cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
+            #       eval "$cmd"
+            #       PROD_URL_FRONTEND=$(eval "$cmd --pipe")
+            #       BASE_PATH="api/"
+            #       PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
+            #       RESULT=$(curl -s $PROD_URL_BACKEND)
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend base path response"
 
             ################################################################################################
             # G. Create staging environment.
@@ -281,51 +297,59 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.branch result success "environment_branch"
-            - name: "[environment_branch] 4. Test: Creating staging env should result in a 200 on the frontend staging app." 
+
+            - name: "[environment_branch] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  sleep 2
-                  EXPECTED_STATUS="200"
-                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
-                  echo $STAG_URL_FRONTEND
-                  ./utils/tests/url_status.sh $STAG_URL_FRONTEND $EXPECTED_STATUS "staging frontend deployment (environment_branch)"
-            - name: "[environment_branch] 5. Test: Creating staging env should result in a 200 on the backend staging app."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED_STATUS="200"
-                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
-                  # Base path
-                  BASE_PATH="api/"
-                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
-                  ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (environment_branch)"
-                  # Data path 
-                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
-                  ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (environment_branch)"
-            - name: "[environment_branch] 6. Test: endpoint data (session_storage)"  
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="file"
-                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
-                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
-                  RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.session_storage')
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data session_storage"
-            - name: "[environment_branch] 7. Test: endpoint data (environment_type)"
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="staging"
-                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
-                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
-                  RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.type')
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
-            - name: "[environment_branch] 8. Test: backend base path"
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="Hello from the Python backend!"
-                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
-                  BASE_PATH="api/"
-                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
-                  RESULT=$(curl -s $STAG_URL_BACKEND)
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend base path"
+                  URL=$(upsun url --primary --pipe)
+                  blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=redis -vvv
+
+            # - name: "[environment_branch] 4. Test: Creating staging env should result in a 200 on the frontend staging app." 
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       sleep 2
+            #       EXPECTED_STATUS="200"
+            #       STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       echo $STAG_URL_FRONTEND
+            #       ./utils/tests/url_status.sh $STAG_URL_FRONTEND $EXPECTED_STATUS "staging frontend deployment (environment_branch)"
+            # - name: "[environment_branch] 5. Test: Creating staging env should result in a 200 on the backend staging app."
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED_STATUS="200"
+            #       STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       # Base path
+            #       BASE_PATH="api/"
+            #       STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
+            #       ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (environment_branch)"
+            #       # Data path 
+            #       STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+            #       ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (environment_branch)"
+            # - name: "[environment_branch] 6. Test: endpoint data (session_storage)"  
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="file"
+            #       STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+            #       RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.session_storage')
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data session_storage"
+            # - name: "[environment_branch] 7. Test: endpoint data (environment_type)"
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="staging"
+            #       STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+            #       RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.type')
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
+            # - name: "[environment_branch] 8. Test: backend base path"
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="Hello from the Python backend!"
+            #       STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       BASE_PATH="api/"
+            #       STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
+            #       RESULT=$(curl -s $STAG_URL_BACKEND)
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend base path"
+
             - name: "[environment_branch] 9. Update staging environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -366,49 +390,56 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update result success "add_service_resources"
-            - name: "[add_service_resources] 4. Test: The update environment resources activity should result in a 200 on the frontend staging app." 
+
+            - name: "[add_service_resources] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  EXPECTED_STATUS="200"
-                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
-                  ./utils/tests/url_status.sh $STAG_URL_FRONTEND $EXPECTED_STATUS "staging frontend deployment (add_service_resources)"
-            - name: "[add_service_resources] 5. Test: The update environment resources activity should result in a 200 on the backend staging app."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED_STATUS="200"
-                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
-                  # Base path
-                  BASE_PATH="api/"
-                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
-                  ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (add_service_resources)"
-                  # Data path 
-                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
-                  ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (add_service_resources)"
-            - name: "[add_service_resources] 6. Test: endpoint data (session_storage)"  
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="redis"
-                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
-                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
-                  RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.session_storage')
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data session_storage"
-            - name: "[add_service_resources] 7. Test: endpoint data (environment_type)"
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="staging"
-                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
-                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
-                  RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.type')
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
-            - name: "[add_service_resources] 8. Test: backend base path"
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="Hello from the Python backend!"
-                  STAG_URL_FRONTEND=$(upsun url --primary --pipe)
-                  BASE_PATH="api/"
-                  STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
-                  RESULT=$(curl -s $STAG_URL_BACKEND)
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
+                  URL=$(upsun url --primary --pipe)
+                  blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=merge-production -vvv
+
+            # - name: "[add_service_resources] 4. Test: The update environment resources activity should result in a 200 on the frontend staging app." 
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED_STATUS="200"
+            #       STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       ./utils/tests/url_status.sh $STAG_URL_FRONTEND $EXPECTED_STATUS "staging frontend deployment (add_service_resources)"
+            # - name: "[add_service_resources] 5. Test: The update environment resources activity should result in a 200 on the backend staging app."
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED_STATUS="200"
+            #       STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       # Base path
+            #       BASE_PATH="api/"
+            #       STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
+            #       ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (add_service_resources)"
+            #       # Data path 
+            #       STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+            #       ./utils/tests/url_status.sh $STAG_URL_BACKEND $EXPECTED_STATUS "staging backend deployment (add_service_resources)"
+            # - name: "[add_service_resources] 6. Test: endpoint data (session_storage)"  
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="redis"
+            #       STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+            #       RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.session_storage')
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data session_storage"
+            # - name: "[add_service_resources] 7. Test: endpoint data (environment_type)"
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="staging"
+            #       STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       STAG_URL_BACKEND=$STAG_URL_FRONTEND$BACKEND_PATH
+            #       RESULT=$(curl -s $STAG_URL_BACKEND | jq -r '.type')
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
+            # - name: "[add_service_resources] 8. Test: backend base path"
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="Hello from the Python backend!"
+            #       STAG_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       BASE_PATH="api/"
+            #       STAG_URL_BACKEND=$STAG_URL_FRONTEND$BASE_PATH
+            #       RESULT=$(curl -s $STAG_URL_BACKEND)
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "STAG Backend data environment_type"
 
             ################################################################################################
             # I. Promote revision to production.
@@ -442,49 +473,56 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
-            - name: "[prod_service_resources] 4. Test: Updating environment resources should result in a 200 on the frontend production app."
+
+            - name: "[prod_service_resources] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  EXPECTED_STATUS="200"
-                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
-                  ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
-            - name: "[prod_service_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED_STATUS="200"
-                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
-                  # Base path
-                  BASE_PATH="api/"
-                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
-                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"              
-                  # Data path 
-                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
-                  ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
-            - name: "[prod_service_resources]  6. Test: endpoint data (session_storage)"
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="redis"
-                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
-                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
-                  RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.session_storage')
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data session_storage"
-            - name: "[prod_service_resources] 7. Test: endpoint data (environment_type)"
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="production"
-                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
-                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
-                  RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
-            - name: "[prod_service_resources] 8. Test: backend base path"
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  EXPECTED="Hello from the Python backend!"
-                  PROD_URL_FRONTEND=$(upsun url --primary --pipe)
-                  BASE_PATH="api/"
-                  PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
-                  RESULT=$(curl -s $PROD_URL_BACKEND)
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
+                  URL=$(upsun url --primary --pipe)
+                  blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=complete -vvv
+
+            # - name: "[prod_service_resources] 4. Test: Updating environment resources should result in a 200 on the frontend production app."
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED_STATUS="200"
+            #       PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       ./utils/tests/url_status.sh $PROD_URL_FRONTEND $EXPECTED_STATUS "production frontend deployment (init_resources)"
+            # - name: "[prod_service_resources] 5. Test: Updating environment resources should result in a 200 on the backend production app."
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED_STATUS="200"
+            #       PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       # Base path
+            #       BASE_PATH="api/"
+            #       PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
+            #       ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"              
+            #       # Data path 
+            #       PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+            #       ./utils/tests/url_status.sh $PROD_URL_BACKEND $EXPECTED_STATUS "production backend deployment (init_resources)"
+            # - name: "[prod_service_resources]  6. Test: endpoint data (session_storage)"
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="redis"
+            #       PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+            #       RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.session_storage')
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data session_storage"
+            # - name: "[prod_service_resources] 7. Test: endpoint data (environment_type)"
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="production"
+            #       PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       PROD_URL_BACKEND=$PROD_URL_FRONTEND$BACKEND_PATH
+            #       RESULT=$(curl -s $PROD_URL_BACKEND | jq -r '.type')
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
+            # - name: "[prod_service_resources] 8. Test: backend base path"
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       EXPECTED="Hello from the Python backend!"
+            #       PROD_URL_FRONTEND=$(upsun url --primary --pipe)
+            #       BASE_PATH="api/"
+            #       PROD_URL_BACKEND=$PROD_URL_FRONTEND$BASE_PATH
+            #       RESULT=$(curl -s $PROD_URL_BACKEND)
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "PROD Backend data environment_type"
             ################################################################################################
             # K. Clean up test project.
             - name: "[cleanup] 1. Delete project."
