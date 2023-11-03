@@ -34,6 +34,9 @@ env:
 
     BACKEND_PATH: "api/v1/environment"
 
+    BLACKFIRE_CLIENT_ID: '${{ secrets.DEVREL_USER_BLACKFIRE_CLIENT_ID }}'
+    BLACKFIRE_CLIENT_TOKEN: '${{ secrets.DEVREL_USER_BLACKFIRE_CLIENT_TOKEN }}'
+
 jobs:
     demo-runthrough:
         runs-on: ubuntu-latest
