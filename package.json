@@ -16,7 +16,8 @@
     "lint:frontend": "cd frontend && npm run lint",
     "lint:backend": "cd backend && pylint main.py app/**/*.py",
     "test:frontend": "cd frontend && npm run test",
-    "test:backend": "cd backend && ./scripts/test.sh"
+    "test:backend": "cd backend && ./scripts/test.sh",
+    "prettier:backend": "cd backend && black . --diff --color --check"
   },
   "repository": {
     "type": "git",
