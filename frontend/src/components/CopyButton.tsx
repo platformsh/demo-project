@@ -3,18 +3,26 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 
 type CopyButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   copyText: string;
+  onCopy?: () => void;
+  hideTooltip?: boolean
 };
 
-const CopyButton: React.FC<CopyButtonProps> = ({ copyText, ...props }) => {
+const CopyButton: React.FC<CopyButtonProps> = ({ copyText, hideTooltip, onCopy, ...props }) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(copyText).then(() => {
-      setTooltipOpen(true);
-      // Reset after a certain delay if you want, e.g., 2 seconds
-      setTimeout(() => {
-        setTooltipOpen(false);
-      }, 2000);
+      if(!hideTooltip) {
+        setTooltipOpen(true);
+        // Reset after a certain delay if you want, e.g., 2 seconds
+        setTimeout(() => {
+          setTooltipOpen(false);
+        }, 2000);
+      }
+
+      if(onCopy) {
+        onCopy()
+      }
     });
   };
 
