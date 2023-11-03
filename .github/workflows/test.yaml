@@ -58,19 +58,17 @@ jobs:
       - name: "7. Run Frontend tests"
         run: npm run test:frontend
       - name: "8. Run Backend linting"
-        run: npm run lint:backend
-      - name: "9. Run Backend linting"
         run: |
           pip install pylint 
           npm run lint:backend
 
       ################################################################################################
       # C. Ensure no vulnerabilities.
-      - name: "10. Test: there should be no Python vulnerabilities."
+      - name: "9. Test: there should be no Python vulnerabilities."
         run: |
           echo "::notice::Checking for vulnerabilities in backend Python app dependencies."
           npm run test:backend
-      - name: "11. Test: there should be no HIGH Node.js vulnerabilities."
+      - name: "10. Test: there should be no HIGH Node.js vulnerabilities."
         run: |
           echo "::notice::Checking for high vulnerabilities in frontend Node.js app dependencies."
           cd frontend
@@ -84,7 +82,7 @@ jobs:
           else
               echo "::notice::No HIGH vulnerabilities found on frontend app."
           fi
-      - name: "12. Test: there should be no CRITICAL Node.js vulnerabilities."
+      - name: "11. Test: there should be no CRITICAL Node.js vulnerabilities."
         run: |
           echo "::notice::Checking for critical vulnerabilities in frontend Node.js app dependencies."
           cd frontend
