@@ -1,0 +1,73 @@
+# This is a sample .blackfire.yaml file created by Blackfire.
+# You can read more about .blackfire.yaml here: https://blackfire.io/docs/cookbooks/tests
+# metrics:
+#     app.user_activity_calculation:
+#         label: "User activity calculation"
+#         timeline: true
+#         marker: true
+#         matching_calls:
+#             python:
+#                 - callee: '=bigfoot.models.User.get_recent_comments_count'
+
+# tests:
+#     "The homepage should be fast":
+#         path: "/"
+#         assertions:
+#             - "main.wall_time < 100ms"
+    
+#     "The homepage should not consume too much memory":
+#         path: "/"
+#         assertions:
+#             - "main.peak_memory < 2mb"
+
+#     "The number of created entities should be reasonable":
+#         path: "/.*"
+#         assertions:
+#             - "metrics.entities.created.count < 50"
+
+#     "The homepage should have a limited number of SQL queries":
+#         path: "/"
+#         assertions:
+#             - "metrics.sql.queries.count <= 5"
+
+# For writing scenarios, take a look at the documentation
+# https://blackfire.io/docs/cookbooks/scenarios
+scenarios: |
+    #!blackfire-player
+
+    scenario
+        name "User visit"
+        set step "branch"
+
+        # local: change endpoint to localhost:3000
+        visit url("/")
+            name "Frontend branch"
+            expect status_code() == 200
+
+        # local: change endpoint to localhost:8000
+        visit url("/api/")
+            name "Backend base path"
+            expect status_code() == 200
+            expect body() == "Hello from the Python backend!"
+
+        visit url("/api/v1/environment")
+            name "Backend data"
+            expect status_code() == 200
+
+        # blackfire-player run blackfire.yml --endpoint="http://localhost:3000/" --variable step=branch -vvv
+        when "branch" == step 
+            visit url("/api/v1/environment")
+                expect "file" == json("session_storage")
+                expect "production" == json("type")
+        when "redis" == step 
+            visit url("/api/v1/environment")
+                expect "file" == json("session_storage")
+                expect "staging" == json("type")
+        when "merge-production" == step 
+            visit url("/api/v1/environment")
+                expect "redis" == json("session_storage")
+                expect "staging" == json("type")
+        when "complete" == step 
+            visit url("/api/v1/environment")
+                expect "redis" == json("session_storage")
+                expect "production" == json("type")
