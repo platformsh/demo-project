@@ -4,7 +4,6 @@ import { ReactComponent as RedisIcon } from "./assets/utility/service_redis.svg"
 import { ReactComponent as DoneIcon } from "./assets/utility/done.svg";
 import { ReactComponent as MergeIcon } from "./assets/utility/merge.svg";
 import { ReactComponent as BranchIcon } from "./assets/utility/branch.svg";
-
 import { ReactComponent as ProductionIcon } from "./assets/utility/production.svg";
 import { ReactComponent as StagingIcon } from "./assets/utility/staging.svg";
 
@@ -14,7 +13,9 @@ import ErrorPage from "./page/ErrorPage";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import FeatureStep from "./components/FeatureStep";
-import { CodeBlock, dracula } from "react-code-blocks";
+import { CodeBlock } from 'react-code-blocks'
+import UpsunCodeTheme from './theme/code'
+import CodeExample from "./components/CodeExample";
 
 import { PROJECT_ID } from "./config";
 
@@ -135,10 +136,7 @@ services:
       >
         <Header />
         <main className="border-t-[1px] border-upsun-violet-600 flex flex-col sm:flex-row">
-          <Sidebar
-            environment={environment}
-            sessionStorageType={sessionStorageType}
-          />
+          <Sidebar/>
           <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
             <div ref={welcomeMessage} className="content-intro sm:w-3/4 mx-auto mt-6 mb-12">
               <div className="aside-title flex flex-row gap-4 items-center mb-2">
@@ -207,15 +205,7 @@ services:
                       <li className="">
                         <p className="mb-2 mt-2">
                           <span>Create environment</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.branch.user.branch}>
-                            <p className="mb-2 mt-2 code-block">
-                              <CodeBlock
-                                text={commands.branch.user.branch}
-                                showLineNumbers={false}
-                                theme={dracula}
-                              />
-                            </p>
-                          </CopyButton>
+                          <CodeExample copyText={commands.branch.user.branch} codeExampleText={commands.branch.user.branch}/>
                         </p>
                       </li>
                       <li>
@@ -223,15 +213,7 @@ services:
                           <span>
                             Once deployed, open environment in browser
                           </span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.branch.user.get_url}>
-                            <p className="mb-2 mt-2 code-block">
-                              <CodeBlock
-                                text={commands.branch.user.get_url}
-                                showLineNumbers={false}
-                                theme={dracula}
-                              />
-                            </p>
-                          </CopyButton>
+                          <CodeExample copyText={commands.branch.user.get_url} codeExampleText={commands.branch.user.get_url}/>
                         </p>
                       </li>
                     </ol>
@@ -266,7 +248,7 @@ services:
                             text={servicesText}
                             language='yaml'
                             showLineNumbers={true}
-                            theme={dracula}
+                            theme={UpsunCodeTheme}
                             startingLineNumber={67}
                           />
                         </p>
@@ -274,43 +256,19 @@ services:
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Commit</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.redis.user.commit}>
-                            <p className="mb-2 mt-2 code-block">
-                              <CodeBlock
-                                text={commands.redis.user.commit}
-                                showLineNumbers={false}
-                                theme={dracula}
-                              />
-                            </p>
-                          </CopyButton>
+                          <CodeExample copyText={commands.redis.user.commit} codeExampleText={commands.redis.user.commit}/>
                         </p>
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Push</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.redis.user.push}>
-                            <p className="mb-2 mt-2 code-block">
-                              <CodeBlock
-                                text={commands.redis.user.push}
-                                showLineNumbers={false}
-                                theme={dracula}
-                              />
-                            </p>
-                          </CopyButton>
+                          <CodeExample copyText={commands.redis.user.push} codeExampleText={commands.redis.user.push}/>
                         </p>
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Allocate Redis resources</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands.redis.user.push}>
-                            <p className="mb-2 mt-2 code-block">
-                              <CodeBlock
-                                text={commands.redis.user.resources_set}
-                                showLineNumbers={false}
-                                theme={dracula}
-                              />
-                            </p>
-                          </CopyButton>
+                          <CodeExample wrapLines copyText={commands.redis.user.resources_set} codeExampleText={commands.redis.user.resources_set}/>
                         </p>
                       </li>
                       <li>
@@ -343,22 +301,14 @@ services:
                         ? "Use your preview environments to stage any future updates."
                         : "Use this or other preview environments to stage any future updates."
                       }
-                      
+
                     </p>
                     <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
                       <li>
                         <p className="mb-2">
                           <span>Deploy staging changes to production</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge_production"].user.merge}>
-                            <p className="mb-2 mt-2 code-block">
-                              <CodeBlock
-                                text={commands["merge_production"].user.merge}
-                                showLineNumbers={false}
-                                theme={dracula}
-                              />
-                            </p>
-                          </CopyButton>
+                          <CodeExample copyText={commands["merge_production"].user.merge} codeExampleText={commands["merge_production"].user.merge}/>
                         </p>
                       </li>
                       <li>
@@ -367,29 +317,13 @@ services:
                         </p>
                         <p className="mb-2 mt-2">
                           <span>Allocate resources to Redis in production.</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge_production"].user.resources_set}>
-                            <p className="mb-2 mt-2 code-block">
-                              <CodeBlock
-                                text={commands["merge_production"].user.resources_set}
-                                showLineNumbers={false}
-                                theme={dracula}
-                              />
-                            </p>
-                          </CopyButton>
+                          <CodeExample wrapLines copyText={commands["merge_production"].user.resources_set} codeExampleText={commands["merge_production"].user.resources_set}/>
                         </p>
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
                           <span>Open production frontend in your browser</span>
-                          <CopyButton className="pl-1 inline-block w-full" copyText={commands["merge_production"].user.get_url}>
-                            <p className="mb-2 mt-2 code-block">
-                              <CodeBlock
-                                text={commands["merge_production"].user.get_url}
-                                showLineNumbers={false}
-                                theme={dracula}
-                              />
-                            </p>
-                          </CopyButton>
+                          <CodeExample copyText={commands["merge_production"].user.get_url} codeExampleText={commands["merge_production"].user.get_url}/>
                         </p>
                       </li>
                     </ol>
@@ -412,15 +346,7 @@ services:
                     </p>
                     <p className="mb-2 mt-5">
                       <span>Delete this project when ready using:</span>
-                      <CopyButton className="pl-1 inline-block w-full" copyText={commands.complete.user.delete_project}>
-                        <p className="mb-2 mt-2 code-block">
-                          <CodeBlock
-                            text={commands.complete.user.delete_project}
-                            showLineNumbers={false}
-                            theme={dracula}
-                          />
-                        </p>
-                      </CopyButton>
+                      <CodeExample copyText={commands.complete.user.delete_project} codeExampleText={commands.complete.user.delete_project}/>
                     </p>
                     <h4 className="mt-5 text-lg font-semibold">What's next?</h4>
                     <ul className="list-disc list-outside ml-8 mt-2">

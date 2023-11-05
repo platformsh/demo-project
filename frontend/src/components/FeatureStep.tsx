@@ -29,11 +29,11 @@ const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
     setIsExpanded(!isDisabled)
   }, [isDisabled])
 
-  return (
+  return (<div className={"group relative"}>
     <div
       ref={ref}
       data-testid="feature-step"
-      className={`feature--step flex flex-col transition-all duration-300 ${(isDisabled && !isExpanded && "is-disabled") || ""}`}
+      className={`feature--step flex flex-col transition-all duration-300 ${(isDisabled && !isExpanded && "is-disabled") || ""} ${!hideContent && 'group-hover:opacity-100'}`}
     >
       <div className="aside-title flex flex-row gap-4 items-center">
         {icon}
@@ -46,21 +46,19 @@ const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
               <div className={`${(isDisabled && !isExpanded && "line-clamp-1") || ""}`}>
                 {children}
               </div>
-              {isDisabled &&
-                <button
-                  style={{ pointerEvents: 'auto' }}
-                  className="text-white underline pt-5 cursor-pointer"
-                  onClick={() => setIsExpanded(!isExpanded)}
-                >
-                  {isExpanded ? 'Show less' : 'Show more'}
-                </button>
-              }
             </>
           </div>
         )}
       </div>
     </div>
-  );
+    {isDisabled &&!hideContent && <button
+      style={{ pointerEvents: 'auto' }}
+      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-white pt-1 pr-1 cursor-pointer absolute top-0 right-0 hover:underline"
+      onClick={() => setIsExpanded(!isExpanded)}
+    >
+      {isExpanded ? 'Show less' : 'Show more'}
+    </button>}
+  </div>);
 });
 
 export default FeatureStep;

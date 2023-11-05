@@ -32,7 +32,7 @@
         "user": {
             "commit": "git commit -am \"Create a Redis service.\"",
             "push": "upsun push",
-            "resources_set": "upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512"
+            "resources_set": "upsun resources:set \\\n\t--size redis_persistent:0.1 \\\n\t--disk redis_persistent:512"
         },
         "test": {
             "push": "git push --force upsun $STAGING_BRANCH"
