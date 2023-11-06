@@ -160,7 +160,7 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   # Title cannot be more than 28 chars
-                  upsun environment:info title "Production ({$DEFAULT_BRANCH:0:15})" -e "${DEFAULT_BRANCH:0:28}"
+                  upsun environment:info title "Production (${DEFAULT_BRANCH:0:15})" -e "${DEFAULT_BRANCH:0:28}"
             # @todo: The tests here are sound, but it takes a moment to get the final complete/success. Some kind of wait is probably
             #   needed here to 1) if pending --> wait until max, 2) if success, pass test, 3) if fail, fail test.
             #   The wait logic can be applied for all activity outcomes for 'state'.
@@ -256,7 +256,7 @@ jobs:
             - name: "[environment_branch] 9. Update staging environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun environment:info title "Staging ("${STAGING_BRANCH:0:18}")" -e "${STAGING_BRANCH:0:28}"
+                  upsun environment:info title "Staging (${STAGING_BRANCH:0:18})" -e "${STAGING_BRANCH:0:28}"
 
             ################################################################################################
             # H. Add a service.
