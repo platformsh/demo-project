@@ -38,9 +38,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
-        run: |
-          python -m venv venv
-          source venv/bin/activate
+
       ################################################################################################
       # B. Prettify, lint, and test repo.
       - name: "4. Preparing"
