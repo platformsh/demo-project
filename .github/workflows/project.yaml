@@ -118,6 +118,8 @@ jobs:
               run: |
                 echo "::notice::Creating a project in the test organization."
                 echo "::notice::The project should become a remote repository for the local repo automatically."
+                PROJECT_TITLE=${PROJECT_TITLE:0:25}
+                PROJECT_TITLE="$PROJECT_TITLE..."
                 upsun project:create -o "$ORG_NAME" \
                     --title "$PROJECT_TITLE" \
                     --region "$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX" \
