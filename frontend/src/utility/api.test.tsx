@@ -1,21 +1,25 @@
-import { fetchEnvironment, EnvironmentResponseType, ENVIRONMENT_API_URI } from './api'; // Replace 'your-file-path' with the actual path
+import {
+  fetchEnvironment,
+  EnvironmentResponseType,
+  ENVIRONMENT_API_URI,
+} from "./api"; // Replace 'your-file-path' with the actual path
 
-describe('fetchEnvironment', () => {
+describe("fetchEnvironment", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
-  it('fetches environment successfully', async () => {
+  it("fetches environment successfully", async () => {
     const mockData: EnvironmentResponseType = {
-      "session_storage": "some-file-storage",
-      "type": "some-environment"
+      session_storage: "some-file-storage",
+      type: "some-environment",
     };
 
     global.fetch = jest.fn().mockImplementationOnce(() =>
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve(mockData),
-      } as Response)
+      } as Response),
     );
 
     const result = await fetchEnvironment();
@@ -27,13 +31,15 @@ describe('fetchEnvironment', () => {
     expect(result.type).toBe(mockData.type);
   });
 
-  it('fetches environment and fails with an error', async () => {
+  it("fetches environment and fails with an error", async () => {
     global.fetch = jest.fn().mockImplementationOnce(() =>
       Promise.resolve({
         ok: false,
-      } as Response)
+      } as Response),
     );
 
-    await expect(fetchEnvironment()).rejects.toThrow('Failed to fetch environment');
+    await expect(fetchEnvironment()).rejects.toThrow(
+      "Failed to fetch environment",
+    );
   });
 });
