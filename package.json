@@ -17,7 +17,7 @@
     "lint:backend": "cd backend && ./scripts/lint_backend.sh",
     "test:frontend": "cd frontend && npm run test",
     "test:backend": "cd backend && ./scripts/test.sh",
-    "prettier:backend": "cd backend && ./scripts/prettier_test.sh",
+    "prettier:backend": "cd backend && ./scripts/prettier_backend.sh",
     "prettier:backend:fix": "cd backend && black ."
   },
   "repository": {
