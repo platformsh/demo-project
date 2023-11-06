@@ -18,7 +18,9 @@
     "test:frontend": "cd frontend && npm run test",
     "test:backend": "cd backend && ./scripts/test.sh",
     "prettier:backend": "cd backend && ./scripts/prettier_backend.sh",
-    "prettier:backend:fix": "cd backend && black ."
+    "prettier:backend:fix": "cd backend && black .",
+    "prettier:frontend": "cd frontend && npm run pretty",
+    "prettier:frontend:fix": "cd frontend && npm run pretty:fix"
   },
   "repository": {
     "type": "git",
