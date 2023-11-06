@@ -27,8 +27,10 @@ env:
 
     PROJECT_LOCALDIR: "upsun-demo"
     PROJECT_REPO: "platformsh/demo-project"
+    PROJECT_TITLE: 'Demo Test Run (pr-${{ github.ref_name }})'
 
-    GIT_REF: "${{ github.event.pull_request.head.ref }}"
+    DEFAULT_BRANCH: '${{ github.event.pull_request.head.ref }}'
+    STAGING_BRANCH: '${{ github.event.pull_request.head.ref }}-staging'
 
     BACKEND_PATH: "api/v1/environment"
 
@@ -39,14 +41,7 @@ jobs:
     demo-runthrough:
         runs-on: ubuntu-latest
         steps:
-            - name: "[globals] Set dynamic global vars"
-              run: |
-                # Upsun title length limit: 28 characters (18 for the branch name, 10 for 'Demo PR ()')
-                echo "PROJECT_TITLE=Demo PR (${GIT_REF:0:18})" >> $GITHUB_ENV
-                echo "DEFAULT_BRANCH=${GIT_REF:0:28}" >> $GITHUB_ENV
-                echo "STAGING_BRANCH=${GIT_REF:0:20}-staging" >> $GITHUB_ENV
-
-          ################################################################################################
+            ################################################################################################
             # A. Setup Upsun CLI & other tools.
             - name: "[tools] 1. Retrieve local files."
               uses: actions/checkout@v4
