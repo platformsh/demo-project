@@ -30,7 +30,7 @@ env:
     PROJECT_TITLE: 'Demo PR (${{ github.ref_name }})'
 
     DEFAULT_BRANCH: '${{ github.event.pull_request.head.ref }}'
-    STAGING_BRANCH: '${{ github.event.pull_request.head.ref }}-staging'
+    STAGING_BRANCH: 'stage-${{ github.event.pull_request.head.ref }}'
 
     BACKEND_PATH: "api/v1/environment"
 
@@ -119,17 +119,17 @@ jobs:
                 echo "::notice::Creating a project in the test organization."
                 echo "::notice::The project should become a remote repository for the local repo automatically."
                 upsun project:create -o "$ORG_NAME" \
-                    --title "{$PROJECT_TITLE:0:28}" \
+                    --title "${PROJECT_TITLE:0:28}" \
                     --region "$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX" \
-                    --default-branch "{$DEFAULT_BRANCH:0:28}"
+                    --default-branch "${DEFAULT_BRANCH:0:28}"
             - name: "[create_project] 2. Test: The create project activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh "{$DEFAULT_BRANCH:0:28}" project.create state complete "create_project"
+                ./utils/tests/activity_outcome.sh "${DEFAULT_BRANCH:0:28}" project.create state complete "create_project"
             - name: "[create_project] 3. Test: The create project activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh "{$DEFAULT_BRANCH:0:28}" project.create result success "create_project"
+                ./utils/tests/activity_outcome.sh "${DEFAULT_BRANCH:0:28}" project.create result success "create_project"
             - name: "[create_project] 4. Test: project remote has been set."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -160,7 +160,7 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   # Title cannot be more than 28 chars
-                  upsun environment:info title "Production ({$DEFAULT_BRANCH:0:15})" -e "{$DEFAULT_BRANCH:0:28}"
+                  upsun environment:info title "Production ({$DEFAULT_BRANCH:0:15})" -e "${DEFAULT_BRANCH:0:28}"
             # @todo: The tests here are sound, but it takes a moment to get the final complete/success. Some kind of wait is probably
             #   needed here to 1) if pending --> wait until max, 2) if success, pass test, 3) if fail, fail test.
             #   The wait logic can be applied for all activity outcomes for 'state'.
@@ -196,18 +196,18 @@ jobs:
               run: |
                   echo "::notice::First push to project."
                   # @todo: Push through Git, not the CLI, so the exit doesn't break the workflow.
-                  git push --force upsun "{$DEFAULT_BRANCH:0:28}"
+                  git push --force upsun "${DEFAULT_BRANCH:0:28}"
                   cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.test.push") 
                   eval "$cmd"
                   # upsun push -f -y
             - name: "[first_deploy] 2. Test: The first deploy activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
-                ./utils/tests/activity_outcome.sh "{$DEFAULT_BRANCH:0:28}" push state complete "first_push"
+                ./utils/tests/activity_outcome.sh "${DEFAULT_BRANCH:0:28}" push state complete "first_push"
             - name: "[first_deploy] 3. Test: The first deploy activity should fail."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh "{$DEFAULT_BRANCH:0:28}" push result failure "first_push"
+                ./utils/tests/activity_outcome.sh "${DEFAULT_BRANCH:0:28}" push result failure "first_push"
 
             ################################################################################################
             # F. Set initial resources.
@@ -219,11 +219,11 @@ jobs:
             - name: "[init_resources] 2. Test: The update environment resources activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh "{$DEFAULT_BRANCH:0:28}" environment.resources.update state complete "init_resources"
+                  ./utils/tests/activity_outcome.sh "${DEFAULT_BRANCH:0:28}" environment.resources.update state complete "init_resources"
             - name: "[init_resources] 3. Test: The update environment resources activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh "{$DEFAULT_BRANCH:0:28}" environment.resources.update result success "init_resources"
+                  ./utils/tests/activity_outcome.sh "${DEFAULT_BRANCH:0:28}" environment.resources.update result success "init_resources"
             
             - name: "[init_resources] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
@@ -238,15 +238,15 @@ jobs:
             - name: "[environment_branch] 1. Create preview environment"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun branch $STAGING_BRANCH --type staging
+                  upsun branch "${STAGING_BRANCH:0:28}" --type staging
             - name: "[environment_branch] 2. Test: The environment_branch activity should complete."     
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.branch state complete "environment_branch"
+                  ./utils/tests/activity_outcome.sh "${STAGING_BRANCH:0:28}" environment.branch state complete "environment_branch"
             - name: "[environment_branch] 3. Test: The environment_branch activity should succeed."        
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.branch result success "environment_branch"
+                  ./utils/tests/activity_outcome.sh "${STAGING_BRANCH:0:28}" environment.branch result success "environment_branch"
 
             - name: "[environment_branch] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
@@ -256,7 +256,7 @@ jobs:
             - name: "[environment_branch] 9. Update staging environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun environment:info title "Staging ($STAGING_BRANCH)" -e $STAGING_BRANCH
+                  upsun environment:info title "Staging ("${STAGING_BRANCH:0:18}")" -e "${STAGING_BRANCH:0:28}"
 
             ################################################################################################
             # H. Add a service.
@@ -272,11 +272,11 @@ jobs:
             - name: "[add_service] 2. Test: The add_service activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
-                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push state complete "add_service"  
+                ./utils/tests/activity_outcome.sh "${STAGING_BRANCH:0:28}" push state complete "add_service"
             - name: "[add_service] 3. Test: The add_service activity should fail."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push result failure "add_service"
+                ./utils/tests/activity_outcome.sh "${STAGING_BRANCH:0:28}" push result failure "add_service"
                 
             ################################################################################################
             # I. Define service resources.
@@ -289,11 +289,11 @@ jobs:
             - name: "[add_service_resources] 2. Test: The add_service_resources activity should complete."     
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update state complete "add_service_resources"
+                  ./utils/tests/activity_outcome.sh "${STAGING_BRANCH:0:28}" environment.resources.update state complete "add_service_resources"
             - name: "[add_service_resources] 3. Test: The update environment resources activity should succeed."        
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update result success "add_service_resources"
+                  ./utils/tests/activity_outcome.sh "${STAGING_BRANCH:0:28}" environment.resources.update result success "add_service_resources"
 
             - name: "[add_service_resources] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
@@ -311,28 +311,28 @@ jobs:
             - name: "[merge] 2. Test: The merge activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
-                ./utils/tests/activity_outcome.sh "{$DEFAULT_BRANCH:0:28}" push state complete "merge"
+                ./utils/tests/activity_outcome.sh "${DEFAULT_BRANCH:0:28}" push state complete "merge"
             - name: "[merge] 3. Test: The merge activity should fail."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh "{$DEFAULT_BRANCH:0:28}" push result failure "merge"
+                ./utils/tests/activity_outcome.sh "${DEFAULT_BRANCH:0:28}" push result failure "merge"
                 
             ################################################################################################
             # J. Define production service resources.
             - name: "[prod_service_resources] 1. Set Redis' resources on production."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  # upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512 -e "{$DEFAULT_BRANCH:0:28}"
+                  # upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512 -e "${DEFAULT_BRANCH:0:28}"
                   cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.test.resources_set") 
                   eval "$cmd"
             - name: "[prod_service_resources] 2. Test: The update environment resources activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh "{$DEFAULT_BRANCH:0:28}" environment.resources.update state complete "init_resources"
+                  ./utils/tests/activity_outcome.sh "${DEFAULT_BRANCH:0:28}" environment.resources.update state complete "init_resources"
             - name: "[prod_service_resources] 3. Test: The update environment resources activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh "{$DEFAULT_BRANCH:0:28}" environment.resources.update result success "init_resources"
+                  ./utils/tests/activity_outcome.sh "${DEFAULT_BRANCH:0:28}" environment.resources.update result success "init_resources"
 
             - name: "[prod_service_resources] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
