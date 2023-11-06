@@ -14,10 +14,10 @@
     "postinstall:backend": "cd backend && ./scripts/build.sh",
     "postinstall:frontend": "cd frontend && npm install",
     "lint:frontend": "cd frontend && npm run lint",
-    "lint:backend": "cd backend && pylint main.py app/**/*.py",
+    "lint:backend": "cd backend && ./scripts/lint_backend.sh",
     "test:frontend": "cd frontend && npm run test",
     "test:backend": "cd backend && ./scripts/test.sh",
-    "prettier:backend": "cd backend && ./scripts/lint_test.sh",
+    "prettier:backend": "cd backend && ./scripts/prettier_test.sh",
     "prettier:backend:fix": "cd backend && black ."
   },
   "repository": {
