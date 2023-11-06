@@ -27,10 +27,11 @@ env:
 
     PROJECT_LOCALDIR: "upsun-demo"
     PROJECT_REPO: "platformsh/demo-project"
-    PROJECT_TITLE: 'Demo Test Run (pr-${{ github.ref_name }})'
 
-    DEFAULT_BRANCH: '${{ github.event.pull_request.head.ref }}'
-    STAGING_BRANCH: '${{ github.event.pull_request.head.ref }}-staging'
+    PROJECT_TITLE: 'Demo PR (${{ github.ref_name | slice(0, 18) }})' # Upsun: 28-Character Limit
+
+    DEFAULT_BRANCH: '${{ github.event.pull_request.head.ref  | slice(0, 28)  }}' # Upsun: 28-Character Limit
+    STAGING_BRANCH: '${{ github.event.pull_request.head.ref  | slice(0, 28) }}-staging'  # Upsun: 28-Character Limit
 
     BACKEND_PATH: "api/v1/environment"
 
@@ -118,8 +119,6 @@ jobs:
               run: |
                 echo "::notice::Creating a project in the test organization."
                 echo "::notice::The project should become a remote repository for the local repo automatically."
-                PROJECT_TITLE=${PROJECT_TITLE:0:25}
-                PROJECT_TITLE="$PROJECT_TITLE..."
                 upsun project:create -o "$ORG_NAME" \
                     --title "$PROJECT_TITLE" \
                     --region "$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX" \
