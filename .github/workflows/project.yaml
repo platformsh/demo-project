@@ -269,6 +269,7 @@ jobs:
             # H. Promote revision to production.
             - name: "[merge] 1. Merge staging into production."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
+              continue-on-error: true
               run: |
                   cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.test.merge") 
                   eval "$cmd"
