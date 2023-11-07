@@ -172,7 +172,6 @@ services:
                         <li className="mt-2 ml-6">Cloned the demo: <code className="ml-2 px-4">{commands.first_deploy.user.clone}</code></li>
                         <li className="mt-2 ml-6">Connected to Upsun: <code className="ml-2 px-4">{commands.first_deploy.user.set_remote} {PROJECT_ID}</code></li>
                         <li className="mt-2 ml-6">Pushed to Upsun: <code className="ml-2 px-4">{commands.first_deploy.user.push}</code></li>
-                        <li className="mt-2 ml-6">Defined deployment resources: <code className="ml-2 px-4">{commands.first_deploy.user.resources_set}</code></li>
                         <li className="mt-2 ml-6">Retrieved the deployed environment URL: <code className="ml-2 px-4">{commands.first_deploy.user.get_url}</code></li>
                       </ul>
                     </div>
