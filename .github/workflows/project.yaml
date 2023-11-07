@@ -321,6 +321,7 @@ jobs:
             - name: "[scale] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
+                  git checkout $DEFAULT_BRANCH
                   URL=$(upsun url --primary --pipe)
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=complete -vvv
 
