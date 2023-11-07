@@ -203,28 +203,12 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
                 ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push state complete "first_push"  
-            - name: "[first_deploy] 3. Test: The first deploy activity should fail."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result failure "first_push"
-
-            ################################################################################################
-            # F. Set initial resources.
-            - name: "[init_resources] 1. Set initial resources."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.resources_set") 
-                  eval "$cmd"
-            - name: "[init_resources] 2. Test: The update environment resources activity should complete."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update state complete "init_resources"
-            - name: "[init_resources] 3. Test: The update environment resources activity should succeed."
+            - name: "[first_deploy] 3. Test: The update environment resources activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
             
-            - name: "[init_resources] X. Test: Test responses on demo app using Blackfire Player."
+            - name: "[first_deploy] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
@@ -233,7 +217,7 @@ jobs:
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=branch -vvv
 
             ################################################################################################
-            # G. Create staging environment.
+            # F. Create staging environment.
             - name: "[environment_branch] 1. Create preview environment"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
