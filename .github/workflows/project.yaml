@@ -203,11 +203,10 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
                 ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push state complete "first_push"  
-            - name: "[first_deploy] 3. Test: The update environment resources activity should succeed."
+            - name: "[first_deploy] 3. Test: The first deploy activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
-            
+                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result success "first_push"
             - name: "[first_deploy] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -242,7 +241,7 @@ jobs:
                   upsun environment:info title "Staging ($STAGING_BRANCH)" -e $STAGING_BRANCH
 
             ################################################################################################
-            # H. Add a service.
+            # G. Add a service.
             - name: "[add_service] 1. Uncomment service configuration block. Commit & push new service."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -256,28 +255,10 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
                 ./utils/tests/activity_outcome.sh $STAGING_BRANCH push state complete "add_service"  
-            - name: "[add_service] 3. Test: The add_service activity should fail."
+            - name: "[add_service] 3. Test: The add_service activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push result failure "add_service"
-                
-            ################################################################################################
-            # I. Define service resources.
-            - name: "[add_service_resources] 1. Set Redis' resources."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512
-                  cmd=$(cat frontend/src/commands.json | jq -r ".redis.user.resources_set") 
-                  eval "$cmd"
-            - name: "[add_service_resources] 2. Test: The add_service_resources activity should complete."     
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update state complete "add_service_resources"
-            - name: "[add_service_resources] 3. Test: The update environment resources activity should succeed."        
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update result success "add_service_resources"
-
+                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push result success "add_service"
             - name: "[add_service_resources] X. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -285,7 +266,7 @@ jobs:
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=merge-production -vvv
 
             ################################################################################################
-            # I. Promote revision to production.
+            # H. Promote revision to production.
             - name: "[merge] 1. Merge staging into production."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
