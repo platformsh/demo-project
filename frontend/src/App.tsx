@@ -51,11 +51,11 @@ function App() {
 # Step 3: Add a service. Uncomment this section.
 ###############################################################
         relationships:
-            redis_session: "redis_persistent:redis"
-      
+             redis_session: "redis_service:redis"
+
 services:
-    redis_persistent:
-        type: "redis-persistent:7.0"
+   redis_service:
+       type: "redis:7.0"
 ###############################################################`
 
   useEffect(() => {
@@ -262,12 +262,6 @@ services:
                         <p className="mb-2 mt-2">
                           <span>Push</span>
                           <CodeExample copyText={commands.redis.user.push} codeExampleText={commands.redis.user.push}/>
-                        </p>
-                      </li>
-                      <li>
-                        <p className="mb-2 mt-2">
-                          <span>Allocate Redis resources</span>
-                          <CodeExample wrapLines copyText={commands.redis.user.resources_set} codeExampleText={commands.redis.user.resources_set}/>
                         </p>
                       </li>
                       <li>
