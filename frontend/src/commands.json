@@ -39,7 +39,7 @@
     "merge_production": {
         "user": {
             "merge": "upsun merge staging",
-            "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1 \\\n\t-e main",
+            "resources_set": "upsun resources:set \\\n\t--size redis_service:0.5 \\\n\t-e main",
             "get_url": "upsun url --primary -e main"
         },
         "test": {
@@ -47,7 +47,14 @@
             "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1"
         }
     },
-    "scale": false,
+    "scale": {
+        "user": {
+            "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1 \\\n\t-e main"
+        },
+        "test": {
+            "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1"
+        }
+    },
     "complete": {
         "user": {
             "delete_project": "upsun project:delete"

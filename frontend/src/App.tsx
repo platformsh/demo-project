@@ -338,6 +338,25 @@ services:
                       You've just experienced the power of Upsun's Git-based workflow to stage and deploy Redis seamlessly.
                     </p>
                     <p className="mb-2 mt-5">
+                      {/* <span>Upsun automatically allocated a set of default resources for each service in your project, but you can <strong>scale 
+                        those resources</strong> to whatever you need. For example, you can scale down the amount of resources on the
+                        Redis service container with the following command:
+                      </span> */}
+                      <span>You've used the Upsun CLI to merge a new service into production, and to match the resources you worked with in staging to that environment.
+                        From here, you can <strong>scale those resources</strong> to whatever you need. 
+                        For example, at this moment your production Redis service has 0.5 CPU. 
+                        You can scale down the amount of resources on the production Redis service container with the following command:
+                      </span>
+                      <CopyButton className="pl-1 inline-block w-full" copyText={commands.scale.user.resources_set}>
+                        <p className="mb-2 mt-2 code-block">
+                          <CodeBlock
+                            text={commands.scale.user.resources_set}
+                            showLineNumbers={false}
+                          />
+                        </p>
+                      </CopyButton>
+                    </p>
+                    <p className="mb-2 mt-5">
                       <span>Delete this project when ready using:</span>
                       <CodeExample copyText={commands.complete.user.delete_project} codeExampleText={commands.complete.user.delete_project}/>
                     </p>
