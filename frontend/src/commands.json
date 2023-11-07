@@ -30,7 +30,7 @@
     "redis": {
         "user": {
             "commit": "git commit -am \"Create a Redis service.\"",
-            "push": "upsun push",
+            "push": "upsun push"
         },
         "test": {
             "push": "git push --force upsun $STAGING_BRANCH"
