@@ -213,6 +213,7 @@ jobs:
                   cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
                   eval "$cmd"
                   URL=$(eval "$cmd --pipe")
+                  sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=branch -vvv
 
             ################################################################################################
@@ -234,6 +235,7 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   URL=$(upsun url --primary --pipe)
+                  sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=redis -vvv
             - name: "[environment_branch] 5. Update staging environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
@@ -263,6 +265,7 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   URL=$(upsun url --primary --pipe)
+                  sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=merge-production -vvv
 
             ################################################################################################
@@ -301,6 +304,7 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   URL=$(upsun url --primary --pipe)
+                  sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=complete -vvv
 
             ################################################################################################
@@ -324,6 +328,7 @@ jobs:
                   git checkout $DEFAULT_BRANCH
                   git branch
                   URL=$(upsun url $DEFAULT_BRANCH -e --primary --pipe)
+                  sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=scale -vvv
 
             ################################################################################################
