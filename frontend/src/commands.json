@@ -43,7 +43,7 @@
             "get_url": "upsun url --primary -e main"
         },
         "test": {
-            "merge": "git checkout $DEFAULT_BRANCH && git merge $STAGING_BRANCH && git push --force upsun $DEFAULT_BRANCH",
+            "merge": "upsun merge staging",
             "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1"
         }
     },
