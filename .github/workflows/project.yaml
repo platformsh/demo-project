@@ -327,7 +327,7 @@ jobs:
               run: |
                   git checkout $DEFAULT_BRANCH
                   git branch
-                  URL=$(upsun url $DEFAULT_BRANCH -e --primary --pipe)
+                  URL=$(upsun url -e $DEFAULT_BRANCH --primary --pipe)
                   sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=scale -vvv
 
