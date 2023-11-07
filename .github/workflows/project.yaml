@@ -322,8 +322,9 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   git checkout $DEFAULT_BRANCH
-                  URL=$(upsun url --primary --pipe)
-                  blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=complete -vvv
+                  git branch
+                  URL=$(upsun url $DEFAULT_BRANCH -e --primary --pipe)
+                  blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=scale -vvv
 
             ################################################################################################
             # K. Clean up test project.
