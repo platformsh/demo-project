@@ -43,7 +43,7 @@
             "get_url": "upsun url --primary -e main"
         },
         "test": {
-            "merge": "upsun merge staging",
+            "merge": "upsun merge $STAGING_BRANCH",
             "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1"
         }
     },
