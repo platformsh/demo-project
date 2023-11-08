@@ -51,6 +51,7 @@ jobs:
         run: | 
           npm run prettier:backend
       - name: "6. Verifying frontend code is pretty"
+        run: |
           npm run prettier:frontend
       - name: "7. Linting frontend"
         run: npm run lint:frontend
