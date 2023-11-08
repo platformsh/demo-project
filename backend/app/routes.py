@@ -5,6 +5,8 @@ import json
 
 bp = Blueprint('routes', __name__)
 
+service_relationship ="redis_session"
+
 API_PREFIX = '/api/v1'
 
 @bp.route(f'{API_PREFIX}/environment')
@@ -24,7 +26,7 @@ def getSessionStorageType():
     try:
         platform_relationships = json.loads(base64.b64decode(platform_relationships_data))
         
-        if 'redis_session' in platform_relationships:
+        if service_relationship in platform_relationships:
             return 'redis'
         else:
             return 'file'

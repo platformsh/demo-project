@@ -203,37 +203,21 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
                 ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push state complete "first_push"  
-            - name: "[first_deploy] 3. Test: The first deploy activity should fail."
+            - name: "[first_deploy] 3. Test: The first deploy activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result failure "first_push"
-
-            ################################################################################################
-            # F. Set initial resources.
-            - name: "[init_resources] 1. Set initial resources."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.resources_set") 
-                  eval "$cmd"
-            - name: "[init_resources] 2. Test: The update environment resources activity should complete."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update state complete "init_resources"
-            - name: "[init_resources] 3. Test: The update environment resources activity should succeed."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
-            
-            - name: "[init_resources] X. Test: Test responses on demo app using Blackfire Player."
+                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result success "first_push"
+            - name: "[first_deploy] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
                   eval "$cmd"
                   URL=$(eval "$cmd --pipe")
+                  sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=branch -vvv
 
             ################################################################################################
-            # G. Create staging environment.
+            # F. Create staging environment.
             - name: "[environment_branch] 1. Create preview environment"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -247,18 +231,19 @@ jobs:
               run: |
                   ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.branch result success "environment_branch"
 
-            - name: "[environment_branch] X. Test: Test responses on demo app using Blackfire Player."
+            - name: "[environment_branch] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   URL=$(upsun url --primary --pipe)
+                  sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=redis -vvv
-            - name: "[environment_branch] 9. Update staging environment name."
+            - name: "[environment_branch] 5. Update staging environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   upsun environment:info title "Staging ($STAGING_BRANCH)" -e $STAGING_BRANCH
 
             ################################################################################################
-            # H. Add a service.
+            # G. Add a service.
             - name: "[add_service] 1. Uncomment service configuration block. Commit & push new service."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -272,56 +257,39 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
                 ./utils/tests/activity_outcome.sh $STAGING_BRANCH push state complete "add_service"  
-            - name: "[add_service] 3. Test: The add_service activity should fail."
+            - name: "[add_service] 3. Test: The add_service activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push result failure "add_service"
-                
-            ################################################################################################
-            # I. Define service resources.
-            - name: "[add_service_resources] 1. Set Redis' resources."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512
-                  cmd=$(cat frontend/src/commands.json | jq -r ".redis.user.resources_set") 
-                  eval "$cmd"
-            - name: "[add_service_resources] 2. Test: The add_service_resources activity should complete."     
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update state complete "add_service_resources"
-            - name: "[add_service_resources] 3. Test: The update environment resources activity should succeed."        
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.resources.update result success "add_service_resources"
-
-            - name: "[add_service_resources] X. Test: Test responses on demo app using Blackfire Player."
+                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push result success "add_service"
+            - name: "[add_service_resources] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   URL=$(upsun url --primary --pipe)
+                  sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=merge-production -vvv
 
             ################################################################################################
-            # I. Promote revision to production.
+            # H. Promote revision to production.
             - name: "[merge] 1. Merge staging into production."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
+              continue-on-error: true
               run: |
                   cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.test.merge") 
                   eval "$cmd"
             - name: "[merge] 2. Test: The merge activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push state complete "merge"  
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.merge state complete "merge"  
             - name: "[merge] 3. Test: The merge activity should fail."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result failure "merge"
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.merge result failure "merge"
                 
             ################################################################################################
-            # J. Define production service resources.
+            # I. Define production service post_merge resources.
             - name: "[prod_service_resources] 1. Set Redis' resources on production."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  # upsun resources:set --size redis_persistent:0.1 --disk redis_persistent:512 -e $DEFAULT_BRANCH
                   cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.test.resources_set") 
                   eval "$cmd"
             - name: "[prod_service_resources] 2. Test: The update environment resources activity should complete."
@@ -332,12 +300,38 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
-
-            - name: "[prod_service_resources] X. Test: Test responses on demo app using Blackfire Player."
+            - name: "[prod_service_resources] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  URL=$(upsun url --primary --pipe)
+                  git checkout $DEFAULT_BRANCH
+                  git branch
+                  URL=$(upsun url -e $DEFAULT_BRANCH --primary --pipe)
+                  sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=complete -vvv
+
+            ################################################################################################
+            # J. Scale down to minimum resources
+            - name: "[scale] 1. Scale down to minimum resources for Redis"
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  cmd=$(cat frontend/src/commands.json | jq -r ".scale.test.resources_set") 
+                  eval "$cmd"
+            - name: "[scale] 2. Test: The update environment resources activity should complete."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update state complete "init_resources"
+            - name: "[scale] 3. Test: The update environment resources activity should succeed."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
+            - name: "[scale] 4. Test: Test responses on demo app using Blackfire Player."
+              working-directory: ${{ env.PROJECT_LOCALDIR }}
+              run: |
+                  git checkout $DEFAULT_BRANCH
+                  git branch
+                  URL=$(upsun url -e $DEFAULT_BRANCH --primary --pipe)
+                  sleep 2
+                  blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=scale -vvv
 
             ################################################################################################
             # K. Clean up test project.

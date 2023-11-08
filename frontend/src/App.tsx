@@ -51,11 +51,11 @@ function App() {
 # Step 3: Add a service. Uncomment this section.
 ###############################################################
         relationships:
-            redis_session: "redis_persistent:redis"
-      
+            redis_session: "redis_service:redis"
+
 services:
-    redis_persistent:
-        type: "redis-persistent:7.0"
+    redis_service:
+        type: "redis:7.0"
 ###############################################################`
 
   useEffect(() => {
@@ -172,7 +172,6 @@ services:
                         <li className="mt-2 ml-6">Cloned the demo: <code className="ml-2 px-4">{commands.first_deploy.user.clone}</code></li>
                         <li className="mt-2 ml-6">Connected to Upsun: <code className="ml-2 px-4">{commands.first_deploy.user.set_remote} {PROJECT_ID}</code></li>
                         <li className="mt-2 ml-6">Pushed to Upsun: <code className="ml-2 px-4">{commands.first_deploy.user.push}</code></li>
-                        <li className="mt-2 ml-6">Defined deployment resources: <code className="ml-2 px-4">{commands.first_deploy.user.resources_set}</code></li>
                         <li className="mt-2 ml-6">Retrieved the deployed environment URL: <code className="ml-2 px-4">{commands.first_deploy.user.get_url}</code></li>
                       </ul>
                     </div>
@@ -267,12 +266,6 @@ services:
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
-                          <span>Allocate Redis resources</span>
-                          <CodeExample wrapLines copyText={commands.redis.user.resources_set} codeExampleText={commands.redis.user.resources_set}/>
-                        </p>
-                      </li>
-                      <li>
-                        <p className="mb-2 mt-2">
                           <span>Refresh this page when done.</span>
                         </p>
                       </li>
@@ -343,6 +336,25 @@ services:
                     <p className="mb-2 mt-2 font-bold">🎉 Kudos! You've aced the Upsun Demo!</p>
                     <p className="mb-2">
                       You've just experienced the power of Upsun's Git-based workflow to stage and deploy Redis seamlessly.
+                    </p>
+                    <p className="mb-2 mt-5">
+                      {/* <span>Upsun automatically allocated a set of default resources for each service in your project, but you can <strong>scale 
+                        those resources</strong> to whatever you need. For example, you can scale down the amount of resources on the
+                        Redis service container with the following command:
+                      </span> */}
+                      <span>You've used the Upsun CLI to merge a new service into production, and to match the resources you worked with in staging to that environment.
+                        From here, you can <strong>scale those resources</strong> to whatever you need. 
+                        For example, at this moment your production Redis service has 0.5 CPU. 
+                        You can scale down the amount of resources on the production Redis service container with the following command:
+                      </span>
+                      <CopyButton className="pl-1 inline-block w-full" copyText={commands.scale.user.resources_set}>
+                        <p className="mb-2 mt-2 code-block">
+                          <CodeBlock
+                            text={commands.scale.user.resources_set}
+                            showLineNumbers={false}
+                          />
+                        </p>
+                      </CopyButton>
                     </p>
                     <p className="mb-2 mt-5">
                       <span>Delete this project when ready using:</span>
