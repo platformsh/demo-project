@@ -91,22 +91,7 @@ If for some reason you close your browser and lose your place, however, you can 
     upsun push -y --set-remote PROJECT_ID
     ```
 
-4. Set resources
-
-    > [!NOTE]
-    > You can determine if you have already defined resources for the demo project with the command `upsun activity:list --type environment.resources.update --result=success`.
-    > If you've successfully defined resources, there will be an entry in the table that says **Your Name updated resource allocation on Main**.
-    >
-    > If you see a successful `environment.resources.update` activity, move on to step 5.
-
-    You first push for the demo project will fail because Upsun does not yet know what resources should be deployed. 
-    Run the command below to complete the deployment.
-
-    ```bash
-    upsun resources:set --size '*:1'
-    ```
-
-5. View the environment
+4. View the environment
 
     You should be all caught up to resume the demo at this point. 
     Run `upsun url --primary` to view the environment, and visit https://console.upsun.com/projects/PROJECT_ID to view the project.

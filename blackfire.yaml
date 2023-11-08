@@ -71,3 +71,7 @@ scenarios: |
             visit url("/api/v1/environment")
                 expect "redis" == json("session_storage")
                 expect "production" == json("type")
+        when "scale" == step 
+            visit url("/api/v1/environment")
+                expect "redis" == json("session_storage")
+                expect "production" == json("type")
