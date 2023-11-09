@@ -22,32 +22,31 @@ const Draggable: React.FC<DraggableProps> = ({ children }) => {
         setIsDragging(true);
     };
 
-    const onMouseMove = (event: MouseEvent) => {
-        if (isDragging) {
-            let newX = event.clientX - offset.x;
-            let newY = event.clientY - offset.y;
-
-            // Boundary checks
-            if (ref.current) {
-                const maxX = window.innerWidth - ref.current.offsetWidth;
-                const maxY = window.innerHeight - ref.current.offsetHeight;
-
-                if (newX < 0) newX = 0;
-                if (newY < 0) newY = 0;
-                if (newX > maxX) newX = maxX;
-                if (newY > maxY) newY = maxY;
-
-                setPosition({ x: newX, y: newY });
-            }
-        }
-    };
-
-    const onMouseUp = () => {
-        setIsDragging(false);
-        localStorage.setItem('draggablePosition', JSON.stringify(position));
-    };
-
     useEffect(() => {
+        const onMouseUp = () => {
+            setIsDragging(false);
+            localStorage.setItem('draggablePosition', JSON.stringify(position));
+        };
+
+        const onMouseMove = (event: MouseEvent) => {
+            if (isDragging) {
+                let newX = event.clientX - offset.x;
+                let newY = event.clientY - offset.y;
+
+                // Boundary checks
+                if (ref.current) {
+                    const maxX = window.innerWidth - ref.current.offsetWidth;
+                    const maxY = window.innerHeight - ref.current.offsetHeight;
+
+                    if (newX < 0) newX = 0;
+                    if (newY < 0) newY = 0;
+                    if (newX > maxX) newX = maxX;
+                    if (newY > maxY) newY = maxY;
+
+                    setPosition({ x: newX, y: newY });
+                }
+            }
+        };
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
         return () => {
