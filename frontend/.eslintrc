@@ -1,7 +1,4 @@
 {
-    "extends": [
-      "react-app",
-      "plugin:testing-library/react"
-    ],
-    "plugins": ["testing-library"]
-  }
+  "extends": ["react-app", "plugin:testing-library/react"],
+  "plugins": ["testing-library"]
+}

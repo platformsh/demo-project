@@ -40,22 +40,34 @@ jobs:
           cache: 'pip'
 
       ################################################################################################
-      # B. Test repo.
-      - name: "4. Run Frontend tests."
+      # B. Prettify, lint, and test repo.
+      - name: "4. Preparing"
         run: |
           echo "::notice::Running react-scripts tests."
           export CI=true
           npm install cross-env npm-run-all -g
           npm install
-          npm run test:frontend
+      - name: "5. Verifying backend code is pretty"
+        run: | 
+          npm run prettier:backend
+      - name: "6. Verifying frontend code is pretty"
+        run: |
+          npm run prettier:frontend
+      - name: "7. Linting frontend"
+        run: npm run lint:frontend
+      - name: "8. Run Frontend tests"
+        run: npm run test:frontend
+      - name: "9. Run Backend linting"
+        run: |
+          npm run lint:backend
 
       ################################################################################################
       # C. Ensure no vulnerabilities.
-      - name: "5. Test: there should be no Python vulnerabilities."
+      - name: "10. Test: there should be no Python vulnerabilities."
         run: |
           echo "::notice::Checking for vulnerabilities in backend Python app dependencies."
           npm run test:backend
-      - name: "6. Test: there should be no HIGH Node.js vulnerabilities."
+      - name: "11. Test: there should be no HIGH Node.js vulnerabilities."
         run: |
           echo "::notice::Checking for high vulnerabilities in frontend Node.js app dependencies."
           cd frontend
@@ -69,7 +81,7 @@ jobs:
           else
               echo "::notice::No HIGH vulnerabilities found on frontend app."
           fi
-      - name: "7. Test: there should be no CRITICAL Node.js vulnerabilities."
+      - name: "12. Test: there should be no CRITICAL Node.js vulnerabilities."
         run: |
           echo "::notice::Checking for critical vulnerabilities in frontend Node.js app dependencies."
           cd frontend

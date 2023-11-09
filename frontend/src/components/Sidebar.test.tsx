@@ -42,5 +42,4 @@ describe("<Sidebar />", () => {
     // Check if the production icon is rendered
     expect(screen.getByText("About")).toBeInTheDocument();
   });
-
 });

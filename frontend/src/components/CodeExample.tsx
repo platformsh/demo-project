@@ -5,21 +5,21 @@ import { ReactComponent as CopyIcon } from "../assets/utility/copy.svg";
 interface CodeExampleProps {
   copyText: string;
   codeExampleText: React.ReactNode;
-  wrapLines?: boolean
+  wrapLines?: boolean;
 }
 
 const CodeExample: React.FC<CodeExampleProps> = ({
   copyText,
   codeExampleText,
-  wrapLines
+  wrapLines,
 }: CodeExampleProps) => {
   const [copied, setCopied] = useState(false);
   const [showCopiedText, setShowCopiedText] = useState(false);
-  const [doWrapLines, setDoWrapLines] = useState(wrapLines || false)
+  const [doWrapLines, setDoWrapLines] = useState(wrapLines || false);
 
-  useEffect(() =>{
-    setDoWrapLines(wrapLines || false)
-  }, [wrapLines])
+  useEffect(() => {
+    setDoWrapLines(wrapLines || false);
+  }, [wrapLines]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -60,13 +60,19 @@ const CodeExample: React.FC<CodeExampleProps> = ({
     >
       <p className="mb-2 mt-2 code-block group/copy-box">
         <code className="px-2 py-1.5 w-full flex flex-row">
-          <span className={`w-full text-left ${doWrapLines ? 'whitespace-pre-wrap' : 'whitespace-nowrap overflow-auto'}`}>
+          <span
+            className={`w-full text-left ${
+              doWrapLines
+                ? "whitespace-pre-wrap"
+                : "whitespace-nowrap overflow-auto"
+            }`}
+          >
             {codeExampleText}
           </span>
           <span className="text-white flex flex-row items-center">
             <span
               className={`h-full transition-opacity duration-300 ${
-                showCopiedText ? 'opacity-100' : 'opacity-0'
+                showCopiedText ? "opacity-100" : "opacity-0"
               }`}
             >
               Copied!

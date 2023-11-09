@@ -50,8 +50,8 @@ describe("<App />", () => {
     // eslint-disable-next-line testing-library/no-unnecessary-act
     await act(async () => {
       render(<App />);
-    });    
-    
+    });
+
     const element = screen.queryByText(
       /This app is the React frontend of your demo/i,
     );
@@ -76,7 +76,6 @@ describe("<App />", () => {
     expect(element).toBeInTheDocument();
   });
 
-
   it("hides staging copy for non-production when changes have been made", async () => {
     const mockData = {
       type: "other",
@@ -91,8 +90,8 @@ describe("<App />", () => {
     // eslint-disable-next-line testing-library/no-unnecessary-act
     await act(async () => {
       render(<App />);
-    });    
-    
+    });
+
     const element = screen.queryByText(
       /This space represents your byte-for-byte copy of production/i,
     );
@@ -118,7 +117,8 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("2. Create your first preview environment").parentElement?.parentElement,
+      screen.getByText("2. Create your first preview environment").parentElement
+        ?.parentElement,
     ).not.toHaveClass("is-disabled");
 
     expect(
@@ -154,7 +154,8 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("2. Create your first preview environment").parentElement?.parentElement,
+      screen.getByText("2. Create your first preview environment").parentElement
+        ?.parentElement,
     ).toHaveClass("is-disabled");
 
     expect(
@@ -192,7 +193,8 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("2. Create your first preview environment").parentElement?.parentElement,
+      screen.getByText("2. Create your first preview environment").parentElement
+        ?.parentElement,
     ).toHaveClass("is-disabled");
 
     expect(
@@ -230,7 +232,8 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("2. Create your first preview environment").parentElement?.parentElement,
+      screen.getByText("2. Create your first preview environment").parentElement
+        ?.parentElement,
     ).toHaveClass("is-disabled");
 
     expect(
