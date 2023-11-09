@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
-import Draggable from './Draggable'
+import React, { useState } from "react";
+import Draggable from "./Draggable";
 
 interface DesignDebuggerProps {
   defaultEnvironment?: string | null;
   defaultStorage?: string | null;
   defaultErrorState?: string | null;
-  onEnvironmentChange?: (environment: string|null) => void;
-  onStorageChange?: (storageType: string|null) => void;
+  onEnvironmentChange?: (environment: string | null) => void;
+  onStorageChange?: (storageType: string | null) => void;
   onErrorChange?: (error: string | null) => void;
 }
 
 const DesignDebugger: React.FC<DesignDebuggerProps> = (props) => {
-  const [environment, setEnvironment] = useState<string | null>(props.defaultEnvironment || 'production');
-  const [sessionStorageType, setSessionStorageType] = useState<string | null>(props.defaultStorage || 'file');
-  const [fatalErrorMessage, setFatalErrorMessage] = useState<string | null>(props.defaultErrorState || null);
+  const [environment, setEnvironment] = useState<string | null>(
+    props.defaultEnvironment || "production",
+  );
+  const [sessionStorageType, setSessionStorageType] = useState<string | null>(
+    props.defaultStorage || "file",
+  );
+  const [fatalErrorMessage, setFatalErrorMessage] = useState<string | null>(
+    props.defaultErrorState || null,
+  );
 
   const handleEnvironmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -28,7 +34,7 @@ const DesignDebugger: React.FC<DesignDebuggerProps> = (props) => {
   };
 
   const handleErrorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const errorMessage = e.target.checked ? 'Emulated error message' : null;
+    const errorMessage = e.target.checked ? "Emulated error message" : null;
     setFatalErrorMessage(errorMessage);
     props.onErrorChange && props.onErrorChange(errorMessage);
   };
@@ -64,7 +70,9 @@ const DesignDebugger: React.FC<DesignDebuggerProps> = (props) => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <label className="text-gray-700 font-medium mr-2">Emulate Error:</label>
+          <label className="text-gray-700 font-medium mr-2">
+            Emulate Error:
+          </label>
           <input
             data-testid={"fatalErrorInput"}
             type="checkbox"
