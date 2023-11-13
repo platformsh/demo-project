@@ -67,18 +67,18 @@ services:
           const { type, session_storage } = envResponse;
           setEnvironment(type && type.charAt(0).toUpperCase() + type.slice(1));
           setSessionStorageType(session_storage);
-          if (isInitialPageLoad) {
-            setIsInitialPageLoad(false);
-          }
-
           setFatalErrorMessage(null);
         })
         .catch(() => {
           if (isInitialPageLoad) {
             setFatalErrorMessage("There was a problem fetching environment data.");
-            setIsInitialPageLoad(false);
           } else {
-            console.info("Could not poll for new environment data. The target server may be redeploying");
+            console.info("Could not poll for new environment data. The target server may be redeploying.");
+          }
+        })
+        .finally(() => {
+          if (isInitialPageLoad) {
+            setIsInitialPageLoad(false);
           }
         });
     };
