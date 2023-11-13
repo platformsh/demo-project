@@ -47,7 +47,6 @@ jobs:
           export CI=true
           npm install cross-env npm-run-all -g
           python3 -m pip install packaging
-          python3 -m pip install distutils
           npm install
       - name: "5. Verifying backend code is pretty"
         run: | 
