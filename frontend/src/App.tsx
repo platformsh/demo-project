@@ -66,21 +66,21 @@ services:
       setSessionStorageType(session_storage);
       setFatalErrorMessage(null);
     });
-  }
+  };
 
   useEffect(() => {
-    setEnvironmentDetails()
-      .catch(() => {
-        setFatalErrorMessage("There was a problem fetching environment data.");
-      })
+    setEnvironmentDetails().catch(() => {
+      setFatalErrorMessage("There was a problem fetching environment data.");
+    });
   }, []);
 
   useEffect(() => {
     const pollEnvironment = setInterval(() => {
-      setEnvironmentDetails()
-        .catch(() => {
-          console.info("Could not poll for new environment data. The target server may be redeploying.");
-        })
+      setEnvironmentDetails().catch(() => {
+        console.info(
+          "Could not poll for new environment data. The target server may be redeploying.",
+        );
+      });
     }, 2000); // Poll every 1 second
 
     return () => clearInterval(pollEnvironment);
@@ -181,7 +181,9 @@ services:
                 ) : (
                   <StagingIcon className="w-[32px] h-[32px]" />
                 )}
-                <h1 data-testid={"title"} className="text-xl">{environment}</h1>
+                <h1 data-testid={"title"} className="text-xl">
+                  {environment}
+                </h1>
               </div>
 
               {currentStepProgress < 3 && (
@@ -534,7 +536,10 @@ const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({
   if (environment === null) return <></>;
 
   return (
-    <div data-testid={`${environment.toLocaleLowerCase()}-intro`} className={`rounded-lg mt-4 p-4 bg-upsun-black-900`}>
+    <div
+      data-testid={`${environment.toLocaleLowerCase()}-intro`}
+      className={`rounded-lg mt-4 p-4 bg-upsun-black-900`}
+    >
       <>
         {environment && environment.toLocaleLowerCase() === "production" ? (
           <ProductionIntroduction />

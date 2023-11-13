@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-wait-for-multiple-assertions */
 /* eslint-disable testing-library/no-node-access */
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
 import { fetchEnvironment } from "./utility/api";
 import { act } from "react-dom/test-utils";
@@ -31,8 +31,8 @@ describe("<App />", () => {
 
     render(<App />);
     await waitFor(() => {
-      const title = screen.getByTestId('title').textContent
-      const intro = screen.queryByTestId('production-intro')
+      const title = screen.getByTestId("title").textContent;
+      const intro = screen.queryByTestId("production-intro");
       expect(title).toBe("Production");
       expect(intro).toBeInTheDocument();
     });
@@ -55,8 +55,8 @@ describe("<App />", () => {
     });
 
     await waitFor(() => {
-      const title = screen.getByTestId('title').textContent
-      const intro = screen.queryByTestId('production-intro')
+      const title = screen.getByTestId("title").textContent;
+      const intro = screen.queryByTestId("production-intro");
       expect(title).toBe("Production");
       expect(intro).not.toBeInTheDocument();
     });
@@ -75,8 +75,8 @@ describe("<App />", () => {
 
     render(<App />);
     await waitFor(() => {
-      const title = screen.getByTestId('title').textContent
-      const intro = screen.queryByTestId('other-intro')
+      const title = screen.getByTestId("title").textContent;
+      const intro = screen.queryByTestId("other-intro");
       expect(title).toBe("Other");
       expect(intro).toBeInTheDocument();
     });
@@ -99,8 +99,8 @@ describe("<App />", () => {
     });
 
     await waitFor(() => {
-      const title = screen.getByTestId('title').textContent
-      const intro = screen.queryByTestId('other-intro')
+      const title = screen.getByTestId("title").textContent;
+      const intro = screen.queryByTestId("other-intro");
       expect(title).toBe("Other");
       expect(intro).not.toBeInTheDocument();
     });
