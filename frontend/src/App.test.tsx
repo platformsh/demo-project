@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-wait-for-multiple-assertions */
 /* eslint-disable testing-library/no-node-access */
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from '@testing-library/react'
 import App from "./App";
 import { fetchEnvironment } from "./utility/api";
 import { act } from "react-dom/test-utils";
@@ -30,10 +30,12 @@ describe("<App />", () => {
     );
 
     render(<App />);
-    const element = await screen.findByText(
-      /This app is the React frontend of your demo/i,
-    );
-    expect(element).toBeInTheDocument();
+    await waitFor(() => {
+      const title = screen.getByTestId('title').textContent
+      const intro = screen.queryByTestId('production-intro')
+      expect(title).toBe("Production");
+      expect(intro).toBeInTheDocument();
+    });
   });
 
   it("hides production intro for production after changes have been made", async () => {
@@ -52,10 +54,12 @@ describe("<App />", () => {
       render(<App />);
     });
 
-    const element = screen.queryByText(
-      /This app is the React frontend of your demo/i,
-    );
-    expect(element).not.toBeInTheDocument();
+    await waitFor(() => {
+      const title = screen.getByTestId('title').textContent
+      const intro = screen.queryByTestId('production-intro')
+      expect(title).toBe("Production");
+      expect(intro).not.toBeInTheDocument();
+    });
   });
 
   it("uses staging copy for non-production when no other changes have been made", async () => {
@@ -70,10 +74,12 @@ describe("<App />", () => {
     );
 
     render(<App />);
-    const element = await screen.findByText(
-      /This space represents your byte-for-byte copy of production/i,
-    );
-    expect(element).toBeInTheDocument();
+    await waitFor(() => {
+      const title = screen.getByTestId('title').textContent
+      const intro = screen.queryByTestId('other-intro')
+      expect(title).toBe("Other");
+      expect(intro).toBeInTheDocument();
+    });
   });
 
   it("hides staging copy for non-production when changes have been made", async () => {
@@ -92,13 +98,15 @@ describe("<App />", () => {
       render(<App />);
     });
 
-    const element = screen.queryByText(
-      /This space represents your byte-for-byte copy of production/i,
-    );
-    expect(element).not.toBeInTheDocument();
+    await waitFor(() => {
+      const title = screen.getByTestId('title').textContent
+      const intro = screen.queryByTestId('other-intro')
+      expect(title).toBe("Other");
+      expect(intro).not.toBeInTheDocument();
+    });
   });
 
-  it("highlights Deploy to Upsun and Creat preview environment on production and session_storage is file", async () => {
+  it("highlights create preview environment step when in production and session_storage is file", async () => {
     const mockData = {
       type: "production",
       session_storage: "file",

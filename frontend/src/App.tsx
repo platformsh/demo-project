@@ -181,7 +181,7 @@ services:
                 ) : (
                   <StagingIcon className="w-[32px] h-[32px]" />
                 )}
-                <h1 className="text-xl">{environment}</h1>
+                <h1 data-testid={"title"} className="text-xl">{environment}</h1>
               </div>
 
               {currentStepProgress < 3 && (
@@ -534,7 +534,7 @@ const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({
   if (environment === null) return <></>;
 
   return (
-    <div className={`rounded-lg mt-4 p-4 bg-upsun-black-900`}>
+    <div data-testid={`${environment.toLocaleLowerCase()}-intro`} className={`rounded-lg mt-4 p-4 bg-upsun-black-900`}>
       <>
         {environment && environment.toLocaleLowerCase() === "production" ? (
           <ProductionIntroduction />
