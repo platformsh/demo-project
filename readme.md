@@ -211,7 +211,7 @@ Before pushing your changes to the repository (or if your PR is failing), please
 
 _Coming soon_
 
-### Local profiles
+### Local profiles with Blackfire.io
 
 > [!NOTE]
 > In order for the steps below to work, you will need:
@@ -244,3 +244,22 @@ _Coming soon_
         ```
 
     For both cases, notice that in the `backend/scripts/start.sh` script, the Python app is run through the `blackfire-python` wrapper command: `blackfire-python gunicorn main:app`, which makes this work locally. 
+
+#### Troubleshooting
+
+1. Authentication
+
+    If you have already launched Blackfire.io through the Upsun management console, and are logged into Upsun, everything should work fine. 
+    If, however, you receive the following message on running the `blackfire` command above: 
+
+    ```bash
+    Are you authorized to profile this page? No probe response, Blackfire not properly installed or invalid signature for relaying agent.
+    ```
+
+    You may need to re-specify the `BLACKFIRE_SERVER_ID` and `BLACKFIRE_SERVER_TOKEN` credentials locally. 
+    Unique values for these two variables are automatically assigned in Upsun for you, so they can be retrived via the `upsun ssh` command:
+
+    ```bash
+    $ export BLACKFIRE_SERVER_ID=$(upsun ssh -e main --app backend -q 'echo $BLACKFIRE_SERVER_ID')
+    $ export BLACKFIRE_SERVER_TOKEN=$(upsun ssh -e main --app backend -q 'echo $BLACKFIRE_SERVER_TOKEN')
+    ```
