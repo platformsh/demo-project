@@ -23,6 +23,7 @@ import commands from "./commands.json";
 import DesignDebugger from "./theme/debug/DesignDebugger";
 
 function App() {
+  const [isInitialPageLoad, setIsInitialPageLoad] = useState(true);
   const [environment, setEnvironment] = useState<string | null>(null);
   const [sessionStorageType, setSessionStorageType] = useState<string | null>(
     null,
@@ -60,16 +61,34 @@ services:
 ###############################################################`;
 
   useEffect(() => {
-    fetchEnvironment()
-      .then((envResponse) => {
-        const { type, session_storage } = envResponse;
-        setEnvironment(type && type.charAt(0).toUpperCase() + type.slice(1));
-        setSessionStorageType(session_storage);
-      })
-      .catch((error) =>
-        setFatalErrorMessage("There was a problem fetching environment data."),
-      );
-  }, []);
+    const fetchData = () => {
+      fetchEnvironment()
+        .then((envResponse) => {
+          const { type, session_storage } = envResponse;
+          setEnvironment(type && type.charAt(0).toUpperCase() + type.slice(1));
+          setSessionStorageType(session_storage);
+          if (isInitialPageLoad) {
+            setIsInitialPageLoad(false);
+          }
+
+          setFatalErrorMessage(null);
+        })
+        .catch(() => {
+          if (isInitialPageLoad) {
+            setFatalErrorMessage("There was a problem fetching environment data.");
+            setIsInitialPageLoad(false);
+          } else {
+            console.info("Could not poll for new environment data. The target server may be redeploying");
+          }
+        });
+    };
+
+    fetchData();
+
+    const pollEnvironment = setInterval(fetchData, 2000); // Poll every 1 second
+
+    return () => clearInterval(pollEnvironment);
+  }, [isInitialPageLoad]);
 
   useEffect(() => {
     if (environment === null) return;
