@@ -210,3 +210,37 @@ Before pushing your changes to the repository (or if your PR is failing), please
 #### Demo path tests
 
 _Coming soon_
+
+### Local profiles
+
+> [!NOTE]
+> In order for the steps below to work, you will need:
+> 
+> 1. Access to the Upsun project integrated to this repository.
+> 1. A deployed version of the demo project in your own organization, where Blackfire.io should be set up automatically.
+
+1. Install dependencies
+
+    ```bash
+    npm install
+    ```
+
+1. Run the server
+
+    ```bash
+    npm run start
+    ```
+
+1. In another terminal window, [install the Blackfire Agent](https://blackfire.io/docs/up-and-running/installation#install-the-agent)
+
+1. Run the profile:
+
+    a. [Install a browser extension](https://blackfire.io/docs/integrations/browsers/index). Upsun environments come pre-configured with the necessary credentials to run profiles through extensions.
+
+    b. Use the CLI. An example command for running a profile on the backend Python application locally would be:
+
+        ```bash
+        blackfire --samples 10 curl -X 'POST' 'http://127.0.0.1:8000/api/v1/environment'
+        ```
+
+    For both cases, notice that in the `backend/scripts/start.sh` script, the Python app is run through the `blackfire-python` wrapper command: `blackfire-python gunicorn main:app`, which makes this work locally. 
