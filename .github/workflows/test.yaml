@@ -45,7 +45,7 @@ jobs:
         run: |
           echo "::notice::Running react-scripts tests."
           export CI=true
-          npm install cross-env npm-run-all -g
+          npm install cross-env npm-run-all distutils -g
           python3 -m pip install packaging
           npm install
       - name: "5. Verifying backend code is pretty"
