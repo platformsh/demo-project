@@ -23,7 +23,6 @@ import commands from "./commands.json";
 import DesignDebugger from "./theme/debug/DesignDebugger";
 
 function App() {
-  const [isInitialPageLoad, setIsInitialPageLoad] = useState(true);
   const [environment, setEnvironment] = useState<string | null>(null);
   const [sessionStorageType, setSessionStorageType] = useState<string | null>(
     null,
@@ -60,35 +59,32 @@ services:
         type: "redis:7.0"
 ###############################################################`;
 
+  const setEnvironmentDetails = async () => {
+    return fetchEnvironment().then((envResponse) => {
+      const { type, session_storage } = envResponse;
+      setEnvironment(type && type.charAt(0).toUpperCase() + type.slice(1));
+      setSessionStorageType(session_storage);
+      setFatalErrorMessage(null);
+    });
+  }
+
   useEffect(() => {
-    const fetchData = () => {
-      fetchEnvironment()
-        .then((envResponse) => {
-          const { type, session_storage } = envResponse;
-          setEnvironment(type && type.charAt(0).toUpperCase() + type.slice(1));
-          setSessionStorageType(session_storage);
-          setFatalErrorMessage(null);
-        })
+    setEnvironmentDetails()
+      .catch(() => {
+        setFatalErrorMessage("There was a problem fetching environment data.");
+      })
+  }, []);
+
+  useEffect(() => {
+    const pollEnvironment = setInterval(() => {
+      setEnvironmentDetails()
         .catch(() => {
-          if (isInitialPageLoad) {
-            setFatalErrorMessage("There was a problem fetching environment data.");
-          } else {
-            console.info("Could not poll for new environment data. The target server may be redeploying.");
-          }
+          console.info("Could not poll for new environment data. The target server may be redeploying.");
         })
-        .finally(() => {
-          if (isInitialPageLoad) {
-            setIsInitialPageLoad(false);
-          }
-        });
-    };
-
-    fetchData();
-
-    const pollEnvironment = setInterval(fetchData, 2000); // Poll every 1 second
+    }, 2000); // Poll every 1 second
 
     return () => clearInterval(pollEnvironment);
-  }, [isInitialPageLoad]);
+  }, []);
 
   useEffect(() => {
     if (environment === null) return;
