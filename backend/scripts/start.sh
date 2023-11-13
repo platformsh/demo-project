@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 source env/bin/activate
-gunicorn main:app
+blackfire-python gunicorn main:app
