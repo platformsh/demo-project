@@ -20,6 +20,7 @@ import CodeExample from "./components/CodeExample";
 import { PROJECT_ID } from "./config";
 
 import commands from "./commands.json";
+import DesignDebugger from "./theme/debug/DesignDebugger";
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>(null);
@@ -107,9 +108,28 @@ services:
     }
   }, [environment, sessionStorageType]);
 
+  const debugEnabled =
+    process.env.REACT_APP_ENABLE_DESIGN_DEBUG &&
+    process.env.REACT_APP_ENABLE_DESIGN_DEBUG !== "false" &&
+    process.env.REACT_APP_ENABLE_DESIGN_DEBUG !== "0";
+
+  const DesignDebug = () => {
+    return debugEnabled ? (
+      <DesignDebugger
+        defaultEnvironment={environment}
+        defaultStorage={sessionStorageType}
+        defaultErrorState={fatalErrorMessage}
+        onEnvironmentChange={(environment) => setEnvironment(environment)}
+        onStorageChange={(storageType) => setSessionStorageType(storageType)}
+        onErrorChange={(errorState) => setFatalErrorMessage(errorState)}
+      />
+    ) : null;
+  };
+
   if (fatalErrorMessage)
     return (
       <ErrorPage header="We cannot fetch your data">
+        <DesignDebug />
         <p className="mt-2 mb-2">
           {" "}
           There was an error fetching data from your Python backend at{" "}
@@ -128,6 +148,7 @@ services:
 
   return (
     <>
+      <DesignDebug />
       <div
         className={`max-w-7xl w-fill px-6 2xl:pl-0 m-auto transition duration-500`}
       >
