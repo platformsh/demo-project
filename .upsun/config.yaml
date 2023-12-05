@@ -14,9 +14,14 @@ applications:
         build:
             flavor: none
 
+        variables:
+            env:
+                NPM_VERSION: '10.2.4'
+
         hooks:
             build: |
                 set -e
+                npm install -g npm@$NPM_VERSION
                 npm install
                 export REACT_APP_BACKEND_URL="/"
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
