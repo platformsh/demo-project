@@ -14,6 +14,10 @@ applications:
         build:
             flavor: none
 
+        dependencies:
+            nodejs:
+                npm: '*'
+
         variables:
             env:
                 NPM_VERSION: '10.2.4'
