@@ -14,21 +14,13 @@ applications:
         build:
             flavor: none
 
-        dependencies:
-            nodejs:
-                npm: 'latest'
-
         variables:
             env:
-                # NPM_VERSION: '10.2.4'
                 REACT_APP_BACKEND_URL: "/"
 
         hooks:
             build: |
                 set -e
-                npm -v
-                # npm upgrade -g npm --verbose
-                # npm -v
                 npm prune --userconfig .npmrc && npm install --userconfig .npmrc
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
                 npm run build
