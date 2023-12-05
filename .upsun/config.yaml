@@ -23,7 +23,7 @@ applications:
             build: |
                 set -e
                 npm -v
-                npm install -g npm@10.2.4
+                npm install -g npm@latest
                 npm -v
                 npm prune --userconfig .npmrc && npm install --userconfig .npmrc
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
