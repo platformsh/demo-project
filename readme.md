@@ -33,7 +33,7 @@
 
 ## About
 
-This is a simple demo project meant to take users through a product tour of Upsun.
+This is a simple demo project meant to take users through a product tour of [Upsun](https://upsun.com).
 
 ## Getting started
 
