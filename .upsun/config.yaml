@@ -23,7 +23,7 @@ applications:
         hooks:
             build: |
                 set -eux
-                npm install
+                npm install --silent
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
                 npm run build
 
