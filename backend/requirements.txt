@@ -3,7 +3,7 @@ blinker==1.6.3
 boolean.py==4.0
 CacheControl==0.13.1
 cachelib==0.10.2
-certifi==2023.7.22
+certifi==2023.11.17
 charset-normalizer==3.3.1
 click==8.1.7
 cyclonedx-python-lib==4.2.3
