@@ -9,7 +9,7 @@ applications:
         source:
             root: "frontend"
 
-        type: "nodejs:18"
+        type: "nodejs:20"
 
         build:
             flavor: none
@@ -49,15 +49,14 @@ applications:
         source:
             root: "backend"
 
-        type: "python:3.11"
+        type: "python:3.12"
 
         build:
             flavor: none
         hooks:
             build: |
                 set -eux
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                pip install -r requirements.txt --disable-pip-version-check
                 
         web:
             commands:
