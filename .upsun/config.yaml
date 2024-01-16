@@ -56,8 +56,7 @@ applications:
         hooks:
             build: |
                 set -eux
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                pip install -r requirements.txt --disable-pip-version-check
                 
         web:
             commands:
