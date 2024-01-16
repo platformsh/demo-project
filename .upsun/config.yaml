@@ -49,7 +49,7 @@ applications:
         source:
             root: "backend"
 
-        type: "python:3.11"
+        type: "python:3.12"
 
         build:
             flavor: none
