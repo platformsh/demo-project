@@ -78,7 +78,7 @@ services:
   }, []);
 
   useEffect(() => {
-    if(debugEnabled) return;
+    if (debugEnabled) return;
 
     const pollEnvironment = setInterval(() => {
       setEnvironmentDetails().catch(() => {
