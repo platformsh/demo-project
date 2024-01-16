@@ -11,6 +11,10 @@ applications:
 
         type: "nodejs:18"
 
+        dependencies:
+            nodejs:
+                bun: "*"
+
         build:
             flavor: none
 
@@ -23,7 +27,7 @@ applications:
         hooks:
             build: |
                 set -eux
-                npm install
+                bun install
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
                 bun run build
 
