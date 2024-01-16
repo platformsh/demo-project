@@ -12,7 +12,7 @@
     "@types/node": "^16.18.39",
     "@types/react": "^18.2.18",
     "@types/react-dom": "^18.2.7",
-    "npm-force-resolutions": "^0.0.10",
+    "ajv": "^8.12.0",
     "postcss": "^8.4.31",
     "react": "^18.2.0",
     "react-code-blocks": "^0.1.4",
@@ -31,8 +31,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "pretty": "prettier . --check",
-    "pretty:fix": "prettier . --write",
-    "preinstall": "npx npm-force-resolutions"
+    "pretty:fix": "prettier . --write"
   },
   "eslintConfig": {
     "extends": [
