@@ -25,7 +25,7 @@ applications:
                 set -eux
                 npm install
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
-                npm run build
+                bun run build
 
         relationships:
            api: "backend:http"

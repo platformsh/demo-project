@@ -45,28 +45,28 @@ jobs:
         run: |
           echo "::notice::Running react-scripts tests."
           export CI=true
-          npm install cross-env npm-run-all -g
-          npm install
+          npm install cross-env bun -g
+          bun install
       - name: "5. Verifying backend code is pretty"
         run: | 
-          npm run prettier:backend
+          bun run prettier:backend
       - name: "6. Verifying frontend code is pretty"
         run: |
-          npm run prettier:frontend
+          bun run prettier:frontend
       - name: "7. Linting frontend"
-        run: npm run lint:frontend
+        run: bun run lint:frontend
       - name: "8. Run Frontend tests"
-        run: npm run test:frontend
+        run: bun run test:frontend
       - name: "9. Run Backend linting"
         run: |
-          npm run lint:backend
+          bun run lint:backend
 
       ################################################################################################
       # C. Ensure no vulnerabilities.
       - name: "10. Test: there should be no Python vulnerabilities."
         run: |
           echo "::notice::Checking for vulnerabilities in backend Python app dependencies."
-          npm run test:backend
+          bun run test:backend
       - name: "11. Test: there should be no HIGH Node.js vulnerabilities."
         run: |
           echo "::notice::Checking for high vulnerabilities in frontend Node.js app dependencies."

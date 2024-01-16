@@ -110,7 +110,7 @@ NPM is required.
 1. `git clone git@github.com:platformsh/demo-project.git`
 1. `cd demo-project`
 1. `npm install`
-1. `npm run start`
+1. `bun run start`
 
 These commands will set up everything you need to get started, serving:
 
@@ -118,12 +118,12 @@ These commands will set up everything you need to get started, serving:
 - The `frontend` React app from `localhost:3000`
 
 > [!IMPORTANT]
-> If at any time you want to start over, run `npm run clean`.
+> If at any time you want to start over, run `bun run clean`.
 > This will delete everything you've done in the previous steps.
 
 ### Testing individual steps of the demo
 
-When running locally, `npm run start` mimicks the backend connection in `frontend/src/utility/api.ts`.
+When running locally, `bun run start` mimicks the backend connection in `frontend/src/utility/api.ts`.
 That is, if you're looking to update steps (defined in `frontend/src/App.tsx`) or commands (defined in `frontend/src/commands.json`)
 and view how they will appear to the user, which state is presented is defined in this file. 
 
@@ -178,7 +178,7 @@ Before pushing your changes to the repository (or if your PR is failing), please
 1. Run backend Python app tests (check for vulnerabilities)
 
     ```bash
-    npm run test:backend
+    bun run test:backend
     ```
 
     > [!NOTE]
@@ -187,7 +187,7 @@ Before pushing your changes to the repository (or if your PR is failing), please
 1. Run frontend React tests.
 
     ```bash
-    npm run test:frontend -- --watchAll
+    bun run test:frontend -- --watchAll
     ```
 
     > [!NOTE]
