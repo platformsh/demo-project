@@ -9,7 +9,7 @@ applications:
         source:
             root: "frontend"
 
-        type: "nodejs:18"
+        type: "nodejs:20"
 
         dependencies:
             nodejs:
@@ -55,7 +55,7 @@ applications:
         source:
             root: "backend"
 
-        type: "python:3.11"
+        type: "python:3.12"
 
         build:
             flavor: none
@@ -63,8 +63,7 @@ applications:
             build: |
                 set -eu
                 echo "Installing backend dependencies"
-                pip install --upgrade pip > /dev/null
-                pip install -r requirements.txt > /dev/null
+                pip install -r requirements.txt --disable-pip-version-check  > /dev/null
                 
         web:
             commands:
