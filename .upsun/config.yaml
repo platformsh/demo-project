@@ -9,7 +9,11 @@ applications:
         source:
             root: "frontend"
 
-        type: "nodejs:18"
+        type: "nodejs:20"
+
+        dependencies:
+            nodejs:
+                bun: "*"
 
         build:
             flavor: none
@@ -22,10 +26,12 @@ applications:
 
         hooks:
             build: |
-                set -eux
-                npm install
+                set -eu
+                echo "Installing frontend app Node.js dependencies..."
+                bun install > /dev/null
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
-                npm run build
+                echo "Building frontend..."
+                bun run build > /dev/null
 
         relationships:
            api: "backend:http"
@@ -49,15 +55,15 @@ applications:
         source:
             root: "backend"
 
-        type: "python:3.11"
+        type: "python:3.12"
 
         build:
             flavor: none
         hooks:
             build: |
-                set -eux
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                set -eu
+                echo "Installing backend app dependencies"
+                pip install -r requirements.txt --disable-pip-version-check > /dev/null
                 
         web:
             commands:
