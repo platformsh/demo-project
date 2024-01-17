@@ -26,10 +26,12 @@ applications:
 
         hooks:
             build: |
-                set -eux
-                bun install
+                set -eu
+                echo "Installing Node.js dependencies..."
+                bun install  > /dev/null
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
-                bun run build
+                echo "Building frontend..."
+                bun run build  > /dev/null
 
         relationships:
            api: "backend:http"
@@ -59,9 +61,10 @@ applications:
             flavor: none
         hooks:
             build: |
-                set -eux
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                set -eu
+                echo "Installing backend dependencies"
+                pip install --upgrade pip > /dev/null
+                pip install -r requirements.txt > /dev/null
                 
         web:
             commands:
