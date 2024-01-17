@@ -28,10 +28,10 @@ applications:
             build: |
                 set -eu
                 echo "Installing frontend app Node.js dependencies..."
-                bun install  > /dev/null
+                bun install > /dev/null
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
                 echo "Building frontend..."
-                bun run build  > /dev/null
+                bun run build > /dev/null
 
         relationships:
            api: "backend:http"
@@ -62,8 +62,8 @@ applications:
         hooks:
             build: |
                 set -eu
-                echo "Installing backend dependencies"
-                pip install -r requirements.txt --disable-pip-version-check  > /dev/null
+                echo "Installing backend app dependencies"
+                pip install -r requirements.txt --disable-pip-version-check > /dev/null
                 
         web:
             commands:
