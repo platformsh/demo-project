@@ -27,7 +27,7 @@ applications:
         hooks:
             build: |
                 set -eu
-                echo "Installing Node.js dependencies..."
+                echo "Installing frontend app Node.js dependencies..."
                 bun install  > /dev/null
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
                 echo "Building frontend..."
