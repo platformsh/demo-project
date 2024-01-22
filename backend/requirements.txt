@@ -9,7 +9,7 @@ click==8.1.7
 cyclonedx-python-lib==4.2.3
 defusedxml==0.7.1
 filelock==3.13.1
-Flask==3.0.0
+Flask==3.0.1
 Flask-Cors==3.0.10
 Flask-Session==0.5.0
 gunicorn==21.2.0
