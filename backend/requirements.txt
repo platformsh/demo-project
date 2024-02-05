@@ -1,7 +1,7 @@
 async-timeout==4.0.3
 blinker==1.6.3
 boolean.py==4.0
-CacheControl==0.13.1
+CacheControl==0.14.0
 cachelib==0.10.2
 certifi==2023.7.22
 charset-normalizer==3.3.1
