@@ -6,7 +6,7 @@ cachelib==0.10.2
 certifi==2023.7.22
 charset-normalizer==3.3.1
 click==8.1.7
-cyclonedx-python-lib==4.2.3
+cyclonedx-python-lib==6.4.1
 defusedxml==0.7.1
 filelock==3.13.1
 Flask==3.0.0
