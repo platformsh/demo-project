@@ -24,7 +24,7 @@ mdurl==0.1.2
 msgpack==1.0.7
 packageurl-python==0.11.2
 packaging==23.2
-pip-api==0.0.30
+pip-api==0.0.33
 pip-requirements-parser==32.0.1
 pip_audit==2.6.1
 py-serializable==0.11.1
