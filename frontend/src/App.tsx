@@ -370,7 +370,7 @@ services:
                 <FeatureStep
                   ref={stepMergeProduction}
                   icon={<MergeIcon className="w-10 h-10" />}
-                  title={"4. Merge staging into production"}
+                  title={"4. Merge changes into production & scale up"}
                   isDisabled={currentStep !== "merge-production"}
                   hideContent={currentStepProgress < 3}
                 >
@@ -405,16 +405,11 @@ services:
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
-                          The previous step will complete, but exit with the
-                          message:{" "}
-                          <span className="text-red-400 font-mono">
-                            Resources must be configured before deployment
-                          </span>
-                          .
-                        </p>
-                        <p className="mb-2 mt-2">
                           <span>
-                            Allocate resources to Redis in production.
+                            Now, use <code className="px-1">resources:set</code> with
+                            <code className="px-1">--count backend:2</code> to horizontally scale the backend app
+                            and <code className="px-1">--size redis_service:0.5</code> to vertically scale
+                            the <code className="px-1">redis_service</code> service.
                           </span>
                           <CodeExample
                             wrapLines
