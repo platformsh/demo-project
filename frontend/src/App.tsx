@@ -474,17 +474,17 @@ services:
                         resources on the production Redis service container with
                         the following command:
                       </span>
-                      <CopyButton
-                        className="pl-1 inline-block w-full"
-                        copyText={commands.scale.user.resources_set}
-                      >
                         <p className="mb-2 mt-2 code-block">
-                          <CodeBlock
-                            text={commands.scale.user.resources_set}
-                            showLineNumbers={false}
+                        <CodeExample
+                            wrapLines
+                            copyText={
+                              commands["scale"].user.resources_set
+                            }
+                            codeExampleText={
+                              commands["scale"].user.resources_set
+                            }
                           />
                         </p>
-                      </CopyButton>
                     </p>
                     <p className="mb-2 mt-5">
                       <span>Delete this project when ready using:</span>
@@ -499,6 +499,7 @@ services:
                         <a
                           href="https://docs.upsun.com/get-started/here.html"
                           target="_blank"
+                          rel="noreferrer"
                         >
                           Migrate your application
                         </a>
