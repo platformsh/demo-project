@@ -496,7 +496,10 @@ services:
                     <h4 className="mt-5 text-lg font-semibold">What's next?</h4>
                     <ul className="list-disc list-outside ml-8 mt-2">
                       <li>
-                        <a href="https://docs.upsun.com/get-started/here.html" target="_blank">
+                        <a
+                          href="https://docs.upsun.com/get-started/here.html"
+                          target="_blank"
+                        >
                           Migrate your application
                         </a>
                       </li>
