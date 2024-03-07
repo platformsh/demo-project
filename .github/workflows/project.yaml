@@ -280,10 +280,10 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
                 ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.merge state complete "merge"  
-            - name: "[merge] 3. Test: The merge activity should fail."
+            - name: "[merge] 3. Test: The merge activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.merge result failure "merge"
+                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.merge result success "merge"
                 
             ################################################################################################
             # I. Define production service post_merge resources.

@@ -370,7 +370,7 @@ services:
                 <FeatureStep
                   ref={stepMergeProduction}
                   icon={<MergeIcon className="w-10 h-10" />}
-                  title={"4. Merge staging into production"}
+                  title={"4. Merge changes into production & scale up"}
                   isDisabled={currentStep !== "merge-production"}
                   hideContent={currentStepProgress < 3}
                 >
@@ -405,16 +405,16 @@ services:
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
-                          The previous step will complete, but exit with the
-                          message:{" "}
-                          <span className="text-red-400 font-mono">
-                            Resources must be configured before deployment
-                          </span>
-                          .
-                        </p>
-                        <p className="mb-2 mt-2">
                           <span>
-                            Allocate resources to Redis in production.
+                            Now, use <code className="px-1">resources:set</code>{" "}
+                            with
+                            <code className="px-1">--count backend:2</code> to
+                            horizontally scale the backend app and{" "}
+                            <code className="px-1">
+                              --size redis_service:0.5
+                            </code>{" "}
+                            to vertically scale the{" "}
+                            <code className="px-1">redis_service</code> service.
                           </span>
                           <CodeExample
                             wrapLines
@@ -474,17 +474,11 @@ services:
                         resources on the production Redis service container with
                         the following command:
                       </span>
-                      <CopyButton
-                        className="pl-1 inline-block w-full"
-                        copyText={commands.scale.user.resources_set}
-                      >
-                        <p className="mb-2 mt-2 code-block">
-                          <CodeBlock
-                            text={commands.scale.user.resources_set}
-                            showLineNumbers={false}
-                          />
-                        </p>
-                      </CopyButton>
+                      <CodeExample
+                        wrapLines
+                        copyText={commands["scale"].user.resources_set}
+                        codeExampleText={commands["scale"].user.resources_set}
+                      />
                     </p>
                     <p className="mb-2 mt-5">
                       <span>Delete this project when ready using:</span>
@@ -496,7 +490,11 @@ services:
                     <h4 className="mt-5 text-lg font-semibold">What's next?</h4>
                     <ul className="list-disc list-outside ml-8 mt-2">
                       <li>
-                        <a href="https://docs.upsun.com/get-started.html">
+                        <a
+                          href="https://docs.upsun.com/get-started/here.html"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
                           Migrate your application
                         </a>
                       </li>

@@ -134,8 +134,8 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("4. Merge staging into production").parentElement
-        ?.parentElement,
+      screen.getByText("4. Merge changes into production & scale up")
+        .parentElement?.parentElement,
     ).toHaveClass("is-disabled");
 
     expect(
@@ -171,8 +171,8 @@ describe("<App />", () => {
     ).not.toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("4. Merge staging into production").parentElement
-        ?.parentElement,
+      screen.getByText("4. Merge changes into production & scale up")
+        .parentElement?.parentElement,
     ).toHaveClass("is-disabled");
 
     expect(
@@ -210,8 +210,8 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("4. Merge staging into production").parentElement
-        ?.parentElement,
+      screen.getByText("4. Merge changes into production & scale up")
+        .parentElement?.parentElement,
     ).not.toHaveClass("is-disabled");
 
     expect(
@@ -249,8 +249,8 @@ describe("<App />", () => {
     ).toHaveClass("is-disabled");
 
     expect(
-      screen.getByText("4. Merge staging into production").parentElement
-        ?.parentElement,
+      screen.getByText("4. Merge changes into production & scale up")
+        .parentElement?.parentElement,
     ).toHaveClass("is-disabled");
 
     expect(
