@@ -406,10 +406,15 @@ services:
                       <li>
                         <p className="mb-2 mt-2">
                           <span>
-                            Now, use <code className="px-1">resources:set</code> with
-                            <code className="px-1">--count backend:2</code> to horizontally scale the backend app
-                            and <code className="px-1">--size redis_service:0.5</code> to vertically scale
-                            the <code className="px-1">redis_service</code> service.
+                            Now, use <code className="px-1">resources:set</code>{" "}
+                            with
+                            <code className="px-1">--count backend:2</code> to
+                            horizontally scale the backend app and{" "}
+                            <code className="px-1">
+                              --size redis_service:0.5
+                            </code>{" "}
+                            to vertically scale the{" "}
+                            <code className="px-1">redis_service</code> service.
                           </span>
                           <CodeExample
                             wrapLines
@@ -491,7 +496,7 @@ services:
                     <h4 className="mt-5 text-lg font-semibold">What's next?</h4>
                     <ul className="list-disc list-outside ml-8 mt-2">
                       <li>
-                        <a href="https://docs.upsun.com/get-started.html">
+                        <a href="https://docs.upsun.com/get-started/here.html" target="_blank">
                           Migrate your application
                         </a>
                       </li>
