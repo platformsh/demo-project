@@ -474,17 +474,11 @@ services:
                         resources on the production Redis service container with
                         the following command:
                       </span>
-                        <p className="mb-2 mt-2 code-block">
-                        <CodeExample
-                            wrapLines
-                            copyText={
-                              commands["scale"].user.resources_set
-                            }
-                            codeExampleText={
-                              commands["scale"].user.resources_set
-                            }
-                          />
-                        </p>
+                      <CodeExample
+                        wrapLines
+                        copyText={commands["scale"].user.resources_set}
+                        codeExampleText={commands["scale"].user.resources_set}
+                      />
                     </p>
                     <p className="mb-2 mt-5">
                       <span>Delete this project when ready using:</span>

@@ -167,6 +167,12 @@ These tests are of two types:
 
 #### Code tests
 
+> [!NOTE]
+> You can run all the tests desribed below with the command:
+> ```
+> ./utils/tests/all.sh
+> ```
+
 Before pushing your changes to the repository (or if your PR is failing), please run the following steps locally:
 
 1. Install project dependencies
