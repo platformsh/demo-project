@@ -29,7 +29,7 @@ pip-requirements-parser==32.0.1
 pip_audit==2.6.1
 py-serializable==0.11.1
 Pygments==2.16.1
-pyparsing==3.1.1
+pyparsing==3.1.2
 python-dotenv==0.19.1
 redis==4.5.4
 requests==2.31.0
