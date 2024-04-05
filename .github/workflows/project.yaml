@@ -36,6 +36,8 @@ env:
     STAGING_BRANCH: '${{ github.event.pull_request.head.ref }}$STAGING_SUFFIX'
     DEFAULT_BRANCH_CHAR_LIMIT: 28
 
+    SLEEP: 5
+
     BACKEND_PATH: "api/v1/environment"
 
     BLACKFIRE_CLIENT_ID: '${{ secrets.DEVREL_USER_BLACKFIRE_CLIENT_ID }}'
@@ -234,7 +236,7 @@ jobs:
                   cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.user.get_url") 
                   eval "$cmd"
                   URL=$(eval "$cmd --pipe")
-                  sleep 2
+                  sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=branch -vvv
 
             ################################################################################################
@@ -256,7 +258,7 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   URL=$(upsun url --primary --pipe)
-                  sleep 2
+                  sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=redis -vvv
             - name: "[environment_branch] 5. Update staging environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
@@ -287,7 +289,7 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   URL=$(upsun url --primary --pipe)
-                  sleep 2
+                  sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=merge-production -vvv
 
             ################################################################################################
@@ -330,7 +332,7 @@ jobs:
                   git checkout ${{ steps.branch_names.outputs.default_branch }}
                   git branch
                   URL=$(upsun url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
-                  sleep 2
+                  sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=complete -vvv
 
             ################################################################################################
@@ -355,7 +357,7 @@ jobs:
                   git checkout ${{ steps.branch_names.outputs.default_branch }}
                   git branch
                   URL=$(upsun url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
-                  sleep 2
+                  sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=scale -vvv
 
             ################################################################################################
