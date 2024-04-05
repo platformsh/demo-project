@@ -8,6 +8,8 @@ name: Upsun Demo CI
     pull_request:
         branches:
             - main
+        types:
+            - labeled
 env:
     UPSUN_CLI_NO_INTERACTION: 1
     UPSUN_CLI_TOKEN: ${{secrets.DEVREL_USER_UPSUN_TOKEN}}
@@ -42,6 +44,7 @@ env:
 jobs:
     demo-runthrough:
         runs-on: ubuntu-latest
+        if: ${{ github.event.label.name == 'simulate' }}
         steps:
             ################################################################################################
             # A. Setup Upsun CLI, variables, & other tools.
