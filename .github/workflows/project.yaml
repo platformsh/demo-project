@@ -212,6 +212,7 @@ jobs:
               run: |
                   echo "::notice::First push to project."
                   # @todo: Push through Git, not the CLI, so the exit doesn't break the workflow.
+                  export DEFAULT_BRANCH=${{ steps.branch_names.outputs.default_branch }}
                   git push --force upsun ${{ steps.branch_names.outputs.default_branch }}
                   cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.test.push") 
                   eval "$cmd"
