@@ -335,6 +335,7 @@ jobs:
             - name: "[scale] 1. Scale down to minimum resources for Redis"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
+                  export DEFAULT_BRANCH=${{ steps.branch_names.outputs.default_branch }}
                   cmd=$(cat frontend/src/commands.json | jq -r ".scale.test.resources_set") 
                   eval "$cmd"
             - name: "[scale] 2. Test: The update environment resources activity should complete."
