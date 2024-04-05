@@ -30,7 +30,9 @@ env:
     PROJECT_TITLE: 'Demo Test Run (pr-${{ github.ref_name }})'
 
     DEFAULT_BRANCH: '${{ github.event.pull_request.head.ref }}'
-    STAGING_BRANCH: '${{ github.event.pull_request.head.ref }}-staging'
+    STAGING_SUFFIX: '-staging'
+    STAGING_BRANCH: '${{ github.event.pull_request.head.ref }}$STAGING_SUFFIX'
+    DEFAULT_BRANCH_CHAR_LIMIT: 28
 
     BACKEND_PATH: "api/v1/environment"
 
@@ -42,7 +44,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             ################################################################################################
-            # A. Setup Upsun CLI & other tools.
+            # A. Setup Upsun CLI, variables, & other tools.
             - name: "[tools] 1. Retrieve local files."
               uses: actions/checkout@v4
               with:
@@ -64,6 +66,20 @@ jobs:
                   php-version: ${{ env.PHP_VERSION }}
                   extensions: 'blackfire, :xdebug'
                   tools: 'blackfire, blackfire-player'
+            - name: "[tools] 6. Test: Setup Default Branch variables."
+              id: branch_names
+              run: |
+                  echo "::notice::Ensure branch names are not too long."
+                  if [ "${#DEFAULT_BRANCH}" -gt "$DEFAULT_BRANCH_CHAR_LIMIT" ]; then
+                      echo "Branch name too long"
+                      echo $DEFAULT_BRANCH, "len ${#DEFAULT_BRANCH}", "max $DEFAULT_BRANCH_CHAR_LIMIT"
+                      count=$(($DEFAULT_BRANCH_CHAR_LIMIT-${#STAGING_SUFFIX}-1))
+                      short="${DEFAULT_BRANCH:0:$count}"
+                      DEFAULT_BRANCH="${short}"
+                      STAGING_BRANCH="${short}${STAGING_SUFFIX}"
+                  fi
+                  echo "default_branch=${DEFAULT_BRANCH}" >> $GITHUB_OUTPUT
+                  echo "staging_branch=${STAGING_BRANCH}" >> $GITHUB_OUTPUT
 
             ################################################################################################
             # B. Setup authenticated Upsun CLI user.
@@ -109,7 +125,7 @@ jobs:
                   RESULT=$(git config --global user.name)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$GIT_USER_NAME" "Git config (name)"
                   RESULT=$(git branch --show-current)
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$DEFAULT_BRANCH" "Git branch"
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "${{ steps.branch_names.outputs.default_branch }}" "Git branch"
 
             ################################################################################################
             # D. Create project. Connect to local repo. Provide access to bot user to the project.
@@ -121,15 +137,15 @@ jobs:
                 upsun project:create -o "$ORG_NAME" \
                     --title "$PROJECT_TITLE" \
                     --region "$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX" \
-                    --default-branch $DEFAULT_BRANCH
+                    --default-branch ${{ steps.branch_names.outputs.default_branch }}
             - name: "[create_project] 2. Test: The create project activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH project.create state complete "create_project"
+                ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} project.create state complete "create_project"
             - name: "[create_project] 3. Test: The create project activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH project.create result success "create_project"
+                ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} project.create result success "create_project"
             - name: "[create_project] 4. Test: project remote has been set."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -159,7 +175,7 @@ jobs:
             - name: "[create_project] 7. Update production environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun environment:info title "Production ($DEFAULT_BRANCH)" -e $DEFAULT_BRANCH
+                  upsun environment:info title "Production (${{ steps.branch_names.outputs.default_branch }})" -e ${{ steps.branch_names.outputs.default_branch }}
             # @todo: The tests here are sound, but it takes a moment to get the final complete/success. Some kind of wait is probably
             #   needed here to 1) if pending --> wait until max, 2) if success, pass test, 3) if fail, fail test.
             #   The wait logic can be applied for all activity outcomes for 'state'.
@@ -169,11 +185,11 @@ jobs:
             #     # @todo: a sleep seems to be required here.
             #     sleep 5
             #     upsun activity:list
-            #     ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment_type.access.create state complete "add_bot_user"
+            #     ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} environment_type.access.create state complete "add_bot_user"
             # - name: "[create_project] 9. Test: The create production environment access should succeed."
             #   working-directory: ${{ env.PROJECT_LOCALDIR }}
             #   run: |
-            #     ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment_type.access.create result success "add_bot_user"
+            #     ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} environment_type.access.create result success "add_bot_user"
             - name: "[create_project] 10. Test: verify user has been granted access to project."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -195,18 +211,18 @@ jobs:
               run: |
                   echo "::notice::First push to project."
                   # @todo: Push through Git, not the CLI, so the exit doesn't break the workflow.
-                  git push --force upsun $DEFAULT_BRANCH
+                  git push --force upsun ${{ steps.branch_names.outputs.default_branch }}
                   cmd=$(cat frontend/src/commands.json | jq -r ".first_deploy.test.push") 
                   eval "$cmd"
                   # upsun push -f -y
             - name: "[first_deploy] 2. Test: The first deploy activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push state complete "first_push"  
+                ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} push state complete "first_push"  
             - name: "[first_deploy] 3. Test: The first deploy activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH push result success "first_push"
+                  ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} push result success "first_push"
             - name: "[first_deploy] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -221,15 +237,15 @@ jobs:
             - name: "[environment_branch] 1. Create preview environment"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun branch $STAGING_BRANCH --type staging
+                  upsun branch ${{ steps.branch_names.outputs.staging_branch }} --type staging
             - name: "[environment_branch] 2. Test: The environment_branch activity should complete."     
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.branch state complete "environment_branch"
+                  ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.staging_branch }} environment.branch state complete "environment_branch"
             - name: "[environment_branch] 3. Test: The environment_branch activity should succeed."        
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $STAGING_BRANCH environment.branch result success "environment_branch"
+                  ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.staging_branch }} environment.branch result success "environment_branch"
 
             - name: "[environment_branch] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
@@ -240,7 +256,7 @@ jobs:
             - name: "[environment_branch] 5. Update staging environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun environment:info title "Staging ($STAGING_BRANCH)" -e $STAGING_BRANCH
+                  upsun environment:info title "Staging (${{ steps.branch_names.outputs.staging_branch }})" -e ${{ steps.branch_names.outputs.staging_branch }}
 
             ################################################################################################
             # G. Add a service.
@@ -256,11 +272,11 @@ jobs:
             - name: "[add_service] 2. Test: The add_service activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
-                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push state complete "add_service"  
+                ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.staging_branch }} push state complete "add_service"  
             - name: "[add_service] 3. Test: The add_service activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $STAGING_BRANCH push result success "add_service"
+                ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.staging_branch }} push result success "add_service"
             - name: "[add_service_resources] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -279,11 +295,11 @@ jobs:
             - name: "[merge] 2. Test: The merge activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |    
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.merge state complete "merge"  
+                ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} environment.merge state complete "merge"  
             - name: "[merge] 3. Test: The merge activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.merge result success "merge"
+                ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} environment.merge result success "merge"
                 
             ################################################################################################
             # I. Define production service post_merge resources.
@@ -295,17 +311,17 @@ jobs:
             - name: "[prod_service_resources] 2. Test: The update environment resources activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update state complete "init_resources"
+                  ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} environment.resources.update state complete "init_resources"
             - name: "[prod_service_resources] 3. Test: The update environment resources activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
+                  ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} environment.resources.update result success "init_resources"
             - name: "[prod_service_resources] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  git checkout $DEFAULT_BRANCH
+                  git checkout ${{ steps.branch_names.outputs.default_branch }}
                   git branch
-                  URL=$(upsun url -e $DEFAULT_BRANCH --primary --pipe)
+                  URL=$(upsun url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
                   sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=complete -vvv
 
@@ -319,17 +335,17 @@ jobs:
             - name: "[scale] 2. Test: The update environment resources activity should complete."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update state complete "init_resources"
+                  ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} environment.resources.update state complete "init_resources"
             - name: "[scale] 3. Test: The update environment resources activity should succeed."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  ./utils/tests/activity_outcome.sh $DEFAULT_BRANCH environment.resources.update result success "init_resources"
+                  ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} environment.resources.update result success "init_resources"
             - name: "[scale] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  git checkout $DEFAULT_BRANCH
+                  git checkout ${{ steps.branch_names.outputs.default_branch }}
                   git branch
-                  URL=$(upsun url -e $DEFAULT_BRANCH --primary --pipe)
+                  URL=$(upsun url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
                   sleep 2
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=scale -vvv
 
