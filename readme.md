@@ -43,13 +43,6 @@ If you already have access to Upsun:
 - Create or select an organization to run the demo on
 - Click **Explore Upsun** to start the demo
 
-> [!NOTE]
-> Upsun is currently in [beta](https://upsun.com/register/), but will become more available in the coming year. 
->
-> You can find more information about Upsun, how it [relates to Platform.sh](https://upsun.com/blog/upsun-origin-story/), [notable features](https://upsun.com/features/), and [pricing](https://upsun.com/pricing/) on our website.
-> 
-> If you'd like to sign up for early access to Upsun, [register on our website](https://upsun.com/register/). 
-
 ## Resume the demo
 
 When you start the demo project through the Upsun console, you will receive all the steps you need to go through the entire demo.
