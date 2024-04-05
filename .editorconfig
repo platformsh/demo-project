@@ -1,0 +1,5 @@
+# Upsun editor configuration normalization
+# @see http://editorconfig.org/
+[.upsun/*.{yaml,yml}]
+indent_style = space
+indent_size = 2
