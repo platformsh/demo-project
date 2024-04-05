@@ -293,6 +293,7 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               continue-on-error: true
               run: |
+                  export STAGING_BRANCH=${{ steps.branch_names.outputs.staging_branch }}
                   cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.test.merge") 
                   eval "$cmd"
             - name: "[merge] 2. Test: The merge activity should complete."
@@ -309,6 +310,7 @@ jobs:
             - name: "[prod_service_resources] 1. Set Redis' resources on production."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
+                  export DEFAULT_BRANCH=${{ steps.branch_names.outputs.default_branch }}
                   cmd=$(cat frontend/src/commands.json | jq -r ".merge_production.test.resources_set") 
                   eval "$cmd"
             - name: "[prod_service_resources] 2. Test: The update environment resources activity should complete."
