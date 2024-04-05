@@ -44,7 +44,7 @@ env:
 jobs:
     demo-runthrough:
         runs-on: ubuntu-latest
-        if: ${{ github.event.label.name == 'simulate' }}
+        if: ${{ github.event.label.name == 'runthrough' }}
         steps:
             ################################################################################################
             # A. Setup Upsun CLI, variables, & other tools.
