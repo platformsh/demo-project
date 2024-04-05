@@ -83,6 +83,13 @@
     /*content:'';*/
     /*@apply border-b-[40px] border-l-[50px] border-b-upsun-violet-600 border-l-transparent;*/
   }
+
+}
+
+@media (prefers-color-scheme: dark) {
+  .react-toggle--checked .react-toggle-track  {
+    background-color: #6046ff !important;
+  }
 }
 
 @media (prefers-color-scheme: light) {
@@ -111,8 +118,13 @@
     fill: #0E1113;
   }
 
-  .aside-title > h1, .aside-title > p {
+  .sidebar > h1, .sidebar > p {
     color: #fff;
   }
+
+  .react-toggle--checked .react-toggle-track  {
+    background-color: #6046ff !important;
+  }
+
 
 }

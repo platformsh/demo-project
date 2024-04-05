@@ -1,6 +1,7 @@
 import React from "react";
 import { ReactComponent as Logo } from "../assets/logo/upsun_horizontal.svg";
 import ShareButton from "./ShareButton";
+import { DarkModeToggle } from "./DarkModeButton";
 
 function Header() {
   return (
@@ -21,8 +22,13 @@ function Header() {
             Powered by Platform.sh
           </span>
         </div>
-        <div className="pull-right">
-          <ShareButton />
+        <div className="flex flex-row inline-flex items-center gap-6">
+          <div className="pull-right">
+            <DarkModeToggle />
+          </div>
+          <div className="pull-right">
+            <ShareButton />
+          </div>
         </div>
       </div>
       <div className="w-full md:hidden pt-3">
