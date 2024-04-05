@@ -126,7 +126,7 @@ jobs:
                   RESULT=$(git config --global user.name)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$GIT_USER_NAME" "Git config (name)"
                   RESULT=$(git branch --show-current)
-                  ./$TEST_PATH/compare_strings.sh "${{ steps.branch_names.outputs.acting_branch }}" "${{ steps.branch_names.outputs.default_branch }}" "Git branch"
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "${{ steps.branch_names.outputs.acting_branch }}" "Git branch"
 
             ################################################################################################
             # D. Create project. Connect to local repo. Provide access to bot user to the project.
