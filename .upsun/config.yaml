@@ -10,7 +10,7 @@ applications:
             root: "frontend"
 
         stack:
-            - "nodejs@20"
+            - "nodejs@21"
 
         variables:
             env:
@@ -50,7 +50,7 @@ applications:
             root: "backend"
 
         stack:
-            - "python@3.11"
+            - "python@3.12"
 
         hooks:
             build: |
