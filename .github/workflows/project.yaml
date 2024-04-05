@@ -266,6 +266,7 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ./utils/uncomment.sh .upsun/config.yaml add_service
+                  export STAGING_BRANCH=${{ steps.branch_names.outputs.staging_branch }}
                   cmd=$(cat frontend/src/commands.json | jq -r ".redis.user.commit") 
                   eval "$cmd"
                   # Push through Git, not the CLI, so the exit doesn't break the workflow.
