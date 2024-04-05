@@ -251,7 +251,7 @@ services:
                 <FeatureStep
                   data-testid="branch"
                   ref={stepCreateBranch}
-                  icon={<BranchIcon className="w-10 h-10 p-1" />}
+                  icon={<BranchIcon className="w-10 h-10 p-1 yellow-icon" />}
                   title={"2. Create your first preview environment"}
                   isDisabled={currentStep !== "branch"}
                 >
@@ -369,7 +369,7 @@ services:
                 {/* STEP 3 - MERGE PREVIEW ENVIRONMENT INTO PRODUCTION */}
                 <FeatureStep
                   ref={stepMergeProduction}
-                  icon={<MergeIcon className="w-10 h-10" />}
+                  icon={<MergeIcon className="w-10 h-10 yellow-icon" />}
                   title={"4. Merge changes into production & scale up"}
                   isDisabled={currentStep !== "merge-production"}
                   hideContent={currentStepProgress < 3}

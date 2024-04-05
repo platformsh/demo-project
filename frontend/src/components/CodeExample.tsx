@@ -72,7 +72,7 @@ const CodeExample: React.FC<CodeExampleProps> = ({
           <span className="text-white flex flex-row items-center">
             <span
               className={`h-full transition-opacity duration-300 ${
-                showCopiedText ? "opacity-100" : "opacity-0"
+                showCopiedText ? "opacity-100 text-white-copy" : "opacity-0"
               }`}
             >
               Copied!

@@ -84,3 +84,35 @@
     /*@apply border-b-[40px] border-l-[50px] border-b-upsun-violet-600 border-l-transparent;*/
   }
 }
+
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #fff;
+    color: #0E1113;
+  }
+
+  .bg-upsun-black-900 {
+    background-color: #fff;
+  }
+
+  .text-white {
+    color: #0E1113;
+  }
+
+  .text-white-copy {
+    color: #fff;
+  }
+
+  .yellow-icon > path {
+    fill: #6046ff;
+  }
+
+  .logo > g > path {
+    fill: #0E1113;
+  }
+
+  .aside-title > h1, .aside-title > p {
+    color: #fff;
+  }
+
+}
