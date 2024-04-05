@@ -28,10 +28,10 @@ jobs:
 
             ### Setting up tests 
 
-            Most tests will run automatically when you open a pull request, while others require contributors with write access to enable. 
             Until all tests pass, a pull request will not be merged. 
 
-            _enable instructions tbd_
+            Build tests for combinations of Python and Node.js will happen automatically, and must pass in order to merge.
+            Another test will actually runthrough all steps of the demo on a new project, but requires a repository admin to add the `runthrough` label to the pull request.
 
             ### Failing tests 
 

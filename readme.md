@@ -167,6 +167,12 @@ These tests are of two types:
 
 #### Code tests
 
+> [!NOTE]
+> You can run all the tests desribed below with the command:
+> ```
+> ./utils/tests/all.sh
+> ```
+
 Before pushing your changes to the repository (or if your PR is failing), please run the following steps locally:
 
 1. Install project dependencies
@@ -206,6 +212,19 @@ Before pushing your changes to the repository (or if your PR is failing), please
 
     > [!NOTE]
     > This test will pass on GitHub, so long as there are **no High or Critical vulnerabilities** found.
+
+1. Prettier
+
+    ```bash
+    npm run prettier:backend
+    npm run prettier:frontend
+    npm run lint:frontend
+    npm run lint:backend
+    ```
+
+    If, for example, you run into the error `[warn] Code style issues found in 3 files. Run Prettier to fix.` for the `frontend`, run `cd frontend && npm run pretty:fix` to fix.
+
+    The workflow on GitHub will fail if this error occurs, so please fix locally when contributing.
 
 #### Demo path tests
 
