@@ -70,7 +70,6 @@ jobs:
               id: branch_names
               run: |
                   echo "::notice::Ensure branch names are not too long."
-                  echo "acting_branch=${DEFAULT_BRANCH}" >> $GITHUB_OUTPUT
                   if [ "${#DEFAULT_BRANCH}" -gt "$DEFAULT_BRANCH_CHAR_LIMIT" ]; then
                       echo "Branch name too long"
                       echo $DEFAULT_BRANCH, "len ${#DEFAULT_BRANCH}", "max $DEFAULT_BRANCH_CHAR_LIMIT"
@@ -116,6 +115,7 @@ jobs:
                   echo "::notice::Setting up Git user."
                   git config --global user.email "$GIT_USER_EMAIL"
                   git config --global user.name "$GIT_USER_NAME"
+                  git branch -m ${{ steps.branch_names.outputs.default_branch }}
                   git branch --show-current
             - name: "[setup_repo] 3. Test: Verify Git settings."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
@@ -126,7 +126,7 @@ jobs:
                   RESULT=$(git config --global user.name)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$GIT_USER_NAME" "Git config (name)"
                   RESULT=$(git branch --show-current)
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "${{ steps.branch_names.outputs.acting_branch }}" "Git branch"
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "${{ steps.branch_names.outputs.default_branch }}" "Git branch"
 
             ################################################################################################
             # D. Create project. Connect to local repo. Provide access to bot user to the project.
