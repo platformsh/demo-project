@@ -9,7 +9,7 @@ applications:
         source:
             root: "frontend"
 
-        type: "nodejs:20"
+        type: "nodejs:18"
 
         build:
             flavor: none
