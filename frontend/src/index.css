@@ -18,6 +18,7 @@
     @apply bg-black text-default text-sm font-sans-soft;
     font-size: 14px;
     line-height: 24px;
+    color: white;
   }
   h1 {
     @apply font-bold;
@@ -92,11 +93,21 @@
   }
 }
 
+body.light {
+  background-color: #fff;
+  color: #0E1113;
+}
+
+feature--step {
+  background-color: #fff;
+  color: inherit;
+}
+
 @media (prefers-color-scheme: light) {
-  body {
+  /* body {
     background-color: #fff;
     color: #0E1113;
-  }
+  } */
 
   .bg-upsun-black-900 {
     background-color: #fff;
@@ -126,5 +137,8 @@
     background-color: #6046ff !important;
   }
 
+  a {
+    color: #6046ff;
+  }
 
 }

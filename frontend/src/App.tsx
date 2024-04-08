@@ -499,7 +499,14 @@ services:
                         </a>
                       </li>
                       <li className="mt-2">
-                        Share your thoughts and connect with us on Discord.
+                        Share your thoughts and connect with us on{" "} 
+                        <a
+                          href="https://discord.gg/PkMc2pVCDV"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Discord
+                        </a>.
                       </li>
                       <li className="mt-2">
                         Explore Upsun's{" "}

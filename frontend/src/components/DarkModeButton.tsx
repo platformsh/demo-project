@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Toggle from "react-toggle";
 import { useMediaQuery } from "react-responsive";
 import "react-toggle/style.css"
@@ -13,6 +13,19 @@ export const DarkModeToggle = () => {
     undefined,
     (isSystemDark) => setIsDark(isSystemDark)
   );
+
+  const value = useMemo(
+    () => (isDark === undefined ? !!systemPrefersDark : isDark),
+    [isDark, systemPrefersDark]
+  );
+
+  useEffect(() => {
+    if (value) {
+      document.body.classList.add("light");
+    } else {
+      document.body.classList.remove("light");
+    }
+  }, [value]);
 
   return (
     <Toggle
