@@ -33,7 +33,6 @@ fi
 
 
 echo "::notice::Checking for critical vulnerabilities in frontend Node.js app dependencies."
-cd frontend
 export CI=true
 CRITICAL_VULN_ALLOWED=$MAX_CRITICAL
 CRITICAL_VULN=$(npm audit --json | jq '.metadata.vulnerabilities.high')
