@@ -41,7 +41,10 @@ function App() {
   const stepCreateService = useRef<HTMLDivElement>(null);
   const stepMergeProduction = useRef<HTMLDivElement>(null);
   const stepAllComplete = useRef<HTMLDivElement>(null);
-
+  const debugEnabled =
+    process.env.REACT_APP_ENABLE_DESIGN_DEBUG &&
+    process.env.REACT_APP_ENABLE_DESIGN_DEBUG !== "false" &&
+    process.env.REACT_APP_ENABLE_DESIGN_DEBUG !== "0";
   const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
     if (ref.current && ref.current.scrollIntoView) {
       ref.current.scrollIntoView({ behavior: "smooth" });
@@ -76,6 +79,8 @@ services:
   }, []);
 
   useEffect(() => {
+    if (debugEnabled) return;
+
     const pollEnvironment = setInterval(() => {
       setEnvironmentDetails().catch(() => {
         console.info(
@@ -85,7 +90,7 @@ services:
     }, 2000); // Poll every 1 second
 
     return () => clearInterval(pollEnvironment);
-  }, []);
+  }, [debugEnabled]);
 
   useEffect(() => {
     if (environment === null) return;
@@ -123,11 +128,6 @@ services:
         break;
     }
   }, [environment, sessionStorageType]);
-
-  const debugEnabled =
-    process.env.REACT_APP_ENABLE_DESIGN_DEBUG &&
-    process.env.REACT_APP_ENABLE_DESIGN_DEBUG !== "false" &&
-    process.env.REACT_APP_ENABLE_DESIGN_DEBUG !== "0";
 
   const DesignDebug = () => {
     return debugEnabled ? (
