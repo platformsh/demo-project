@@ -18,7 +18,7 @@ export const fetchEnvironment = async (): Promise<EnvironmentResponseType> => {
   let data;
 
   let override_state = "default";
-
+  console.log(BASE_PATH);
   if (BASE_PATH.toLocaleLowerCase() === "http://localhost:3000/") {
     if (override_state === "default") {
       data = await response.json();
