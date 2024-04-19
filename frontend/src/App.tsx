@@ -335,7 +335,7 @@ services:
                             language="yaml"
                             showLineNumbers={true}
                             theme={UpsunCodeTheme}
-                            startingLineNumber={67}
+                            startingLineNumber={51}
                           />
                         </p>
                       </li>

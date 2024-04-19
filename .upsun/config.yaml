@@ -41,26 +41,24 @@ applications:
                     rules:
                         static\/*:
                             expires: 365d
-                # /api/v1/environment:
-                #     root: build
-                #     index:
-                #         - index.json
-                #     allow: true
-                #     scripts: false
+
         mounts:
             /build/api/v1/environment:
                 source: storage
                 source_path: api
-###############################################################
-# Step 3: Add a service. Uncomment this section.
-###############################################################
-#        relationships:
-#            redis_session: "redis_service:redis"
-#
-#services:
-#    redis_service:
-#        type: "redis:7.0"
-###############################################################
+
+# #add_service_start
+# ######################################################################################################################
+# # Step 3: Add a service. Uncomment this section.
+# ######################################################################################################################
+#         relationships:
+#             redis_session: "redis_service:redis"
+
+# services:
+#     redis_service:
+#         type: "redis:7.0"
+# ######################################################################################################################
+# #add_service_end
 
 # Routes configuration.
 routes:
