@@ -1,4 +1,4 @@
 {
-    "session_storage": "file",
-    "type": "production"
+  "session_storage": "file",
+  "type": "production"
 }
