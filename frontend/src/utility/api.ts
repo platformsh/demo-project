@@ -6,7 +6,7 @@ export type EnvironmentResponseType = {
   type: "production" | "staging" | "development" | string;
 };
 
-export const ENVIRONMENT_PATH = `environment`;
+export const ENVIRONMENT_PATH = `environment/index.json`;
 export const ENVIRONMENT_API_URI = `${API_BASE_URL}/${ENVIRONMENT_PATH}`;
 
 export const fetchEnvironment = async (): Promise<EnvironmentResponseType> => {
@@ -19,7 +19,7 @@ export const fetchEnvironment = async (): Promise<EnvironmentResponseType> => {
 
   let override_state = "default";
 
-  if (BASE_PATH.toLocaleLowerCase() === "http://localhost:8000/") {
+  if (BASE_PATH.toLocaleLowerCase() === "http://localhost:3000/") {
     if (override_state === "default") {
       data = await response.json();
     } else if (override_state.toLocaleLowerCase() === "branch") {

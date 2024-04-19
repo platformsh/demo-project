@@ -26,9 +26,8 @@ applications:
                 npm install
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
                 npm run build
-
-        relationships:
-           api: "backend:http"
+            deploy: |
+                bash scripts/api.sh
 
         web:
             locations:
@@ -42,44 +41,27 @@ applications:
                     rules:
                         static\/*:
                             expires: 365d
+                /api/v1/environment:
+                    root: build
+                    index:
+                        - index.json
+                    allow: true
+                    scripts: false
+        mounts:
+            /build/api/v1/environment:
+                source: storage
+                source_path: api
+###############################################################
+# Step 3: Add a service. Uncomment this section.
+###############################################################
+#        relationships:
+#            redis_session: "redis_service:redis"
+#
+#services:
+#    redis_service:
+#        type: "redis:7.0"
+###############################################################
 
-    # App 2: Backend (Python)
-    backend:
-
-        source:
-            root: "backend"
-
-        type: "python:3.12"
-
-        build:
-            flavor: none
-        hooks:
-            build: |
-                set -eux
-                pip install -r requirements.txt --disable-pip-version-check
-                
-        web:
-            commands:
-                start: "gunicorn main:app"
-            upstream:
-                socket_family: tcp
-            locations:
-                /:
-                    passthru: true
-
-# #add_service_start
-# ######################################################################################################################
-# # Step 3: Add a service. Uncomment this section.
-# ######################################################################################################################
-#         relationships:
-#             redis_session: "redis_service:redis"
-
-# services:
-#     redis_service:
-#         type: "redis:7.0"
-# ######################################################################################################################
-# #add_service_end
-    
 # Routes configuration.
 routes:
     "https://{default}/":
@@ -92,8 +74,3 @@ routes:
         id: frontend-redirect
         type: redirect
         to: "https://{default}/"
-
-    "https://{default}/api/":
-        id: backend
-        type: upstream
-        upstream: "backend:http"
