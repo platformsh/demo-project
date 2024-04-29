@@ -41,4 +41,4 @@ urllib3==2.1.0
 webencodings==0.5.1
 Werkzeug==3.0.2
 pylint==3.0.3
-black==24.4.0
+black==24.4.2
