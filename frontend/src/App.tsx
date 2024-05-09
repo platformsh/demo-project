@@ -55,8 +55,9 @@ function App() {
 # Step 3: Add a service. Uncomment this section.
 ###############################################################
         relationships:
-            redis_session: "redis_service:redis"
-
+            redis_session: 
+                service: "redis_service"
+                endpoint: "redis"
 services:
     redis_service:
         type: "redis:7.0"
