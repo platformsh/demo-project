@@ -9,10 +9,8 @@ applications:
         source:
             root: "frontend"
 
-        type: "nodejs:18"
-
-        build:
-            flavor: none
+        stack:
+            - "nodejs@22"
 
         variables:
             env:
@@ -28,7 +26,9 @@ applications:
                 npm run build
 
         relationships:
-           api: "backend:http"
+            api: 
+                service: "backend"
+                endpoint: "http"
 
         web:
             locations:
@@ -49,10 +49,9 @@ applications:
         source:
             root: "backend"
 
-        type: "python:3.12"
+        stack:
+            - "python@3.12"
 
-        build:
-            flavor: none
         hooks:
             build: |
                 set -eux
@@ -72,7 +71,9 @@ applications:
 # # Step 3: Add a service. Uncomment this section.
 # ######################################################################################################################
 #         relationships:
-#             redis_session: "redis_service:redis"
+#             redis_session: 
+#                 service: "redis_service"
+#                 endpoint: "redis"
 
 # services:
 #     redis_service:
