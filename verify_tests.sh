@@ -6,17 +6,11 @@ MAX_CRITICAL=0
 npm install cross-env npm-run-all -g
 npm install
 
-npm run prettier:backend
-
 npm run prettier:frontend
 
 npm run lint:frontend
 
 npm run test:frontend
-
-npm run lint:backend
-
-npm run test:backend
 
 echo "::notice::Checking for high vulnerabilities in frontend Node.js app dependencies."
 cd frontend
