@@ -10,7 +10,7 @@ applications:
             root: "frontend"
 
         stack:
-            - "nodejs@21"
+            - "nodejs@22"
 
         variables:
             env:
