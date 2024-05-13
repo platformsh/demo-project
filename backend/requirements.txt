@@ -1,5 +1,5 @@
 async-timeout==4.0.3
-blinker==1.7.0
+blinker==1.8.2
 boolean.py==4.0
 CacheControl==0.13.1
 cachelib==0.13.0
