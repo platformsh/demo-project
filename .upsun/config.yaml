@@ -52,7 +52,7 @@ applications:
         source:
             root: "backend"
 
-        type: "python:3.12
+        type: "python:3.12"
 
         # The composable image (https://docs.upsun.com/create-apps/app-reference/composable-image.html) is currently in Beta. 
         # stack:
