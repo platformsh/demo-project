@@ -11,10 +11,6 @@ applications:
 
         type: "nodejs:18"
 
-        # The composable image (https://docs.upsun.com/create-apps/app-reference/composable-image.html) is currently in Beta. 
-        # stack:
-        #     - "nodejs@22"
-
         variables:
             env:
                 REACT_APP_BACKEND_URL: "/"
@@ -53,10 +49,6 @@ applications:
             root: "backend"
 
         type: "python:3.12"
-
-        # The composable image (https://docs.upsun.com/create-apps/app-reference/composable-image.html) is currently in Beta. 
-        # stack:
-        #     - "python@3.12"
 
         hooks:
             build: |
