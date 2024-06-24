@@ -37,7 +37,7 @@ rich==13.7.0
 six==1.16.0
 sortedcontainers==2.4.0
 toml==0.10.2
-urllib3==2.1.0
+urllib3==2.2.2
 webencodings==0.5.1
 Werkzeug==3.0.3
 pylint==3.0.3
