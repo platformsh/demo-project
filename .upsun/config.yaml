@@ -9,8 +9,7 @@ applications:
         source:
             root: "frontend"
 
-        stack:
-            - "nodejs@22"
+        type: "nodejs:18"
 
         variables:
             env:
@@ -49,8 +48,7 @@ applications:
         source:
             root: "backend"
 
-        stack:
-            - "python@3.12"
+        type: "python:3.12"
 
         hooks:
             build: |

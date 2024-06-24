@@ -39,20 +39,20 @@
   "merge_production": {
     "user": {
       "merge": "upsun merge staging",
-      "resources_set": "upsun resources:set \\\n\t--count backend:2 \\\n\t--size redis_service:0.5 \\\n\t-e main",
+      "resources_set": "upsun resources:set \\\n\t--count backend:2 \\\n\t--size redis_service:0.5 \\\n\t--disk backend:0,frontend:0 \\\n\t-e main",
       "get_url": "upsun url --primary -e main"
     },
     "test": {
       "merge": "upsun merge $STAGING_BRANCH",
-      "resources_set": "upsun resources:set \\\n\t--count backend:2 \\\n\t--size redis_service:0.5 \\\n\t-e $DEFAULT_BRANCH"
+      "resources_set": "upsun resources:set \\\n\t--count backend:2 \\\n\t--size redis_service:0.5 \\\n\t--disk backend:0,frontend:0 \\\n\t-e $DEFAULT_BRANCH"
     }
   },
   "scale": {
     "user": {
-      "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1 \\\n\t-e main"
+      "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1 \\\n\t--disk backend:0,frontend:0 \\\n\t-e main"
     },
     "test": {
-      "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1 \\\n\t-e $DEFAULT_BRANCH"
+      "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1 \\\n\t--disk backend:0,frontend:0 \\\n\t-e $DEFAULT_BRANCH"
     }
   },
   "complete": {
