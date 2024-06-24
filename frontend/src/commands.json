@@ -49,10 +49,10 @@
   },
   "scale": {
     "user": {
-      "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1 \\\n\t-e main"
+      "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1 \\\n\t--disk backend:0,frontend:0 \\\n\t-e main"
     },
     "test": {
-      "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1 \\\n\t-e $DEFAULT_BRANCH"
+      "resources_set": "upsun resources:set \\\n\t--size redis_service:0.1 \\\n\t--disk backend:0,frontend:0 \\\n\t-e $DEFAULT_BRANCH"
     }
   },
   "complete": {
