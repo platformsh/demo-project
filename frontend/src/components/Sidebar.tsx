@@ -1,3 +1,4 @@
+import ThemeToggle from './ThemeToggle'
 interface SidebarProps {}
 
 const Sidebar: React.FC<SidebarProps> = () => {
@@ -13,6 +14,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
             run on Upsun and teach you about it's unique features.
           </p>
         </div>
+      <ThemeToggle />
       </section>
     </aside>
   );
