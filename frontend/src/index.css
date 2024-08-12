@@ -3,6 +3,10 @@
 @tailwind utilities;
 :root {
   --upsun-colors-neutral-light-white: #ffffff;
+  --upsun-colors-neutral-weak: #f0f2f5;
+  --upsun-colors-neutral-300: #f2f3f4;
+
+  --upsun-colors-ebony: #302f45;
 
   --upsun-colors-black-900: #181e21;
   --upsun-colors-black-800: #252d31;
@@ -15,7 +19,7 @@
 
 @layer base {
   body {
-    @apply bg-black text-default text-sm font-sans-soft;
+    @apply bg-upsun-neutral-300 dark:bg-black text-default dark:text-defaultDark text-sm font-sans-soft;
     font-size: 14px;
     line-height: 24px;
   }
@@ -34,7 +38,7 @@
   }
 
   code {
-    @apply p-0 font-mono inline-flex justify-center items-center rounded-md bg-black text-xs text-upsun-yellow-400 leading-5;
+    @apply p-0 font-mono inline-flex justify-center items-center rounded-md bg-upsun-ebony text-white dark:bg-black text-xs dark:text-upsun-yellow-400 leading-5;
   }
 
   .TooltipContent {
@@ -55,7 +59,7 @@
   }
 
   a {
-    @apply text-upsun-yellow-400 underline;
+    @apply text-upsun-violet-600 dark:text-upsun-yellow-400 underline;
   }
 
   .bottom-right-cut-corner {
@@ -82,5 +86,9 @@
     /*right: -1px;*/
     /*content:'';*/
     /*@apply border-b-[40px] border-l-[50px] border-b-upsun-violet-600 border-l-transparent;*/
+  }
+
+  .logo {
+    @apply fill-black dark:fill-white
   }
 }

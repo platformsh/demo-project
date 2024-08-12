@@ -34,7 +34,7 @@ const ThemeToggle: React.FC = () => {
         <button
           key={mode}
           onClick={() => setMode(mode as Theme)}
-          className={`p-2 ${theme === mode ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+          className={`px-4 py-1 transition-background rounded-2xl duration-300 ${theme === mode ? 'bg-upsun-violet-600 text-white' : 'bg-white text-upsun-violet-600 border-2 border-upsun-violet-600'} hover:border-[#3a2a99] hover:bg-[#3a2a99] hover:text-white`}
         >
           {mode.charAt(0).toUpperCase() + mode.slice(1)}
         </button>

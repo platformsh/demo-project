@@ -252,7 +252,7 @@ services:
                 <FeatureStep
                   data-testid="branch"
                   ref={stepCreateBranch}
-                  icon={<BranchIcon className="w-10 h-10 p-1" />}
+                  icon={<BranchIcon className="w-10 h-10 p-1 fill-upsun-ebony dark:fill-[#E6FB66]" />}
                   title={"2. Create your first preview environment"}
                   isDisabled={currentStep !== "branch"}
                 >
@@ -537,7 +537,7 @@ const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({
   return (
     <div
       data-testid={`${environment.toLocaleLowerCase()}-intro`}
-      className={`rounded-lg mt-4 p-4 bg-upsun-black-900`}
+      className={`rounded-lg mt-4 p-4 bg-white dark:bg-upsun-black-900`}
     >
       <>
         {environment && environment.toLocaleLowerCase() === "production" ? (
