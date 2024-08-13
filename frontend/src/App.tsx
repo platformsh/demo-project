@@ -151,13 +151,13 @@ services:
           There was an error fetching data from your Python backend at{" "}
         </p>
         <p>
-          <code className="px-2 py-1">
+          <code className="px-2 py-1.5 leading-[1.25rem]">
             {API_BASE_URL}/{ENVIRONMENT_PATH}
           </code>
         </p>
         <p className="mt-2 mb-2"> Please check your app logs using </p>
         <p>
-          <code className="px-2 py-1">{commands.error.user.get_logs}</code>
+          <code className="px-2 py-1.5 leading-[1.25rem]">{commands.error.user.get_logs}</code>
         </p>
       </ErrorPage>
     );
@@ -216,25 +216,25 @@ services:
                         <li className="mt-2 ml-6">Installed the Upsun CLI</li>
                         <li className="mt-2 ml-6">
                           Cloned the demo:{" "}
-                          <code className="ml-2 px-4">
+                          <code className="ml-2 px-2.5 leading-6">
                             {commands.first_deploy.user.clone}
                           </code>
                         </li>
                         <li className="mt-2 ml-6">
                           Connected to Upsun:{" "}
-                          <code className="ml-2 px-4">
+                          <code className="ml-2 px-2.5 leading-6">
                             {commands.first_deploy.user.set_remote} {PROJECT_ID}
                           </code>
                         </li>
                         <li className="mt-2 ml-6">
                           Pushed to Upsun:{" "}
-                          <code className="ml-2 px-4">
+                          <code className="ml-2 px-2.5 leading-6">
                             {commands.first_deploy.user.push}
                           </code>
                         </li>
                         <li className="mt-2 ml-6">
                           Retrieved the deployed environment URL:{" "}
-                          <code className="ml-2 px-4">
+                          <code className="ml-2 px-2.5 leading-6">
                             {commands.first_deploy.user.get_url}
                           </code>
                         </li>
@@ -326,7 +326,7 @@ services:
                             className="inline-block"
                             copyText=".upsun/config.yaml"
                           >
-                            <code className="px-2">.upsun/config.yaml</code>
+                            <code className="px-2 leading-6">.upsun/config.yaml</code>
                           </CopyButton>{" "}
                           and uncomment the following lines
                         </p>
