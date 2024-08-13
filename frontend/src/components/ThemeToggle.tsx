@@ -4,15 +4,18 @@ type Theme = "light" | "dark" | "system";
 
 const hasMatchMedia = () => {
   return typeof window.matchMedia === "function";
-}
+};
 const ThemeToggle: React.FC = () => {
   const getInitialTheme = (): Theme => {
     const storedTheme = localStorage.getItem("theme") as Theme;
-    const preferredTheme = storedTheme && ["light", "dark"].includes(storedTheme)
-      ? storedTheme
-      : "system";
+    const preferredTheme =
+      storedTheme && ["light", "dark"].includes(storedTheme)
+        ? storedTheme
+        : "system";
 
-    return preferredTheme === "system" && !hasMatchMedia() ? "light" : preferredTheme;
+    return preferredTheme === "system" && !hasMatchMedia()
+      ? "light"
+      : preferredTheme;
   };
 
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
@@ -21,7 +24,7 @@ const ThemeToggle: React.FC = () => {
     setTheme(mode);
     localStorage.setItem("theme", mode);
     document.documentElement.className =
-      (mode === "system" && hasMatchMedia())
+      mode === "system" && hasMatchMedia()
         ? window.matchMedia("(prefers-color-scheme: dark)").matches
           ? "dark"
           : "light"
