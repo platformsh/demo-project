@@ -8,7 +8,7 @@ module.exports = {
         15: "0.9375rem", // 15px
       },
       textColor: {
-        "defaultDark": "var(--upsun-colors-neutral-light-white, #FFF)",
+        defaultDark: "var(--upsun-colors-neutral-light-white, #FFF)",
         default: "var(--upsun-colors-ebony, #302f45)",
       },
       colors: {

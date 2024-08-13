@@ -47,7 +47,9 @@ const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
             }`}
           >
             {!hideContent && children && (
-              <div className={`rounded-lg p-4 bg-white dark:bg-upsun-black-900`}>
+              <div
+                className={`rounded-lg p-4 bg-white dark:bg-upsun-black-900`}
+              >
                 <>
                   <div
                     className={`${

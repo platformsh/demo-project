@@ -14,7 +14,9 @@ function Header() {
           <span className="hidden md:inline-block font-sans-strong text-sm font-medium">
             Demo Guide Project
           </span>
-          <div className="hidden md:inline-block border-r-[1px] border-r-upsun-black-100 dark:border-r-white">&nbsp;</div>
+          <div className="hidden md:inline-block border-r-[1px] border-r-upsun-black-100 dark:border-r-white">
+            &nbsp;
+          </div>
           <span className="hidden md:inline-block font-sans-strong text-sm font-medium">
             Powered by Platform.sh
           </span>

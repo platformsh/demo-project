@@ -157,7 +157,9 @@ services:
         </p>
         <p className="mt-2 mb-2"> Please check your app logs using </p>
         <p>
-          <code className="px-2 py-1.5 leading-[1.25rem]">{commands.error.user.get_logs}</code>
+          <code className="px-2 py-1.5 leading-[1.25rem]">
+            {commands.error.user.get_logs}
+          </code>
         </p>
       </ErrorPage>
     );
@@ -252,7 +254,9 @@ services:
                 <FeatureStep
                   data-testid="branch"
                   ref={stepCreateBranch}
-                  icon={<BranchIcon className="w-10 h-10 p-1 fill-upsun-ebony dark:fill-[#E6FB66]" />}
+                  icon={
+                    <BranchIcon className="w-10 h-10 p-1 fill-upsun-ebony dark:fill-[#E6FB66]" />
+                  }
                   title={"2. Create your first preview environment"}
                   isDisabled={currentStep !== "branch"}
                 >
@@ -326,7 +330,9 @@ services:
                             className="inline-block"
                             copyText=".upsun/config.yaml"
                           >
-                            <code className="px-2 leading-6">.upsun/config.yaml</code>
+                            <code className="px-2 leading-6">
+                              .upsun/config.yaml
+                            </code>
                           </CopyButton>{" "}
                           and uncomment the following lines
                         </p>
