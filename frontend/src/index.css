@@ -3,10 +3,16 @@
 @tailwind utilities;
 :root {
   --upsun-colors-neutral-light-white: #ffffff;
+  --upsun-colors-neutral-weak: #f0f2f5;
+  --upsun-colors-neutral-300: #f2f3f4;
 
+  --upsun-colors-ebony: #302f45;
+  --upsun-colors-black-100: #d9d6d6;
+  --upsun-colors-black-300: #8b9397;
   --upsun-colors-black-900: #181e21;
   --upsun-colors-black-800: #252d31;
 
+  --upsun-colors-violet-300: #efedff;
   --upsun-colors-violet-600: #6046ff;
   --upsun-colors-violet-900: #130e33;
 
@@ -15,7 +21,7 @@
 
 @layer base {
   body {
-    @apply bg-black text-default text-sm font-sans-soft;
+    @apply bg-upsun-neutral-300 dark:bg-black text-default dark:text-defaultDark text-sm font-sans-soft;
     font-size: 14px;
     line-height: 24px;
   }
@@ -34,16 +40,16 @@
   }
 
   code {
-    @apply p-0 font-mono inline-flex justify-center items-center rounded-md bg-black text-xs text-upsun-yellow-400 leading-5;
+    @apply p-0 font-mono inline-flex justify-center items-center rounded-md text-white bg-black text-xs text-upsun-yellow-400 leading-5;
   }
 
   .TooltipContent {
-    @apply p-2 bg-[#302F45] rounded-md font-sans-soft;
+    @apply p-2 bg-upsun-ebony rounded-md font-sans-soft text-white;
     box-shadow: 0px 1px 4px 0px rgba(26, 25, 43, 0.4);
   }
 
   .TooltipArrow {
-    @apply fill-[#302F45];
+    @apply fill-upsun-ebony;
   }
 
   .is-disabled {
@@ -55,7 +61,7 @@
   }
 
   a {
-    @apply text-upsun-yellow-400 underline;
+    @apply text-upsun-violet-600 dark:text-upsun-yellow-400 underline;
   }
 
   .bottom-right-cut-corner {
@@ -82,5 +88,9 @@
     /*right: -1px;*/
     /*content:'';*/
     /*@apply border-b-[40px] border-l-[50px] border-b-upsun-violet-600 border-l-transparent;*/
+  }
+
+  .logo {
+    @apply fill-black dark:fill-white;
   }
 }

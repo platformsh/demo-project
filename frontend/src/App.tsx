@@ -151,13 +151,15 @@ services:
           There was an error fetching data from your Python backend at{" "}
         </p>
         <p>
-          <code className="px-2 py-1">
+          <code className="px-2 py-1.5 leading-[1.25rem]">
             {API_BASE_URL}/{ENVIRONMENT_PATH}
           </code>
         </p>
         <p className="mt-2 mb-2"> Please check your app logs using </p>
         <p>
-          <code className="px-2 py-1">{commands.error.user.get_logs}</code>
+          <code className="px-2 py-1.5 leading-[1.25rem]">
+            {commands.error.user.get_logs}
+          </code>
         </p>
       </ErrorPage>
     );
@@ -169,9 +171,9 @@ services:
         className={`max-w-7xl w-fill px-6 2xl:pl-0 m-auto transition duration-500`}
       >
         <Header />
-        <main className="border-t-[1px] border-upsun-violet-600 flex flex-col sm:flex-row">
+        <main className="mx-12 flex flex-col sm:flex-row">
           <Sidebar />
-          <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
+          <section className="sm:border-t-4 sm:border-upsun-violet-600 w-full sm:w-3/4">
             <div
               ref={welcomeMessage}
               className="content-intro sm:w-3/4 mx-auto mt-6 mb-12"
@@ -216,25 +218,25 @@ services:
                         <li className="mt-2 ml-6">Installed the Upsun CLI</li>
                         <li className="mt-2 ml-6">
                           Cloned the demo:{" "}
-                          <code className="ml-2 px-4">
+                          <code className="ml-2 px-2.5 leading-6">
                             {commands.first_deploy.user.clone}
                           </code>
                         </li>
                         <li className="mt-2 ml-6">
                           Connected to Upsun:{" "}
-                          <code className="ml-2 px-4">
+                          <code className="ml-2 px-2.5 leading-6">
                             {commands.first_deploy.user.set_remote} {PROJECT_ID}
                           </code>
                         </li>
                         <li className="mt-2 ml-6">
                           Pushed to Upsun:{" "}
-                          <code className="ml-2 px-4">
+                          <code className="ml-2 px-2.5 leading-6">
                             {commands.first_deploy.user.push}
                           </code>
                         </li>
                         <li className="mt-2 ml-6">
                           Retrieved the deployed environment URL:{" "}
-                          <code className="ml-2 px-4">
+                          <code className="ml-2 px-2.5 leading-6">
                             {commands.first_deploy.user.get_url}
                           </code>
                         </li>
@@ -252,7 +254,9 @@ services:
                 <FeatureStep
                   data-testid="branch"
                   ref={stepCreateBranch}
-                  icon={<BranchIcon className="w-10 h-10 p-1" />}
+                  icon={
+                    <BranchIcon className="w-10 h-10 p-1 fill-upsun-ebony dark:fill-[#E6FB66]" />
+                  }
                   title={"2. Create your first preview environment"}
                   isDisabled={currentStep !== "branch"}
                 >
@@ -326,7 +330,9 @@ services:
                             className="inline-block"
                             copyText=".upsun/config.yaml"
                           >
-                            <code className="px-2">.upsun/config.yaml</code>
+                            <code className="px-2 leading-6">
+                              .upsun/config.yaml
+                            </code>
                           </CopyButton>{" "}
                           and uncomment the following lines
                         </p>
@@ -537,7 +543,7 @@ const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({
   return (
     <div
       data-testid={`${environment.toLocaleLowerCase()}-intro`}
-      className={`rounded-lg mt-4 p-4 bg-upsun-black-900`}
+      className={`rounded-lg mt-4 p-4 bg-white dark:bg-upsun-black-900`}
     >
       <>
         {environment && environment.toLocaleLowerCase() === "production" ? (

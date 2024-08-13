@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
@@ -7,14 +8,21 @@ module.exports = {
         15: "0.9375rem", // 15px
       },
       textColor: {
-        default: "var(--upsun-colors-neutral-light-white, #FFF)",
+        defaultDark: "var(--upsun-colors-neutral-light-white, #FFF)",
+        default: "var(--upsun-colors-ebony, #302f45)",
       },
       colors: {
+        "upsun-black-100": "var(--upsun-colors-black-100)",
+        "upsun-black-300": "var(--upsun-colors-black-300)",
         "upsun-black-900": "var(--upsun-colors-black-900)",
         "upsun-black-800": "var(--upsun-colors-black-800)",
+        "upsun-violet-300": "var(--upsun-colors-violet-300)",
         "upsun-violet-600": "var(--upsun-colors-violet-600)",
         "upsun-violet-900": "var(--upsun-colors-violet-900)",
         "upsun-yellow-400": "var(--upsun-colors-yellow-400)",
+        "upsun-neutral-300": "var(--upsun-colors-neutral-300)",
+        "upsun-neutral-weak": "var(--upsun-colors-neutral-weak)",
+        "upsun-ebony": "var(--upsun-colors-ebony)",
       },
       fontFamily: {
         "sans-strong": [
