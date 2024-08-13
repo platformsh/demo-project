@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 
 type Theme = "light" | "dark" | "system";
 
+const hasMatchMedia = () => {
+  return typeof window.matchMedia === "function";
+}
 const ThemeToggle: React.FC = () => {
   const getInitialTheme = (): Theme => {
     const storedTheme = localStorage.getItem("theme") as Theme;
@@ -16,7 +19,7 @@ const ThemeToggle: React.FC = () => {
     setTheme(mode);
     localStorage.setItem("theme", mode);
     document.documentElement.className =
-      mode === "system"
+      (mode === "system" && hasMatchMedia())
         ? window.matchMedia("(prefers-color-scheme: dark)").matches
           ? "dark"
           : "light"
@@ -24,7 +27,7 @@ const ThemeToggle: React.FC = () => {
   };
 
   useEffect(() => {
-    if (theme === "system") {
+    if (theme === "system" && hasMatchMedia()) {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
       const handleChange = () => setMode("system");
       mediaQuery.addEventListener("change", handleChange);
