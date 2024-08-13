@@ -4,7 +4,7 @@ import ShareButton from "./ShareButton";
 
 function Header() {
   return (
-    <header className="p-12 flex flex-col">
+    <header className="py-7 px-12 flex flex-col border-b-[1px] border-upsun-violet-600">
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row inline-flex items-center gap-6">
           <Logo
@@ -14,9 +14,7 @@ function Header() {
           <span className="hidden md:inline-block font-sans-strong text-sm font-medium">
             Demo Guide Project
           </span>
-          <span className="hidden md:inline-block font-sans-strong text-sm font-medium">
-            |
-          </span>
+          <div className="hidden md:inline-block border-r-[1px] border-r-upsun-black-100 dark:border-r-white">&nbsp;</div>
           <span className="hidden md:inline-block font-sans-strong text-sm font-medium">
             Powered by Platform.sh
           </span>

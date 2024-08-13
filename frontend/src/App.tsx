@@ -169,9 +169,9 @@ services:
         className={`max-w-7xl w-fill px-6 2xl:pl-0 m-auto transition duration-500`}
       >
         <Header />
-        <main className="border-t-[1px] border-upsun-violet-600 flex flex-col sm:flex-row">
+        <main className="mx-12 flex flex-col sm:flex-row">
           <Sidebar />
-          <section className="border-t-2 border-upsun-violet-600 w-full sm:w-3/4">
+          <section className="border-t-4 border-upsun-violet-600 w-full sm:w-3/4">
             <div
               ref={welcomeMessage}
               className="content-intro sm:w-3/4 mx-auto mt-6 mb-12"

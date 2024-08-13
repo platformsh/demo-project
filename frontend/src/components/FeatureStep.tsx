@@ -64,7 +64,7 @@ const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
         {isDisabled && !hideContent && (
           <button
             style={{ pointerEvents: "auto" }}
-            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-upsun-ebony dark:text-white pt-1 pr-1 cursor-pointer absolute top-0 right-0 hover:underline"
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-upsun-violet-600 dark:text-white pt-1 pr-1 cursor-pointer absolute top-0 right-0 hover:underline"
             onClick={() => setIsExpanded(!isExpanded)}
           >
             {isExpanded ? "Show less" : "Show more"}

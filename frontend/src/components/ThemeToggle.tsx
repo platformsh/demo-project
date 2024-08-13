@@ -29,12 +29,12 @@ const ThemeToggle: React.FC = () => {
   }, [theme]);
 
   return (
-    <div className="flex space-x-2">
+    <div className="flex gap-1 align-start">
       {['light', 'dark', 'system'].map((mode) => (
         <button
           key={mode}
           onClick={() => setMode(mode as Theme)}
-          className={`px-4 py-1 transition-background rounded-2xl duration-300 ${theme === mode ? 'bg-upsun-violet-600 text-white' : 'bg-white text-upsun-violet-600 border-2 border-upsun-violet-600'} hover:border-[#3a2a99] hover:bg-[#3a2a99] hover:text-white`}
+          className={`text-xs px-[8px] py-[6px] leading-none transition-background rounded-2xl duration-300 ${theme === mode ? 'bg-upsun-violet-600 text-white' : 'bg-none text-upsun-black-300 border-2 border-transparent'} hover:border-[#3a2a99] hover:bg-[#3a2a99] hover:text-white`}
         >
           {mode.charAt(0).toUpperCase() + mode.slice(1)}
         </button>
