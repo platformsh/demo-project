@@ -22,7 +22,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
           </p>
         </div>
         <Divider />
-        <div className={`font-semibold p-2 pl-0 leading-4`}>Theme</div>
+        <div className={`font-semibold p-2 pl-0 leading-4 text-[0.8rem]`}>Theme</div>
         <ThemeToggle/>
       </section>
     </aside>
