@@ -48,7 +48,7 @@ function ShareButton() {
             alignOffset={5}
             sideOffset={10}
           >
-            Copied!
+            Copied URL to clipboard
             <Tooltip.Arrow className="TooltipArrow" />
           </Tooltip.Content>
         </Tooltip.Portal>

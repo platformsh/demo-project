@@ -40,16 +40,16 @@
   }
 
   code {
-    @apply p-0 font-mono inline-flex justify-center items-center rounded-md bg-upsun-ebony text-white dark:bg-black text-xs dark:text-upsun-yellow-400 leading-5;
+    @apply p-0 font-mono inline-flex justify-center items-center rounded-md text-white bg-black text-xs text-upsun-yellow-400 leading-5;
   }
 
   .TooltipContent {
-    @apply p-2 bg-[#302F45] rounded-md font-sans-soft;
+    @apply p-2 bg-upsun-ebony rounded-md font-sans-soft text-white;
     box-shadow: 0px 1px 4px 0px rgba(26, 25, 43, 0.4);
   }
 
   .TooltipArrow {
-    @apply fill-[#302F45];
+    @apply fill-upsun-ebony;
   }
 
   .is-disabled {
