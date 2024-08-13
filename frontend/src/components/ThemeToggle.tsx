@@ -8,9 +8,11 @@ const hasMatchMedia = () => {
 const ThemeToggle: React.FC = () => {
   const getInitialTheme = (): Theme => {
     const storedTheme = localStorage.getItem("theme") as Theme;
-    return storedTheme && ["light", "dark"].includes(storedTheme)
+    const preferredTheme = storedTheme && ["light", "dark"].includes(storedTheme)
       ? storedTheme
       : "system";
+
+    return preferredTheme === "system" && !hasMatchMedia() ? "light" : preferredTheme;
   };
 
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
