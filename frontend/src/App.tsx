@@ -171,7 +171,7 @@ services:
         <Header />
         <main className="mx-12 flex flex-col sm:flex-row">
           <Sidebar />
-          <section className="border-t-4 border-upsun-violet-600 w-full sm:w-3/4">
+          <section className="sm:border-t-4 sm:border-upsun-violet-600 w-full sm:w-3/4">
             <div
               ref={welcomeMessage}
               className="content-intro sm:w-3/4 mx-auto mt-6 mb-12"
