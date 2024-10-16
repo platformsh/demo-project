@@ -9,8 +9,7 @@ applications:
         source:
             root: "frontend"
 
-        stack:
-            - "nodejs@22"
+        type: "nodejs:18"
 
         variables:
             env:
