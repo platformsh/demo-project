@@ -44,34 +44,28 @@ scenarios: |
             name "Frontend branch"
             expect status_code() == 200
 
-        # local: change endpoint to localhost:8000
-        visit url("/api/")
-            name "Backend base path"
-            expect status_code() == 200
-            expect body() == "Hello from the Python backend!"
-
-        visit url("/api/v1/environment")
+        visit url("/api/v1/environment/index.json")
             name "Backend data"
             expect status_code() == 200
 
         # blackfire-player run blackfire.yml --endpoint="http://localhost:3000/" --variable step=branch -vvv
         when "branch" == step 
-            visit url("/api/v1/environment")
+            visit url("/api/v1/environment/index.json")
                 expect "file" == json("session_storage")
                 expect "production" == json("type")
         when "redis" == step 
-            visit url("/api/v1/environment")
+            visit url("/api/v1/environment/index.json")
                 expect "file" == json("session_storage")
                 expect "staging" == json("type")
         when "merge-production" == step 
-            visit url("/api/v1/environment")
+            visit url("/api/v1/environment/index.json")
                 expect "redis" == json("session_storage")
                 expect "staging" == json("type")
         when "complete" == step 
-            visit url("/api/v1/environment")
+            visit url("/api/v1/environment/index.json")
                 expect "redis" == json("session_storage")
                 expect "production" == json("type")
         when "scale" == step 
-            visit url("/api/v1/environment")
+            visit url("/api/v1/environment/index.json")
                 expect "redis" == json("session_storage")
                 expect "production" == json("type")
