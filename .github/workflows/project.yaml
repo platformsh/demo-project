@@ -90,6 +90,7 @@ jobs:
             # B. Setup authenticated Upsun CLI user.
             - name: "[setup_cli_auth] 1. Test: an authenticated CLI can retrieve bot user info."
               run: |
+                  upsun login --max-age 0 
                   echo "::notice::Verifying CLI auth - bot can access user info."
                   RESULT=$(upsun auth:info username)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$UPSUN_USERNAME" "Authenticate Upsun CLI user"
