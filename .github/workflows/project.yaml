@@ -118,7 +118,7 @@ jobs:
             - name: "[setup_cli_auth] 2. Authenticate Upsun CLI to allow push from workflow."
               run: |
                   echo "::notice::Generating SSH certificate for Upsun CLI."
-                  symfony upsun ssh-cert:load --new -y
+                  symfony ssh-cert:load --new -y
                   touch ~/.ssh/known_hosts
                   chmod 644 ~/.ssh/known_hosts
                   ssh-keyscan ssh.$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX -v >> ~/.ssh/known_hosts
@@ -157,7 +157,7 @@ jobs:
               run: |
                 echo "::notice::Creating a project in the test organization."
                 echo "::notice::The project should become a remote repository for the local repo automatically."
-                symfony upsun project:create -o "$ORG_NAME" \
+                symfony upsun:create -o "$ORG_NAME" \
                     --title "$PROJECT_TITLE" \
                     --region "$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX" \
                     --default-branch ${{ steps.branch_names.outputs.default_branch }}
