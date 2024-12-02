@@ -173,14 +173,14 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                 ADDRESS=$(git config remote.upsun.url)
-                PROJECT_ID=$(symfony upsun project:info id)
+                PROJECT_ID=$(symfony upsun:project:info id)
                 EXPECTED="$PROJECT_ID@git.$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX:$PROJECT_ID.git"
                 ./$TEST_PATH/compare_strings.sh "$ADDRESS" "$EXPECTED" "project:set-remote git_address"
             - name: "[create_project] 5. Test: project remote has been set. Ensure only a single project is defined in org for the current PR."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                 # Failure here indicates that a project for another run on the same PR still exists in the org.
-                EXPECTED=$(symfony upsun project:list -o "$ORG_NAME" --title "$PROJECT_TITLE" --pipe)
+                EXPECTED=$(symfony upsun:project:list -o "$ORG_NAME" --title "$PROJECT_TITLE" --pipe)
                 RESULT=$(symfony upsun project:info id)
                 ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "project:set-remote local"
             - name: "[create_project] 6. Remove remote origin."
@@ -198,7 +198,7 @@ jobs:
             - name: "[create_project] 7. Update production environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  symfony upsun environment:info title "Production (${{ steps.branch_names.outputs.default_branch }})" -e ${{ steps.branch_names.outputs.default_branch }}
+                  symfony upsun:environment:info title "Production (${{ steps.branch_names.outputs.default_branch }})" -e ${{ steps.branch_names.outputs.default_branch }}
             # @todo: The tests here are sound, but it takes a moment to get the final complete/success. Some kind of wait is probably
             #   needed here to 1) if pending --> wait until max, 2) if success, pass test, 3) if fail, fail test.
             #   The wait logic can be applied for all activity outcomes for 'state'.
@@ -217,13 +217,13 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ACTIVITY_TYPE="environment_type.access.create"
-                  ACTIVITY_ID=$(symfony upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
-                  EXPECTED=$(symfony upsun activity:get $ACTIVITY_ID -P parameters.target)
-                  RESULT=$(symfony upsun auth:info id)
+                  ACTIVITY_ID=$(symfony upsun:activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
+                  EXPECTED=$(symfony upsun:activity:get $ACTIVITY_ID -P parameters.target)
+                  RESULT=$(symfony upsun:auth:info id)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add access"
                   ACTIVITY_TYPE="environment_type.access.create"
-                  ACTIVITY_ID=$(symfony upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
-                  EXPECTED=$(symfony upsun activity:get $ACTIVITY_ID -P parameters.role)
+                  ACTIVITY_ID=$(symfony upsun:activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
+                  EXPECTED=$(symfony upsun:activity:get $ACTIVITY_ID -P parameters.role)
                   RESULT="admin"
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add role"
 
