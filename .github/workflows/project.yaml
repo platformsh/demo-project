@@ -72,14 +72,16 @@ jobs:
             - name: "[tools] 2. Set up Homebrew."
               id: set-up-homebrew
               uses: Homebrew/actions/setup-homebrew@master
-            - name: "[tools] 3. Install Upsun CLI."
+            - name: "[tools] 3. Install Symfony CLI + Upsun CLI."
               run: |
                   echo "::notice::Installing Symfony CLI via HomeBrew."
                   brew install symfony-cli/tap/symfony-cli
-            - name: "[tools] 4. Test: The Upsun CLI should be installed and executable."
+                  brew install platformsh/tap/upsun-cli
+            - name: "[tools] 4. Test: The Symfony CLI should be installed and executable."
               run: |
                   echo "::notice::Verifying CLI is installed correctly."
                   ./$TEST_PATH/command_installed.sh symfony
+                  ./$TEST_PATH/command_installed.sh upsun
             - name: "[tools] 5. Test: Setup Blackfire."
               uses: shivammathur/setup-php@v2
               with:
