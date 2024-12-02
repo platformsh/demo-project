@@ -500,16 +500,16 @@ services:
                         </a>
                       </li>
                       <li className="mt-2">
-                        Explore articles, documentation, and more resources on the {" "}
+                        Explore articles, documentation, and more resources on
+                        the{" "}
                         <a href="https://devcenter.upsun.com">
                           Upsun Developer Center
-                        </a>.
+                        </a>
+                        .
                       </li>
                       <li className="mt-2">
-                        Share your thoughts and connect with us on {" "}
-                        <a href="https://discord.gg/platformsh">
-                          Discord
-                        </a>.
+                        Share your thoughts and connect with us on{" "}
+                        <a href="https://discord.gg/platformsh">Discord</a>.
                       </li>
                       <li className="mt-2">
                         Explore Upsun's{" "}
