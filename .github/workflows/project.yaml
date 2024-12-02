@@ -108,12 +108,12 @@ jobs:
             - name: "[setup_cli_auth] 1. Test: an authenticated CLI can retrieve bot user info."
               run: |
                   echo "::notice::Verifying CLI auth - bot can access user info."
-                  RESULT=$(symfony upsun auth:info username)
+                  RESULT=$(symfony auth:info username)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$UPSUN_USERNAME" "Authenticate Upsun CLI user"
             - name: "[setup_cli_auth] 2. Test: an authenticated CLI can retrieve organization info."
               run: |
                   echo "::notice::Verifying CLI auth - bot can access test organization info."
-                  RESULT=$(symfony upsun org:info -o $ORG_NAME name)
+                  RESULT=$(symfony org:info -o $ORG_NAME name)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$ORG_NAME" "Authenticate Upsun CLI user"
             - name: "[setup_cli_auth] 2. Authenticate Upsun CLI to allow push from workflow."
               run: |
