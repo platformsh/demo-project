@@ -54,17 +54,32 @@ jobs:
               uses: actions/checkout@v4
               with:
                   ref: ${{ github.event.pull_request.head.sha }}
+
+            # Original Upsun CLI
+            # - name: "[tools] 2. Set up Homebrew."
+            #   id: set-up-homebrew
+            #   uses: Homebrew/actions/setup-homebrew@master
+            # - name: "[tools] 3. Install Upsun CLI."
+            #   run: |
+            #       echo "::notice::Installing Upsun CLI via HomeBrew."
+            #       brew install platformsh/tap/upsun-cli
+            # - name: "[tools] 4. Test: The Upsun CLI should be installed and executable."
+            #   run: |
+            #       echo "::notice::Verifying CLI is installed correctly."
+            #       ./$TEST_PATH/command_installed.sh upsun
+
+            # Symfony variation
             - name: "[tools] 2. Set up Homebrew."
               id: set-up-homebrew
               uses: Homebrew/actions/setup-homebrew@master
             - name: "[tools] 3. Install Upsun CLI."
               run: |
-                  echo "::notice::Installing Upsun CLI via HomeBrew."
-                  brew install platformsh/tap/upsun-cli
+                  echo "::notice::Installing Symfony CLI via HomeBrew."
+                  brew install symfony-cli/tap/symfony-cli
             - name: "[tools] 4. Test: The Upsun CLI should be installed and executable."
               run: |
                   echo "::notice::Verifying CLI is installed correctly."
-                  ./$TEST_PATH/command_installed.sh upsun
+                  ./$TEST_PATH/command_installed.sh symfony
             - name: "[tools] 5. Test: Setup Blackfire."
               uses: shivammathur/setup-php@v2
               with:
@@ -91,17 +106,17 @@ jobs:
             - name: "[setup_cli_auth] 1. Test: an authenticated CLI can retrieve bot user info."
               run: |
                   echo "::notice::Verifying CLI auth - bot can access user info."
-                  RESULT=$(upsun auth:info username)
+                  RESULT=$(symfony upsun auth:info username)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$UPSUN_USERNAME" "Authenticate Upsun CLI user"
             - name: "[setup_cli_auth] 2. Test: an authenticated CLI can retrieve organization info."
               run: |
                   echo "::notice::Verifying CLI auth - bot can access test organization info."
-                  RESULT=$(upsun org:info -o $ORG_NAME name)
+                  RESULT=$(symfony upsun org:info -o $ORG_NAME name)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$ORG_NAME" "Authenticate Upsun CLI user"
             - name: "[setup_cli_auth] 2. Authenticate Upsun CLI to allow push from workflow."
               run: |
                   echo "::notice::Generating SSH certificate for Upsun CLI."
-                  upsun ssh-cert:load --new -y
+                  symfony upsun ssh-cert:load --new -y
                   touch ~/.ssh/known_hosts
                   chmod 644 ~/.ssh/known_hosts
                   ssh-keyscan ssh.$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX -v >> ~/.ssh/known_hosts
@@ -140,7 +155,7 @@ jobs:
               run: |
                 echo "::notice::Creating a project in the test organization."
                 echo "::notice::The project should become a remote repository for the local repo automatically."
-                upsun project:create -o "$ORG_NAME" \
+                symfony upsun project:create -o "$ORG_NAME" \
                     --title "$PROJECT_TITLE" \
                     --region "$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX" \
                     --default-branch ${{ steps.branch_names.outputs.default_branch }}
@@ -156,15 +171,15 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                 ADDRESS=$(git config remote.upsun.url)
-                PROJECT_ID=$(upsun project:info id)
+                PROJECT_ID=$(symfony upsun project:info id)
                 EXPECTED="$PROJECT_ID@git.$UPSUN_HOST_REGION.$UPSUN_HOST_SUFFIX:$PROJECT_ID.git"
                 ./$TEST_PATH/compare_strings.sh "$ADDRESS" "$EXPECTED" "project:set-remote git_address"
             - name: "[create_project] 5. Test: project remote has been set. Ensure only a single project is defined in org for the current PR."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                 # Failure here indicates that a project for another run on the same PR still exists in the org.
-                EXPECTED=$(upsun project:list -o "$ORG_NAME" --title "$PROJECT_TITLE" --pipe)
-                RESULT=$(upsun project:info id)
+                EXPECTED=$(symfony upsun project:list -o "$ORG_NAME" --title "$PROJECT_TITLE" --pipe)
+                RESULT=$(symfony upsun project:info id)
                 ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "project:set-remote local"
             - name: "[create_project] 6. Remove remote origin."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
@@ -181,7 +196,7 @@ jobs:
             - name: "[create_project] 7. Update production environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun environment:info title "Production (${{ steps.branch_names.outputs.default_branch }})" -e ${{ steps.branch_names.outputs.default_branch }}
+                  symfony upsun environment:info title "Production (${{ steps.branch_names.outputs.default_branch }})" -e ${{ steps.branch_names.outputs.default_branch }}
             # @todo: The tests here are sound, but it takes a moment to get the final complete/success. Some kind of wait is probably
             #   needed here to 1) if pending --> wait until max, 2) if success, pass test, 3) if fail, fail test.
             #   The wait logic can be applied for all activity outcomes for 'state'.
@@ -200,13 +215,13 @@ jobs:
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
                   ACTIVITY_TYPE="environment_type.access.create"
-                  ACTIVITY_ID=$(upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
-                  EXPECTED=$(upsun activity:get $ACTIVITY_ID -P parameters.target)
-                  RESULT=$(upsun auth:info id)
+                  ACTIVITY_ID=$(symfony upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
+                  EXPECTED=$(symfony upsun activity:get $ACTIVITY_ID -P parameters.target)
+                  RESULT=$(symfony upsun auth:info id)
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add access"
                   ACTIVITY_TYPE="environment_type.access.create"
-                  ACTIVITY_ID=$(upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
-                  EXPECTED=$(upsun activity:get $ACTIVITY_ID -P parameters.role)
+                  ACTIVITY_ID=$(symfony upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
+                  EXPECTED=$(symfony upsun activity:get $ACTIVITY_ID -P parameters.role)
                   RESULT="admin"
                   ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add role"
 
@@ -244,7 +259,7 @@ jobs:
             - name: "[environment_branch] 1. Create preview environment"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun branch ${{ steps.branch_names.outputs.staging_branch }} --type staging
+                  symfony upsun branch ${{ steps.branch_names.outputs.staging_branch }} --type staging
             - name: "[environment_branch] 2. Test: The environment_branch activity should complete."     
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -257,13 +272,13 @@ jobs:
             - name: "[environment_branch] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  URL=$(upsun url --primary --pipe)
+                  URL=$(symfony upsun url --primary --pipe)
                   sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=redis -vvv
             - name: "[environment_branch] 5. Update staging environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  upsun environment:info title "Staging (${{ steps.branch_names.outputs.staging_branch }})" -e ${{ steps.branch_names.outputs.staging_branch }}
+                  symfony upsun environment:info title "Staging (${{ steps.branch_names.outputs.staging_branch }})" -e ${{ steps.branch_names.outputs.staging_branch }}
 
             ################################################################################################
             # G. Add a service.
@@ -288,7 +303,7 @@ jobs:
             - name: "[add_service_resources] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  URL=$(upsun url --primary --pipe)
+                  URL=$(symfony upsun url --primary --pipe)
                   sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=merge-production -vvv
 
@@ -331,7 +346,7 @@ jobs:
               run: |
                   git checkout ${{ steps.branch_names.outputs.default_branch }}
                   git branch
-                  URL=$(upsun url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
+                  URL=$(symfony upsun url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
                   sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=complete -vvv
 
@@ -356,7 +371,7 @@ jobs:
               run: |
                   git checkout ${{ steps.branch_names.outputs.default_branch }}
                   git branch
-                  URL=$(upsun url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
+                  URL=$(symfony upsun url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
                   sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=scale -vvv
 
