@@ -181,7 +181,7 @@ jobs:
               run: |
                 # Failure here indicates that a project for another run on the same PR still exists in the org.
                 EXPECTED=$(symfony upsun:project:list -o "$ORG_NAME" --title "$PROJECT_TITLE" --pipe)
-                RESULT=$(symfony upsun project:info id)
+                RESULT=$(symfony upsun:project:info id)
                 ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "project:set-remote local"
             - name: "[create_project] 6. Remove remote origin."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
