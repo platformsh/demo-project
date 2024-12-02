@@ -261,7 +261,7 @@ jobs:
             - name: "[environment_branch] 1. Create preview environment"
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  symfony upsun branch ${{ steps.branch_names.outputs.staging_branch }} --type staging
+                  symfony upsun:branch ${{ steps.branch_names.outputs.staging_branch }} --type staging
             - name: "[environment_branch] 2. Test: The environment_branch activity should complete."     
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -274,13 +274,13 @@ jobs:
             - name: "[environment_branch] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  URL=$(symfony upsun url --primary --pipe)
+                  URL=$(symfony upsun:url --primary --pipe)
                   sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=redis -vvv
             - name: "[environment_branch] 5. Update staging environment name."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  symfony upsun environment:info title "Staging (${{ steps.branch_names.outputs.staging_branch }})" -e ${{ steps.branch_names.outputs.staging_branch }}
+                  symfony upsun:environment:info title "Staging (${{ steps.branch_names.outputs.staging_branch }})" -e ${{ steps.branch_names.outputs.staging_branch }}
 
             ################################################################################################
             # G. Add a service.
@@ -305,7 +305,7 @@ jobs:
             - name: "[add_service_resources] 4. Test: Test responses on demo app using Blackfire Player."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
-                  URL=$(symfony upsun url --primary --pipe)
+                  URL=$(symfony upsun:url --primary --pipe)
                   sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=merge-production -vvv
 
@@ -348,7 +348,7 @@ jobs:
               run: |
                   git checkout ${{ steps.branch_names.outputs.default_branch }}
                   git branch
-                  URL=$(symfony upsun url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
+                  URL=$(symfony upsun:url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
                   sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=complete -vvv
 
@@ -373,7 +373,7 @@ jobs:
               run: |
                   git checkout ${{ steps.branch_names.outputs.default_branch }}
                   git branch
-                  URL=$(symfony upsun url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
+                  URL=$(symfony upsun:url -e ${{ steps.branch_names.outputs.default_branch }} --primary --pipe)
                   sleep $SLEEP
                   blackfire-player run blackfire.yaml --endpoint="$URL" --variable step=scale -vvv
 
