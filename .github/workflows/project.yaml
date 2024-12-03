@@ -55,20 +55,7 @@ jobs:
               with:
                   ref: ${{ github.event.pull_request.head.sha }}
 
-            # Original Upsun CLI
-            # - name: "[tools] 2. Set up Homebrew."
-            #   id: set-up-homebrew
-            #   uses: Homebrew/actions/setup-homebrew@master
-            # - name: "[tools] 3. Install Upsun CLI."
-            #   run: |
-            #       echo "::notice::Installing Upsun CLI via HomeBrew."
-            #       brew install platformsh/tap/upsun-cli
-            # - name: "[tools] 4. Test: The Upsun CLI should be installed and executable."
-            #   run: |
-            #       echo "::notice::Verifying CLI is installed correctly."
-            #       ./$TEST_PATH/command_installed.sh upsun
-
-            # Symfony variation
+            # Symfony CLI on Upsun variation
             - name: "[tools] 2. Set up Homebrew."
               id: set-up-homebrew
               uses: Homebrew/actions/setup-homebrew@master
@@ -104,20 +91,20 @@ jobs:
                   echo "staging_branch=${STAGING_BRANCH}" >> $GITHUB_OUTPUT
 
             ################################################################################################
-            # B. Setup authenticated Upsun CLI user.
+            # B. Setup authenticated Symfony CLI user.
             - name: "[setup_cli_auth] 1. Test: an authenticated CLI can retrieve bot user info."
               run: |
                   echo "::notice::Verifying CLI auth - bot can access user info."
                   RESULT=$(symfony auth:info username)
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$UPSUN_USERNAME" "Authenticate Upsun CLI user"
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$UPSUN_USERNAME" "Authenticate Symfony CLI user"
             - name: "[setup_cli_auth] 2. Test: an authenticated CLI can retrieve organization info."
               run: |
                   echo "::notice::Verifying CLI auth - bot can access test organization info."
                   RESULT=$(symfony org:info -o $ORG_NAME name)
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$ORG_NAME" "Authenticate Upsun CLI user"
-            - name: "[setup_cli_auth] 2. Authenticate Upsun CLI to allow push from workflow."
+                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$ORG_NAME" "Authenticate Symfony CLI user"
+            - name: "[setup_cli_auth] 2. Authenticate Symfony CLI to allow push from workflow."
               run: |
-                  echo "::notice::Generating SSH certificate for Upsun CLI."
+                  echo "::notice::Generating SSH certificate for Syfmony CLI."
                   symfony ssh-cert:load --new -y
                   touch ~/.ssh/known_hosts
                   chmod 644 ~/.ssh/known_hosts
