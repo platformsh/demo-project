@@ -7,9 +7,9 @@
   },
   "first_deploy": {
     "user": {
-      "clone": "git clone git@github.com:platformsh/demo-project.git",
-      "set_remote": "symfony upsun:project:set-remote",
-      "push": "symfony upsun:push",
+      "clone": "git clone -b symfony git@github.com:platformsh/demo-project.git",
+      "set_remote": "symfony upsun:create ... --set-remote",
+      "push": "symfony deploy -y",
       "get_url": "symfony upsun:url --primary"
     },
     "test": {
