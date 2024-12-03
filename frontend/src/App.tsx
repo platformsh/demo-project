@@ -213,7 +213,7 @@ services:
                           Created a <em>project</em>, the Upsun counterpart to a{" "}
                           <em>repository</em>.
                         </li>
-                        <li className="mt-2 ml-6">Installed the Upsun CLI</li>
+                        <li className="mt-2 ml-6">Installed the Symfony CLI</li>
                         <li className="mt-2 ml-6">
                           Cloned the demo:{" "}
                           <code className="ml-2 px-4">
@@ -466,7 +466,7 @@ services:
                         Redis service container with the following command:
                       </span> */}
                       <span>
-                        You've used the Upsun CLI to merge a new service into
+                        You've used the Symfony CLI to merge a new service into
                         production, and to match the resources you worked with
                         in staging to that environment. From here, you can{" "}
                         <strong>scale those resources</strong> to whatever you
@@ -500,7 +500,16 @@ services:
                         </a>
                       </li>
                       <li className="mt-2">
-                        Share your thoughts and connect with us on Discord.
+                        Explore articles, documentation, and more resources on
+                        the{" "}
+                        <a href="https://devcenter.upsun.com">
+                          Upsun Developer Center
+                        </a>
+                        .
+                      </li>
+                      <li className="mt-2">
+                        Share your thoughts and connect with us on{" "}
+                        <a href="https://discord.gg/platformsh">Discord</a>.
                       </li>
                       <li className="mt-2">
                         Explore Upsun's{" "}
