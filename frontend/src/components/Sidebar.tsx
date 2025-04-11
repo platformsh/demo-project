@@ -10,7 +10,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
         <div className="aside-title flex flex-row gap-4 items-center mt-4 mb-2">
           <p>
             Welcome to your Upsun app, a Python and Node.js multiapp designed to
-            run on Upsun and teach you about it's unique features.
+            run on Upsun and teach you about its unique features.
           </p>
         </div>
       </section>
