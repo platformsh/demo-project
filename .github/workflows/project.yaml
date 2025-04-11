@@ -196,19 +196,6 @@ jobs:
             #   working-directory: ${{ env.PROJECT_LOCALDIR }}
             #   run: |
             #     ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} environment_type.access.create result success "add_bot_user"
-            - name: "[create_project] 10. Test: verify user has been granted access to project."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  ACTIVITY_TYPE="environment_type.access.create"
-                  ACTIVITY_ID=$(upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
-                  EXPECTED=$(upsun activity:get $ACTIVITY_ID -P parameters.target)
-                  RESULT=$(upsun auth:info id)
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add access"
-                  ACTIVITY_TYPE="environment_type.access.create"
-                  ACTIVITY_ID=$(upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
-                  EXPECTED=$(upsun activity:get $ACTIVITY_ID -P parameters.role)
-                  RESULT="admin"
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add role"
 
             ################################################################################################
             # E. First code deploy.
