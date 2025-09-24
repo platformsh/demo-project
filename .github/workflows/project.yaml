@@ -147,7 +147,7 @@ jobs:
                 if [[ "$PROJECT_TITLE" =~ ^Demo\ Test\ Run\ \(pr-[0-9]+/merge\)$ ]]; then
                   projectIds="$(upsun project:list --title "$PROJECT_TITLE" --format plain --no-header --columns id 2>/dev/null | paste -sd, -)"
                   if [ -n "$projectIds" ]; then
-                    UPSUN_CLI_NO_INTERACTION=0 upsun multi project:delete -p "$projectIds" --yes
+                    upsun multi project:delete -p "$projectIds" -- --yes
                   else
                     echo "No existing test runs named: $PROJECT_TITLE. Ready to go!"
                   fi
