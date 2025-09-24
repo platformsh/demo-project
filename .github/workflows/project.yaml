@@ -10,6 +10,8 @@ name: Upsun Demo CI
             - main
         types:
             - labeled
+    workflow_dispatch:  # Enable manual runs with secrets (useful for testing MRs from forks)
+
 env:
     UPSUN_CLI_NO_INTERACTION: 1
     UPSUN_CLI_TOKEN: ${{secrets.DEVREL_USER_UPSUN_TOKEN}}
