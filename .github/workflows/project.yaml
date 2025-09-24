@@ -14,7 +14,7 @@ env:
     UPSUN_CLI_NO_INTERACTION: 1
     UPSUN_CLI_TOKEN: ${{secrets.DEVREL_USER_UPSUN_TOKEN}}
 
-    PHP_VERSION: '8.3'
+    PHP_VERSION: '8.2'
 
     UPSUN_HOST_REGION: "ca-1"
     UPSUN_HOST_SUFFIX: "platform.sh"
