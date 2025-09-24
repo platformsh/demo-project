@@ -142,6 +142,18 @@ jobs:
 
             ################################################################################################
             # D. Create project. Connect to local repo. Provide access to bot user to the project.
+            - name: "[clean up old project] Ensure old test runs are deleted"
+              run: |
+                if [[ "$PROJECT_TITLE" =~ ^Demo\ Test\ Run\ \(pr-[0-9]+/merge\)$ ]]; then
+                  projectIds="$(upsun project:list --title "$PROJECT_TITLE" --format plain --no-header --columns id 2>/dev/null | paste -sd, -)"
+                  if [ -n "$projectIds" ]; then
+                    upsun multi project:delete -y -p "$projectIds"
+                  else
+                    echo "No existing test runs named: $PROJECT_TITLE. Ready to go!"
+                  fi
+                else
+                  echo "Skipping cleanup: PROJECT_TITLE does not match 'Demo Test Run (pr-###/merge)'"
+                fi
             - name: "[create_project] 1. Create a project in the test organization."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
