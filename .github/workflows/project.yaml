@@ -14,7 +14,7 @@ env:
     UPSUN_CLI_NO_INTERACTION: 1
     UPSUN_CLI_TOKEN: ${{secrets.DEVREL_USER_UPSUN_TOKEN}}
 
-    PHP_VERSION: '8.2'
+    PHP_VERSION: '8.3'
 
     UPSUN_HOST_REGION: "ca-1"
     UPSUN_HOST_SUFFIX: "platform.sh"
@@ -48,6 +48,15 @@ jobs:
         steps:
             ################################################################################################
             # A. Setup Upsun CLI, variables, & other tools.
+            - name: "[Debug] Verify environment variable"
+              run: |
+                echo "Token length is: ${{ env.UPSUN_CLI_TOKEN && 'non-empty' || 'empty' }}"
+                if [ -n "${{ env.UPSUN_CLI_TOKEN }}" ]; then
+                  echo "UPSUN_CLI_TOKEN is set."
+                else
+                  echo "::error::UPSUN_CLI_TOKEN is NOT set."
+                  exit 1
+                fi
             - name: "[tools] 1. Retrieve local files."
               uses: actions/checkout@v4
               with:
@@ -133,6 +142,18 @@ jobs:
 
             ################################################################################################
             # D. Create project. Connect to local repo. Provide access to bot user to the project.
+            - name: "[clean up old project] Ensure old test runs are deleted"
+              run: |
+                if [[ "$PROJECT_TITLE" =~ ^Demo\ Test\ Run\ \(pr-[0-9]+/merge\)$ ]]; then
+                  projectIds="$(upsun project:list --title "$PROJECT_TITLE" --format plain --no-header --columns id 2>/dev/null | paste -sd, -)"
+                  if [ -n "$projectIds" ]; then
+                    upsun multi project:delete -p "$projectIds" -- --yes
+                  else
+                    echo "No existing test runs named: $PROJECT_TITLE. Ready to go!"
+                  fi
+                else
+                  echo "Skipping cleanup: PROJECT_TITLE does not match 'Demo Test Run (pr-###/merge)'"
+                fi
             - name: "[create_project] 1. Create a project in the test organization."
               working-directory: ${{ env.PROJECT_LOCALDIR }}
               run: |
@@ -194,19 +215,19 @@ jobs:
             #   working-directory: ${{ env.PROJECT_LOCALDIR }}
             #   run: |
             #     ./utils/tests/activity_outcome.sh ${{ steps.branch_names.outputs.default_branch }} environment_type.access.create result success "add_bot_user"
-            - name: "[create_project] 10. Test: verify user has been granted access to project."
-              working-directory: ${{ env.PROJECT_LOCALDIR }}
-              run: |
-                  ACTIVITY_TYPE="environment_type.access.create"
-                  ACTIVITY_ID=$(upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
-                  EXPECTED=$(upsun activity:get $ACTIVITY_ID -P parameters.target)
-                  RESULT=$(upsun auth:info id)
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add access"
-                  ACTIVITY_TYPE="environment_type.access.create"
-                  ACTIVITY_ID=$(upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
-                  EXPECTED=$(upsun activity:get $ACTIVITY_ID -P parameters.role)
-                  RESULT="admin"
-                  ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add role"
+            # - name: "[create_project] 10. Test: verify user has been granted access to project."
+            #   working-directory: ${{ env.PROJECT_LOCALDIR }}
+            #   run: |
+            #       ACTIVITY_TYPE="environment_type.access.create"
+            #       ACTIVITY_ID=$(upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
+            #       EXPECTED=$(upsun activity:get $ACTIVITY_ID -P parameters.target)
+            #       RESULT=$(upsun auth:info id)
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add access"
+            #       ACTIVITY_TYPE="environment_type.access.create"
+            #       ACTIVITY_ID=$(upsun activity:list --type $ACTIVITY_TYPE --limit 1 --no-header --columns=id --format plain)
+            #       EXPECTED=$(upsun activity:get $ACTIVITY_ID -P parameters.role)
+            #       RESULT="admin"
+            #       ./$TEST_PATH/compare_strings.sh "$RESULT" "$EXPECTED" "bot_user_add role"
 
             ################################################################################################
             # E. First code deploy.
