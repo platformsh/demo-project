@@ -63,10 +63,6 @@ jobs:
               run: |
                   echo "::notice::Verifying CLI is installed correctly."
                   ./$TEST_PATH/command_installed.sh upsun
-            - name: "[setup_cli_auth] Authenticate Upsun CLI with token"
-              run: upsun auth:api-token-login "$UPSUN_CLI_TOKEN"
-              env:
-                UPSUN_CLI_TOKEN: ${{ secrets.DEVREL_USER_UPSUN_TOKEN }}
             - name: "[tools] 5. Test: Setup Blackfire."
               uses: shivammathur/setup-php@v2
               with:
