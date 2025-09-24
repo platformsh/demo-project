@@ -44,7 +44,7 @@
     },
     "test": {
       "merge": "upsun merge $STAGING_BRANCH",
-      "resources_set": "upsun resources:set \\\n\t--count backend:2 \\\n\t--size redis_service:0.5 \\\n\t--disk backend:512:frontend:512  \\\n\t-e $DEFAULT_BRANCH"
+      "resources_set": "upsun resources:set \\\n\t--count backend:2 \\\n\t--size redis_service:0.5 \\\n\t--disk backend:512,frontend:512  \\\n\t-e $DEFAULT_BRANCH"
     }
   },
   "scale": {
