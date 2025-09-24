@@ -201,7 +201,8 @@ services:
                 >
                   <>
                     <p className="mb-4">
-                      <strong>Congrats!</strong> You've deployed this app to Upsun.
+                      <strong>Congrats!</strong> You've deployed this app to
+                      Upsun.
                     </p>
                     <div className="mb-4">
                       By this point, you have:
@@ -257,8 +258,8 @@ services:
                   <>
                     <p className="mb-2">
                       With Upsun, you can clone any environment to get a
-                      byte-for-byte copy to use for staging, features, and
-                      bug fixes.
+                      byte-for-byte copy to use for staging, features, and bug
+                      fixes.
                     </p>
                     <p className="mb-2">
                       Before you make your first revision, let's create a new
@@ -428,7 +429,9 @@ services:
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
-                          <span>Open the production frontend in your browser</span>
+                          <span>
+                            Open the production frontend in your browser
+                          </span>
                           <CodeExample
                             copyText={commands["merge_production"].user.get_url}
                             codeExampleText={
@@ -465,8 +468,8 @@ services:
                       </span> */}
                       <span>
                         You've used the Upsun CLI to merge a new service into
-                        production and to match the resources you worked with
-                        in staging to that environment. From here, you can{" "}
+                        production and to match the resources you worked with in
+                        staging to that environment. From here, you can{" "}
                         <strong>scale those resources</strong> to whatever you
                         need. For example, at this moment your production Redis
                         service has 0.5 CPU. You can scale down the amount of
