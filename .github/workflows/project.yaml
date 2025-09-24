@@ -48,6 +48,15 @@ jobs:
         steps:
             ################################################################################################
             # A. Setup Upsun CLI, variables, & other tools.
+            - name: "[Debug] Verify environment variable"
+              run: |
+                echo "Token length is: ${{ env.UPSUN_CLI_TOKEN && 'non-empty' || 'empty' }}"
+                if [ -n "${{ env.UPSUN_CLI_TOKEN }}" ]; then
+                  echo "UPSUN_CLI_TOKEN is set."
+                else
+                  echo "::error::UPSUN_CLI_TOKEN is NOT set."
+                  exit 1
+                fi
             - name: "[tools] 1. Retrieve local files."
               uses: actions/checkout@v4
               with:
