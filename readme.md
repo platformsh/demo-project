@@ -105,7 +105,10 @@ NPM is required.
 1. `npm install`
 1. `npm run start`
 
-These commands will set up everything you need to get started, serving the `frontend` React app from `localhost:3000`
+These commands will set up everything you need to get started, serving:
+
+- The `backend` Python app from `localhost:8000`
+- The `frontend` React app from `localhost:3000`
 
 > [!IMPORTANT]
 > If at any time you want to start over, run `npm run clean`.
@@ -171,6 +174,15 @@ Before pushing your changes to the repository (or if your PR is failing), please
     npm install
     ```
 
+1. Run backend Python app tests (check for vulnerabilities)
+
+    ```bash
+    npm run test:backend
+    ```
+
+    > [!NOTE]
+    > This test will fail on GitHub if **any** vulnerabilities are found. 
+
 1. Run frontend React tests.
 
     ```bash
@@ -197,10 +209,16 @@ Before pushing your changes to the repository (or if your PR is failing), please
 1. Prettier
 
     ```bash
+    npm run prettier:backend
     npm run prettier:frontend
     npm run lint:frontend
+    npm run lint:backend
     ```
 
     If, for example, you run into the error `[warn] Code style issues found in 3 files. Run Prettier to fix.` for the `frontend`, run `cd frontend && npm run pretty:fix` to fix.
 
     The workflow on GitHub will fail if this error occurs, so please fix locally when contributing.
+
+#### Demo path tests
+
+_Coming soon_

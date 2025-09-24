@@ -336,7 +336,7 @@ services:
                             language="yaml"
                             showLineNumbers={true}
                             theme={UpsunCodeTheme}
-                            startingLineNumber={51}
+                            startingLineNumber={67}
                           />
                         </p>
                       </li>
@@ -409,8 +409,8 @@ services:
                           <span>
                             Now, use <code className="px-1">resources:set</code>{" "}
                             with
-                            <code className="px-1">--count frontend:2</code> to
-                            horizontally scale the frontend app and{" "}
+                            <code className="px-1">--count backend:2</code> to
+                            horizontally scale the backend app and{" "}
                             <code className="px-1">
                               --size redis_service:0.5
                             </code>{" "}
