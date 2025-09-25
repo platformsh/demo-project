@@ -10,7 +10,7 @@ const StepDeploy: React.FC = () => {
       data-testid="step-deploy"
       icon={<DoneIcon className="w-10 h-10 p-1" />}
       title="1. Deploy to Upsun"
-      isDisabled // always completed
+      isDisabled
     >
       <>
         <p className="mb-4">
