@@ -21,6 +21,7 @@ import { PROJECT_ID } from "./config";
 
 import commands from "./commands.json";
 import DesignDebugger from "./theme/debug/DesignDebugger";
+import EnvironmentIntroduction from "./components/EnvironmentIntroduction";
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>(null);
@@ -525,71 +526,5 @@ services:
     </>
   );
 }
-
-interface EnvironmentIntroductionProps {
-  environment: string | null;
-}
-
-const EnvironmentIntroduction: React.FC<EnvironmentIntroductionProps> = ({
-  environment,
-}) => {
-  if (environment === null) return <></>;
-
-  return (
-    <div
-      data-testid={`${environment.toLocaleLowerCase()}-intro`}
-      className={`rounded-lg mt-4 p-4 bg-upsun-black-900`}
-    >
-      <>
-        {environment && environment.toLocaleLowerCase() === "production" ? (
-          <ProductionIntroduction />
-        ) : (
-          <StagingIntroduction />
-        )}
-      </>
-    </div>
-  );
-};
-
-const ProductionIntroduction = () => {
-  return (
-    <>
-      <p className="text-sm leading-6 text-lg mb-2">
-        Congrats! You’ve deployed the Upsun Demo Guide project to a production
-        environment 🎉
-      </p>
-      <p className="text-sm leading-6">
-        This app is the React frontend of your demo project’s production
-        environment, which is associated with the default branch of the
-        repository, <code className="px-2 py-1">main</code>. With it now
-        deployed, we can add features, services, and runtimes in preview
-        environments—which are byte-for-byte copies of production.
-      </p>
-    </>
-  );
-};
-
-const StagingIntroduction = () => {
-  return (
-    <>
-      <p className="text-sm leading-6 text-lg mb-2">
-        Congrats! You’ve created your staging environment 🎉
-      </p>
-      <p className="text-sm leading-6">
-        This space represents your byte-for-byte copy of production. You can use
-        staging and development environments to preview and share changes prior
-        to pushing them to production.
-      </p>
-      <p className="text-sm leading-6">
-        This app uses the Upsun environment variable{" "}
-        <code className="px-2 py-1">$PLATFORM_ENVIRONMENT="staging"</code> to
-        modify the content of this page.
-      </p>
-      <p className="text-sm leading-6">
-        Return to the steps below to continue adding your Redis service.
-      </p>
-    </>
-  );
-};
 
 export default App;
