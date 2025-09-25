@@ -22,6 +22,11 @@ import { PROJECT_ID } from "./config";
 import commands from "./commands.json";
 import DesignDebugger from "./theme/debug/DesignDebugger";
 import EnvironmentIntroduction from "./components/EnvironmentIntroduction";
+import StepDeploy from "./steps/StepDeploy";
+import StepBranch from "./steps/StepBranch";
+import StepRedis from "./steps/StepRedis";
+import StepMergeProduction from "./steps/StepMergeProduction";
+import StepComplete from "./steps/StepComplete";
 
 function App() {
   const [environment, setEnvironment] = useState<string | null>(null);
@@ -37,9 +42,6 @@ function App() {
   const [currentStepProgress, setCurrentStepProgress] = useState<number>(1);
 
   const welcomeMessage = useRef<HTMLDivElement>(null);
-  const stepCreateProduction = useRef<HTMLDivElement>(null);
-  const stepCreateBranch = useRef<HTMLDivElement>(null);
-  const stepCreateService = useRef<HTMLDivElement>(null);
   const stepMergeProduction = useRef<HTMLDivElement>(null);
   const stepAllComplete = useRef<HTMLDivElement>(null);
   const debugEnabled =
@@ -51,17 +53,6 @@ function App() {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-  const servicesText = `###############################################################
-# Step 3: Add a service. Uncomment this section.
-###############################################################
-        relationships:
-            redis_session: "redis_service:redis"
-
-services:
-    redis_service:
-        type: "redis:7.0"
-###############################################################`;
 
   const setEnvironmentDetails = async () => {
     return fetchEnvironment().then((envResponse) => {
@@ -193,330 +184,30 @@ services:
 
               {/* STEP 1 - INITIAL DEPLOYMENT CONFIRMATION */}
               <div className="pt-8 flex flex-col gap-2">
-                <FeatureStep
-                  data-testid="branch"
-                  ref={stepCreateProduction}
-                  icon={<DoneIcon className="w-10 h-10 p-1" />}
-                  title={"1. Deploy to Upsun"}
-                  isDisabled // This step is always completed because the app is intended to be viewed on Upsun
-                >
-                  <>
-                    <p className="mb-4">
-                      <strong>Congrats!</strong> You've deployed this app to
-                      Upsun.
-                    </p>
-                    <div className="mb-4">
-                      By this point, you have:
-                      <br />
-                      <ul className="list-disc list-inside">
-                        <li className="mt-2 ml-6">
-                          Created a <em>project</em>, the Upsun counterpart to a{" "}
-                          <em>repository</em>.
-                        </li>
-                        <li className="mt-2 ml-6">Installed the Upsun CLI</li>
-                        <li className="mt-2 ml-6">
-                          Cloned the demo:{" "}
-                          <code className="ml-2 px-4">
-                            {commands.first_deploy.user.clone}
-                          </code>
-                        </li>
-                        <li className="mt-2 ml-6">
-                          Connected to Upsun:{" "}
-                          <code className="ml-2 px-4">
-                            {commands.first_deploy.user.set_remote} {PROJECT_ID}
-                          </code>
-                        </li>
-                        <li className="mt-2 ml-6">
-                          Pushed to Upsun:{" "}
-                          <code className="ml-2 px-4">
-                            {commands.first_deploy.user.push}
-                          </code>
-                        </li>
-                        <li className="mt-2 ml-6">
-                          Retrieved the deployed environment URL:{" "}
-                          <code className="ml-2 px-4">
-                            {commands.first_deploy.user.get_url}
-                          </code>
-                        </li>
-                      </ul>
-                    </div>
-                    <p className="mb-2">
-                      With the production environment now deployed, you can move
-                      on to the next step: creating preview environments to make
-                      your first revision!
-                    </p>
-                  </>
-                </FeatureStep>
+                <StepDeploy />
 
                 {/* STEP 2 - CREATE A PREVIEW ENVIRONMENT */}
-                <FeatureStep
-                  data-testid="branch"
-                  ref={stepCreateBranch}
-                  icon={<BranchIcon className="w-10 h-10 p-1" />}
-                  title={"2. Create your first preview environment"}
-                  isDisabled={currentStep !== "branch"}
-                >
-                  <>
-                    <p className="mb-2">
-                      With Upsun, you can clone any environment to get a
-                      byte-for-byte copy to use for staging, features, and bug
-                      fixes.
-                    </p>
-                    <p className="mb-2">
-                      Before you make your first revision, let's create a new
-                      preview environment called <strong>Staging</strong>.
-                    </p>
-                    <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
-                    <ol className="list-decimal list-outside ml-4 mt-2">
-                      <li className="">
-                        <p className="mb-2 mt-2">
-                          <span>Create environment</span>
-                          <CodeExample
-                            copyText={commands.branch.user.branch}
-                            codeExampleText={commands.branch.user.branch}
-                          />
-                        </p>
-                      </li>
-                      <li>
-                        <p className="mb-2 mt-2">
-                          <span>
-                            Once deployed, open the environment in browser
-                          </span>
-                          <CodeExample
-                            copyText={commands.branch.user.get_url}
-                            codeExampleText={commands.branch.user.get_url}
-                          />
-                        </p>
-                      </li>
-                    </ol>
-                  </>
-                </FeatureStep>
+                <StepBranch isDisabled={currentStep !== "branch"} />
 
                 {/* STEP 3 - PUSH SERVICE TO THE PREVIEW ENVIRONMENT */}
-                <FeatureStep
-                  data-testid="add-redis"
-                  ref={stepCreateService}
-                  icon={<RedisIcon className="w-10 h-10" />}
-                  title={"3. Add Redis to staging"}
+                <StepRedis
                   isDisabled={currentStep !== "redis"}
                   hideContent={currentStepProgress < 2}
-                >
-                  <>
-                    <p className="mb-2">
-                      Great! Your preview environment{" "}
-                      {environment?.toLocaleLowerCase() === "production" ? (
-                        ""
-                      ) : (
-                        <code className="px-1">staging</code>
-                      )}{" "}
-                      is live and mirrors your production setup.
-                    </p>
-                    <p className="mb-2">
-                      We'll use this preview environment as a sandbox to stage
-                      the addition of a Redis service. Once happy, we'll commit
-                      the changes using <code className="px-1">git</code> and
-                      then merge it into production.
-                    </p>
-                    <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
-                    <ol className="list-decimal list-outside ml-4 mt-2">
-                      <li className="">
-                        <p className="mb-2">
-                          Create the relationship. Open{" "}
-                          <CopyButton
-                            className="inline-block"
-                            copyText=".upsun/config.yaml"
-                          >
-                            <code className="px-2">.upsun/config.yaml</code>
-                          </CopyButton>{" "}
-                          and uncomment the following lines
-                        </p>
-                        <p className="mb-2 code-block">
-                          <CodeBlock
-                            text={servicesText}
-                            language="yaml"
-                            showLineNumbers={true}
-                            theme={UpsunCodeTheme}
-                            startingLineNumber={67}
-                          />
-                        </p>
-                      </li>
-                      <li>
-                        <p className="mb-2 mt-2">
-                          <span>Commit</span>
-                          <CodeExample
-                            copyText={commands.redis.user.commit}
-                            codeExampleText={commands.redis.user.commit}
-                          />
-                        </p>
-                      </li>
-                      <li>
-                        <p className="mb-2 mt-2">
-                          <span>Push</span>
-                          <CodeExample
-                            copyText={commands.redis.user.push}
-                            codeExampleText={commands.redis.user.push}
-                          />
-                        </p>
-                      </li>
-                      <li>
-                        <p className="mb-2 mt-2">
-                          <span>Refresh this page when done.</span>
-                        </p>
-                      </li>
-                    </ol>
-                  </>
-                </FeatureStep>
+                  environment={environment}
+                />
 
-                {/* STEP 3 - MERGE PREVIEW ENVIRONMENT INTO PRODUCTION */}
-                <FeatureStep
-                  ref={stepMergeProduction}
-                  icon={<MergeIcon className="w-10 h-10" />}
-                  title={"4. Merge changes into production & scale up"}
+                {/* STEP 4 - MERGE PREVIEW ENVIRONMENT INTO PRODUCTION */}
+                <StepMergeProduction
                   isDisabled={currentStep !== "merge-production"}
                   hideContent={currentStepProgress < 3}
-                >
-                  <>
-                    <p className="mb-2">
-                      {environment?.toLocaleLowerCase() === "production" ? (
-                        <>Awesome! Your changes are live.</>
-                      ) : (
-                        <>
-                          Awesome! Your changes are live in{" "}
-                          {environment?.toLocaleLowerCase()}.
-                        </>
-                      )}
-                    </p>
-                    <p className="mb-2">
-                      {environment?.toLocaleLowerCase() === "production"
-                        ? "Use your preview environments to stage future updates."
-                        : "Use this or other preview environments to stage future updates."}
-                    </p>
-                    <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
-                    <ol className="list-decimal list-outside ml-4 mt-2">
-                      <li>
-                        <p className="mb-2">
-                          <span>Deploy staging changes to production</span>
-                          <CodeExample
-                            copyText={commands["merge_production"].user.merge}
-                            codeExampleText={
-                              commands["merge_production"].user.merge
-                            }
-                          />
-                        </p>
-                      </li>
-                      <li>
-                        <p className="mb-2 mt-2">
-                          <span>
-                            Now, use <code className="px-1">resources:set</code>{" "}
-                            with
-                            <code className="px-1">--count backend:2</code> to
-                            horizontally scale the backend app, and{" "}
-                            <code className="px-1">
-                              --size redis_service:0.5
-                            </code>{" "}
-                            to vertically scale the{" "}
-                            <code className="px-1">redis_service</code> service.
-                          </span>
-                          <CodeExample
-                            wrapLines
-                            copyText={
-                              commands["merge_production"].user.resources_set
-                            }
-                            codeExampleText={
-                              commands["merge_production"].user.resources_set
-                            }
-                          />
-                        </p>
-                      </li>
-                      <li>
-                        <p className="mb-2 mt-2">
-                          <span>
-                            Open the production frontend in your browser
-                          </span>
-                          <CodeExample
-                            copyText={commands["merge_production"].user.get_url}
-                            codeExampleText={
-                              commands["merge_production"].user.get_url
-                            }
-                          />
-                        </p>
-                      </li>
-                    </ol>
-                  </>
-                </FeatureStep>
+                  environment={environment}
+                />
 
                 {/* Step 5 - DEMO COMPLETED */}
-                <FeatureStep
-                  ref={stepAllComplete}
-                  icon={<DoneIcon className="w-10 h-10 p-1" />}
-                  title={"5. You did it!"}
+                <StepComplete
                   isDisabled={currentStep !== "complete"}
-                  hideBorder
                   hideContent={currentStepProgress !== 4}
-                >
-                  <>
-                    <p className="mb-2 mt-2 font-bold">
-                      🎉 Kudos! You've aced the Upsun Demo!
-                    </p>
-                    <p className="mb-2">
-                      You've just experienced the power of Upsun's Git-based
-                      workflow to stage and deploy Redis seamlessly.
-                    </p>
-                    <p className="mb-2 mt-5">
-                      {/* <span>Upsun automatically allocated a set of default resources for each service in your project, but you can <strong>scale 
-                        those resources</strong> to whatever you need. For example, you can scale down the amount of resources on the
-                        Redis service container with the following command:
-                      </span> */}
-                      <span>
-                        You've used the Upsun CLI to merge a new service into
-                        production and to match the resources you worked with in
-                        staging to that environment. From here, you can{" "}
-                        <strong>scale those resources</strong> to whatever you
-                        need. For example, at this moment your production Redis
-                        service has 0.5 CPU. You can scale down the amount of
-                        resources on the production Redis service container with
-                        the following command:
-                      </span>
-                      <CodeExample
-                        wrapLines
-                        copyText={commands["scale"].user.resources_set}
-                        codeExampleText={commands["scale"].user.resources_set}
-                      />
-                    </p>
-                    <p className="mb-2 mt-5">
-                      <span>Delete this project when ready using:</span>
-                      <CodeExample
-                        copyText={commands.complete.user.delete_project}
-                        codeExampleText={commands.complete.user.delete_project}
-                      />
-                    </p>
-                    <h4 className="mt-5 text-lg font-semibold">What's next?</h4>
-                    <ul className="list-disc list-outside ml-8 mt-2">
-                      <li>
-                        <a
-                          href="https://docs.upsun.com/get-started/here.html"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          Migrate your application
-                        </a>
-                      </li>
-                      <li className="mt-2">
-                        Share your thoughts and connect with us on Discord.
-                      </li>
-                      <li className="mt-2">
-                        Explore Upsun's{" "}
-                        <a href="https://docs.upsun.com/manage-resources.html#horizontal-scaling">
-                          horizontal scalability features
-                        </a>
-                        .
-                      </li>
-                    </ul>
-                    <p className="mb-2 mt-4 font-semibold">
-                      Welcome to the Upsun Community!
-                    </p>
-                  </>
-                </FeatureStep>
+                />
               </div>
             </div>
           </section>
