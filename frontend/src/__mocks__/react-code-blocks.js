@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export const CodeBlock = ({ text }) => (
   <pre data-testid="mocked-code-block">

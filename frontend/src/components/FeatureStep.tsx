@@ -8,7 +8,6 @@ interface FeatureStepProps {
   hideBorder?: boolean;
   children?: React.ReactNode;
   "data-testid"?: string;
-  ref?: HTMLElement;
 }
 
 const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
@@ -16,7 +15,7 @@ const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
     {
       icon,
       title,
-      isDisabled,
+      isDisabled = false,
       hideContent,
       hideBorder,
       children,
@@ -24,25 +23,31 @@ const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
     }: FeatureStepProps,
     ref: ForwardedRef<HTMLDivElement>,
   ) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(!isDisabled);
 
+    // Update expansion when `isDisabled` changes
     useEffect(() => {
-      setIsExpanded(!isDisabled);
+      if (!isDisabled) {
+        setIsExpanded(true); // auto-expand current step
+      } else {
+        setIsExpanded(false); // collapse others by default
+      }
     }, [isDisabled]);
 
     return (
-      <div className={"group relative"}>
+      <div className="group relative">
         <div
           ref={ref}
           data-testid={testId}
           className={`feature--step flex flex-col transition-all duration-300 ${
-            (isDisabled && !isExpanded && "is-disabled") || ""
+            isDisabled ? "is-disabled" : ""
           } ${!hideContent && "group-hover:opacity-100"}`}
         >
           <div className="aside-title flex flex-row gap-4 items-center">
             {icon}
             <h2 className="font-semibold">{title}</h2>
           </div>
+
           <div
             className={`border-l-2 ml-5 pl-10 ${
               (hideContent || !children) && !hideBorder && "h-10"
@@ -63,7 +68,9 @@ const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
             )}
           </div>
         </div>
-        {isDisabled && !hideContent && (
+
+        {/* Allow manual toggle only if disabled (non-current step) */}
+        {isDisabled && !hideContent && children && (
           <button
             style={{ pointerEvents: "auto" }}
             className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-white pt-1 pr-1 cursor-pointer absolute top-0 right-0 hover:underline"

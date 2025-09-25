@@ -1,16 +1,12 @@
-/* eslint-disable testing-library/no-wait-for-multiple-assertions */
-/* eslint-disable testing-library/no-node-access */
 import { render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
 import { fetchEnvironment } from "./utility/api";
 import { act } from "react-dom/test-utils";
 
-// Mock the module and function
 jest.mock("./utility/api", () => ({
   fetchEnvironment: jest.fn(),
 }));
 
-// Cast the function to its mocked version
 const mockedFetchEnvironment = fetchEnvironment as jest.Mock;
 
 describe("<App />", () => {
@@ -24,7 +20,6 @@ describe("<App />", () => {
       session_storage: "file",
     };
 
-    // Use mockImplementationOnce
     mockedFetchEnvironment.mockImplementationOnce(() =>
       Promise.resolve(mockData),
     );
@@ -32,8 +27,10 @@ describe("<App />", () => {
     render(<App />);
     await waitFor(() => {
       const title = screen.getByTestId("title").textContent;
-      const intro = screen.queryByTestId("production-intro");
       expect(title).toBe("Production");
+    });
+    await waitFor(() => {
+      const intro = screen.queryByTestId("production-intro");
       expect(intro).toBeInTheDocument();
     });
   });
@@ -44,20 +41,18 @@ describe("<App />", () => {
       session_storage: "redis",
     };
 
-    // Use mockImplementationOnce
     mockedFetchEnvironment.mockImplementationOnce(() =>
       Promise.resolve(mockData),
     );
 
-    // eslint-disable-next-line testing-library/no-unnecessary-act
-    await act(async () => {
-      render(<App />);
-    });
+    render(<App />);
 
     await waitFor(() => {
       const title = screen.getByTestId("title").textContent;
-      const intro = screen.queryByTestId("production-intro");
       expect(title).toBe("Production");
+    });
+    await waitFor(() => {
+      const intro = screen.queryByTestId("production-intro");
       expect(intro).not.toBeInTheDocument();
     });
   });
@@ -68,7 +63,6 @@ describe("<App />", () => {
       session_storage: "file",
     };
 
-    // Use mockImplementationOnce
     mockedFetchEnvironment.mockImplementationOnce(() =>
       Promise.resolve(mockData),
     );
@@ -76,8 +70,10 @@ describe("<App />", () => {
     render(<App />);
     await waitFor(() => {
       const title = screen.getByTestId("title").textContent;
-      const intro = screen.queryByTestId("other-intro");
       expect(title).toBe("Other");
+    });
+    await waitFor(() => {
+      const intro = screen.queryByTestId("other-intro");
       expect(intro).toBeInTheDocument();
     });
   });
@@ -88,20 +84,19 @@ describe("<App />", () => {
       session_storage: "redis",
     };
 
-    // Use mockImplementationOnce
     mockedFetchEnvironment.mockImplementationOnce(() =>
       Promise.resolve(mockData),
     );
 
-    // eslint-disable-next-line testing-library/no-unnecessary-act
-    await act(async () => {
-      render(<App />);
-    });
+    render(<App />);
 
     await waitFor(() => {
       const title = screen.getByTestId("title").textContent;
-      const intro = screen.queryByTestId("other-intro");
       expect(title).toBe("Other");
+    });
+
+    await waitFor(() => {
+      const intro = screen.queryByTestId("other-intro");
       expect(intro).not.toBeInTheDocument();
     });
   });
@@ -112,35 +107,25 @@ describe("<App />", () => {
       session_storage: "file",
     };
 
-    // Mock the fetch call
     mockedFetchEnvironment.mockResolvedValueOnce(mockData);
 
-    // eslint-disable-next-line testing-library/no-unnecessary-act
-    await act(async () => {
-      render(<App />);
-    });
+    render(<App />);
 
-    expect(
-      screen.getByText("1. Deploy to Upsun").parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-deploy")).toHaveClass("is-disabled");
 
-    expect(
-      screen.getByText("2. Create your first preview environment").parentElement
-        ?.parentElement,
-    ).not.toHaveClass("is-disabled");
+    await waitFor(() =>
+      expect(screen.getByTestId("step-branch")).not.toHaveClass("is-disabled"),
+    );
 
-    expect(
-      screen.getByText("3. Add Redis to staging").parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-redis")).toHaveClass("is-disabled");
 
-    expect(
-      screen.getByText("4. Merge changes into production & scale up")
-        .parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-merge-production")).toHaveClass(
+      "is-disabled",
+    );
 
-    expect(
-      screen.getByText("5. You did it!").parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-complete")).toHaveClass(
+      "is-disabled",
+    );
   });
 
   it("highlights redis step on file storage in staging", async () => {
@@ -149,35 +134,27 @@ describe("<App />", () => {
       session_storage: "file",
     };
 
-    // Mock the fetch call
     mockedFetchEnvironment.mockResolvedValueOnce(mockData);
 
-    // eslint-disable-next-line testing-library/no-unnecessary-act
-    await act(async () => {
-      render(<App />);
-    });
+    render(<App />);
 
-    expect(
-      screen.getByText("1. Deploy to Upsun").parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-deploy")).toHaveClass("is-disabled");
 
-    expect(
-      screen.getByText("2. Create your first preview environment").parentElement
-        ?.parentElement,
-    ).toHaveClass("is-disabled");
+    await waitFor(() =>
+      expect(screen.getByTestId("step-branch")).toHaveClass("is-disabled"),
+    );
 
-    expect(
-      screen.getByText("3. Add Redis to staging").parentElement?.parentElement,
-    ).not.toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-redis")).not.toHaveClass(
+      "is-disabled",
+    );
 
-    expect(
-      screen.getByText("4. Merge changes into production & scale up")
-        .parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-merge-production")).toHaveClass(
+      "is-disabled",
+    );
 
-    expect(
-      screen.getByText("5. You did it!").parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-complete")).toHaveClass(
+      "is-disabled",
+    );
   });
 
   it("highlights merge step to on redis storage set in staging", async () => {
@@ -186,37 +163,29 @@ describe("<App />", () => {
       session_storage: "redis",
     };
 
-    // Use mockImplementationOnce
     mockedFetchEnvironment.mockImplementationOnce(() =>
       Promise.resolve(mockData),
     );
 
-    // eslint-disable-next-line testing-library/no-unnecessary-act
-    await act(async () => {
-      render(<App />);
-    });
+    render(<App />);
 
-    expect(
-      screen.getByText("1. Deploy to Upsun").parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-deploy")).toHaveClass("is-disabled");
 
-    expect(
-      screen.getByText("2. Create your first preview environment").parentElement
-        ?.parentElement,
-    ).toHaveClass("is-disabled");
+    await waitFor(() =>
+      expect(screen.getByTestId("step-branch")).toHaveClass("is-disabled"),
+    );
 
-    expect(
-      screen.getByText("3. Add Redis to staging").parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    await waitFor(() =>
+      expect(screen.getByTestId("step-redis")).toHaveClass("is-disabled"),
+    );
 
-    expect(
-      screen.getByText("4. Merge changes into production & scale up")
-        .parentElement?.parentElement,
-    ).not.toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-merge-production")).not.toHaveClass(
+      "is-disabled",
+    );
 
-    expect(
-      screen.getByText("5. You did it!").parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-complete")).toHaveClass(
+      "is-disabled",
+    );
   });
 
   it("highlights all steps completed in production when redis storage set", async () => {
@@ -225,36 +194,28 @@ describe("<App />", () => {
       session_storage: "redis",
     };
 
-    // Use mockImplementationOnce
     mockedFetchEnvironment.mockImplementationOnce(() =>
       Promise.resolve(mockData),
     );
 
-    // eslint-disable-next-line testing-library/no-unnecessary-act
-    await act(async () => {
-      render(<App />);
-    });
+    render(<App />);
 
-    expect(
-      screen.getByText("1. Deploy to Upsun").parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-deploy")).toHaveClass("is-disabled");
 
-    expect(
-      screen.getByText("2. Create your first preview environment").parentElement
-        ?.parentElement,
-    ).toHaveClass("is-disabled");
+    await waitFor(() =>
+      expect(screen.getByTestId("step-branch")).toHaveClass("is-disabled"),
+    );
 
-    expect(
-      screen.getByText("3. Add Redis to staging").parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    await waitFor(() =>
+      expect(screen.getByTestId("step-redis")).toHaveClass("is-disabled"),
+    );
 
-    expect(
-      screen.getByText("4. Merge changes into production & scale up")
-        .parentElement?.parentElement,
-    ).toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-merge-production")).toHaveClass(
+      "is-disabled",
+    );
 
-    expect(
-      screen.getByText("5. You did it!").parentElement?.parentElement,
-    ).not.toHaveClass("is-disabled");
+    expect(await screen.findByTestId("step-complete")).not.toHaveClass(
+      "is-disabled",
+    );
   });
 });
