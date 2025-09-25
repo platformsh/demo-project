@@ -16,6 +16,6 @@ describe("<EnvironmentIntroduction />", () => {
     const { container } = render(
       <EnvironmentIntroduction environment={null} />,
     );
-    expect(container.firstChild).toBeNull();
+    expect(container).toBeEmptyDOMElement();
   });
 });

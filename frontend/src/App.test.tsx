@@ -1,7 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
 import { fetchEnvironment } from "./utility/api";
-import { act } from "react-dom/test-utils";
 
 jest.mock("./utility/api", () => ({
   fetchEnvironment: jest.fn(),
