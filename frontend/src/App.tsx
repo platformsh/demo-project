@@ -9,7 +9,6 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 
 import commands from "./commands.json";
-import DesignDebugger from "./theme/debug/DesignDebugger";
 import EnvironmentIntroduction from "./components/EnvironmentIntroduction";
 import StepDeploy from "./steps/StepDeploy";
 import StepBranch from "./steps/StepBranch";
@@ -18,12 +17,17 @@ import StepMergeProduction from "./steps/StepMergeProduction";
 import StepComplete from "./steps/StepComplete";
 
 import { useEnvironmentSteps } from "./hooks/useEnvironmentSteps";
+import DesignDebug from "./components/DesignDebug";
+
+function parseBooleanEnvVar(value: string | undefined): boolean {
+  if (!value) return false;
+  return !["false", "0"].includes(value.toLowerCase());
+}
 
 function App() {
-  const debugEnabled =
-    process.env.REACT_APP_ENABLE_DESIGN_DEBUG &&
-    process.env.REACT_APP_ENABLE_DESIGN_DEBUG !== "false" &&
-    process.env.REACT_APP_ENABLE_DESIGN_DEBUG !== "0";
+  const debugEnabled = parseBooleanEnvVar(
+    process.env.REACT_APP_ENABLE_DESIGN_DEBUG,
+  );
 
   const {
     environment,
@@ -37,25 +41,20 @@ function App() {
     welcomeMessage,
     stepMergeProduction,
     stepAllComplete,
-  } = useEnvironmentSteps(Boolean(debugEnabled));
-
-  const DesignDebug = () => {
-    return debugEnabled ? (
-      <DesignDebugger
-        defaultEnvironment={environment}
-        defaultStorage={sessionStorageType}
-        defaultErrorState={fatalErrorMessage}
-        onEnvironmentChange={(environment) => setEnvironment(environment)}
-        onStorageChange={(storageType) => setSessionStorageType(storageType)}
-        onErrorChange={(errorState) => setFatalErrorMessage(errorState)}
-      />
-    ) : null;
-  };
+  } = useEnvironmentSteps(debugEnabled);
 
   if (fatalErrorMessage)
     return (
       <ErrorPage header="We cannot fetch your data">
-        <DesignDebug />
+        <DesignDebug
+          enabled={debugEnabled}
+          environment={environment}
+          storage={sessionStorageType}
+          errorState={fatalErrorMessage}
+          onEnvironmentChange={setEnvironment}
+          onStorageChange={setSessionStorageType}
+          onErrorChange={setFatalErrorMessage}
+        />
         <p className="mt-2 mb-2">
           There was an error fetching data from your Python backend at
         </p>
@@ -73,10 +72,16 @@ function App() {
 
   return (
     <>
-      <DesignDebug />
-      <div
-        className={`max-w-7xl w-fill px-6 2xl:pl-0 m-auto transition duration-500`}
-      >
+      <DesignDebug
+        enabled={debugEnabled}
+        environment={environment}
+        storage={sessionStorageType}
+        errorState={fatalErrorMessage}
+        onEnvironmentChange={setEnvironment}
+        onStorageChange={setSessionStorageType}
+        onErrorChange={setFatalErrorMessage}
+      />
+      <div className="max-w-7xl w-fill px-6 2xl:pl-0 m-auto transition duration-500">
         <Header />
         <main className="border-t-[1px] border-upsun-violet-600 flex flex-col sm:flex-row">
           <Sidebar />
@@ -100,21 +105,14 @@ function App() {
                 <EnvironmentIntroduction environment={environment} />
               )}
 
-              {/* STEP 1 - INITIAL DEPLOYMENT CONFIRMATION */}
               <div className="pt-8 flex flex-col gap-2">
                 <StepDeploy />
-
-                {/* STEP 2 - CREATE A PREVIEW ENVIRONMENT */}
                 <StepBranch isDisabled={currentStep !== "branch"} />
-
-                {/* STEP 3 - PUSH SERVICE TO THE PREVIEW ENVIRONMENT */}
                 <StepRedis
                   isDisabled={currentStep !== "redis"}
                   hideContent={currentStepProgress < 2}
                   environment={environment}
                 />
-
-                {/* STEP 4 - MERGE PREVIEW ENVIRONMENT INTO PRODUCTION */}
                 <div ref={stepMergeProduction}>
                   <StepMergeProduction
                     isDisabled={currentStep !== "merge-production"}
@@ -122,8 +120,6 @@ function App() {
                     environment={environment}
                   />
                 </div>
-
-                {/* STEP 5 - DEMO COMPLETED */}
                 <div ref={stepAllComplete}>
                   <StepComplete
                     isDisabled={currentStep !== "complete"}
