@@ -7,6 +7,7 @@ interface FeatureStepProps {
   hideContent?: boolean;
   hideBorder?: boolean;
   children?: React.ReactNode;
+  "data-testid"?: string;
   ref?: HTMLElement;
 }
 
@@ -19,6 +20,7 @@ const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
       hideContent,
       hideBorder,
       children,
+      "data-testid": testId = "feature-step",
     }: FeatureStepProps,
     ref: ForwardedRef<HTMLDivElement>,
   ) => {
@@ -32,7 +34,7 @@ const FeatureStep = forwardRef<HTMLDivElement, FeatureStepProps>(
       <div className={"group relative"}>
         <div
           ref={ref}
-          data-testid="feature-step"
+          data-testid={testId}
           className={`feature--step flex flex-col transition-all duration-300 ${
             (isDisabled && !isExpanded && "is-disabled") || ""
           } ${!hideContent && "group-hover:opacity-100"}`}

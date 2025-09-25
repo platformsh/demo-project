@@ -7,7 +7,7 @@ import { PROJECT_ID } from "../config";
 const StepDeploy: React.FC = () => {
   return (
     <FeatureStep
-      data-testid="branch"
+      data-testid="step-deploy"
       icon={<DoneIcon className="w-10 h-10 p-1" />}
       title="1. Deploy to Upsun"
       isDisabled // always completed

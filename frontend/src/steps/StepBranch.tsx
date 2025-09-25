@@ -11,7 +11,7 @@ interface StepBranchProps {
 const StepBranch: React.FC<StepBranchProps> = ({ isDisabled }) => {
   return (
     <FeatureStep
-      data-testid="branch"
+      data-testid="step-branch"
       icon={<BranchIcon className="w-10 h-10 p-1" />}
       title="2. Create your first preview environment"
       isDisabled={isDisabled}

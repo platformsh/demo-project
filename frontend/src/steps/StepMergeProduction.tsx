@@ -17,6 +17,7 @@ const StepMergeProduction: React.FC<StepMergeProductionProps> = ({
 }) => {
   return (
     <FeatureStep
+      data-testid="step-merge-production"
       icon={<MergeIcon className="w-10 h-10" />}
       title="4. Merge changes into production & scale up"
       isDisabled={isDisabled}

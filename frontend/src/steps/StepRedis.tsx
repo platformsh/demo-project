@@ -31,7 +31,7 @@ services:
 
   return (
     <FeatureStep
-      data-testid="add-redis"
+      data-testid="step-redis"
       icon={<RedisIcon className="w-10 h-10" />}
       title="3. Add Redis to staging"
       isDisabled={isDisabled}
@@ -65,7 +65,7 @@ services:
               </CopyButton>{" "}
               and uncomment the following lines
             </p>
-            <p className="mb-2 code-block">
+            <div className="mb-2 code-block">
               <CodeBlock
                 text={servicesText}
                 language="yaml"
@@ -73,7 +73,7 @@ services:
                 theme={UpsunCodeTheme}
                 startingLineNumber={67}
               />
-            </p>
+            </div>
           </li>
           <li>
             <p className="mb-2 mt-2">

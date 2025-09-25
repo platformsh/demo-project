@@ -15,6 +15,7 @@ const StepComplete: React.FC<StepCompleteProps> = ({
 }) => {
   return (
     <FeatureStep
+      data-testid="step-complete"
       icon={<DoneIcon className="w-10 h-10 p-1" />}
       title="5. You did it!"
       isDisabled={isDisabled}
