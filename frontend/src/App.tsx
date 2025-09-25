@@ -1,23 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ENVIRONMENT_PATH, fetchEnvironment } from "./utility/api";
-import { ReactComponent as RedisIcon } from "./assets/utility/service_redis.svg";
-import { ReactComponent as DoneIcon } from "./assets/utility/done.svg";
-import { ReactComponent as MergeIcon } from "./assets/utility/merge.svg";
-import { ReactComponent as BranchIcon } from "./assets/utility/branch.svg";
 import { ReactComponent as ProductionIcon } from "./assets/utility/production.svg";
 import { ReactComponent as StagingIcon } from "./assets/utility/staging.svg";
 
-import CopyButton from "./components/CopyButton";
 import { API_BASE_URL } from "./config";
 import ErrorPage from "./page/ErrorPage";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import FeatureStep from "./components/FeatureStep";
-import { CodeBlock } from "react-code-blocks";
-import UpsunCodeTheme from "./theme/code";
-import CodeExample from "./components/CodeExample";
-
-import { PROJECT_ID } from "./config";
 
 import commands from "./commands.json";
 import DesignDebugger from "./theme/debug/DesignDebugger";
