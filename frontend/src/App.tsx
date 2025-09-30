@@ -55,9 +55,8 @@ function App() {
 # Step 3: Add a service. Uncomment this section.
 ###############################################################
         relationships:
-            redis_session: 
-                service: "redis_service"
-                endpoint: "redis"
+            redis_session: "redis_service:redis"
+
 services:
     redis_service:
         type: "redis:7.0"
@@ -336,7 +335,7 @@ services:
                             language="yaml"
                             showLineNumbers={true}
                             theme={UpsunCodeTheme}
-                            startingLineNumber={51}
+                            startingLineNumber={67}
                           />
                         </p>
                       </li>
@@ -409,8 +408,8 @@ services:
                           <span>
                             Now, use <code className="px-1">resources:set</code>{" "}
                             with
-                            <code className="px-1">--count frontend:2</code> to
-                            horizontally scale the frontend app and{" "}
+                            <code className="px-1">--count backend:2</code> to
+                            horizontally scale the backend app and{" "}
                             <code className="px-1">
                               --size redis_service:0.5
                             </code>{" "}
