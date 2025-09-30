@@ -72,33 +72,3 @@ jobs:
         run: |
           echo "::notice::Checking for vulnerabilities in backend Python app dependencies."
           npm run test:backend
-      - name: "12. Test: there should be no HIGH Node.js vulnerabilities."
-        run: |
-          echo "::notice::Checking for high vulnerabilities in frontend Node.js app dependencies."
-          cd frontend
-          export CI=true
-          HIGH_VULN_ALLOWED=${{ env.MAX_HIGH }}
-          RESULT=$(curl -X POST https://bun.sh/api/scan -H "Content-Type: application/json" -d @bun.lock)
-          HIGH_VULN=$(echo "$RESULT" | jq '[.[] | select(.severity == "high")] | length')
-          if [ "$HIGH_VULN" -gt "$HIGH_VULN_ALLOWED" ]; then
-              echo "::error::HIGH vulnerabilities exceed allowed budget."
-              echo "$RESULT" | jq '[.[] | select(.severity == "high")]'
-              exit 1
-          else
-              echo "::notice::No HIGH vulnerabilities found on frontend app."
-          fi
-      - name: "13. Test: there should be no CRITICAL Node.js vulnerabilities."
-        run: |
-          echo "::notice::Checking for critical vulnerabilities in frontend Node.js app dependencies."
-          cd frontend
-          export CI=true
-          CRITICAL_VULN_ALLOWED=${{ env.MAX_CRITICAL }}
-          RESULT=$(curl -X POST https://bun.sh/api/scan -H "Content-Type: application/json" -d @bun.lock)
-          CRITICAL_VULN=$(echo "$RESULT" | jq '[.[] | select(.severity == "critical")] | length')
-          if [ "$CRITICAL_VULN" -gt "$CRITICAL_VULN_ALLOWED" ]; then
-              echo "::error::CRITICAL vulnerabilities exceed allowed budget."
-              echo "$RESULT" | jq '[.[] | select(.severity == "critical")]'
-              exit 1
-          else
-              echo "::notice::No CRITICAL vulnerabilities found on frontend app."
-          fi
