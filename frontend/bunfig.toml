@@ -1,5 +1,1 @@
-[install.security]
-scanner = "@acme/bun-security-scanner"
-
-[telemetry]
-enabled = false
+telemetry = false
