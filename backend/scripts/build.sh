@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 
-# Setup a virtual environment
-python3 -m venv env
-source env/bin/activate
-
 # Install dependencies
-uv pip install -r requirements.txt
+uv sync --dev
 
 # Test scenarios 
 cp .env.sample .env
