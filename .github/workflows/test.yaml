@@ -41,56 +41,61 @@ jobs:
 
       ################################################################################################
       # B. Prettify, lint, and test repo.
-      - name: "4. Preparing"
+      - name: "4. Set up Bun"
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: "5. Preparing"
         run: |
           echo "::notice::Running react-scripts tests."
           export CI=true
           npm install cross-env npm-run-all -g
           npm install
-      - name: "5. Verifying backend code is pretty"
-        run: | 
+          cd frontend && bun install
+      - name: "6. Verifying backend code is pretty"
+        run: |
           npm run prettier:backend
-      - name: "6. Verifying frontend code is pretty"
+      - name: "7. Verifying frontend code is pretty"
         run: |
           npm run prettier:frontend
-      - name: "7. Linting frontend"
+      - name: "8. Linting frontend"
         run: npm run lint:frontend
-      - name: "8. Run Frontend tests"
+      - name: "9. Run Frontend tests"
         run: npm run test:frontend
-      - name: "9. Run Backend linting"
+      - name: "10. Run Backend linting"
         run: |
           npm run lint:backend
 
       ################################################################################################
       # C. Ensure no vulnerabilities.
-      - name: "10. Test: there should be no Python vulnerabilities."
+      - name: "11. Test: there should be no Python vulnerabilities."
         run: |
           echo "::notice::Checking for vulnerabilities in backend Python app dependencies."
           npm run test:backend
-      - name: "11. Test: there should be no HIGH Node.js vulnerabilities."
+      - name: "12. Test: there should be no HIGH Node.js vulnerabilities."
         run: |
           echo "::notice::Checking for high vulnerabilities in frontend Node.js app dependencies."
           cd frontend
           export CI=true
           HIGH_VULN_ALLOWED=${{ env.MAX_HIGH }}
-          HIGH_VULN=$(npm audit --json | jq '.metadata.vulnerabilities.high')
+          HIGH_VULN=$(bun pm audit --json 2>/dev/null | jq '.vulnerabilities.high // 0')
           if [ "$HIGH_VULN" -gt "$HIGH_VULN_ALLOWED" ]; then
-              echo "::error::NPM HIGH vulnerabilities exceed allowed budget."
-              npm audit
+              echo "::error::Bun HIGH vulnerabilities exceed allowed budget."
+              bun pm audit
               exit 1
           else
               echo "::notice::No HIGH vulnerabilities found on frontend app."
           fi
-      - name: "12. Test: there should be no CRITICAL Node.js vulnerabilities."
+      - name: "13. Test: there should be no CRITICAL Node.js vulnerabilities."
         run: |
           echo "::notice::Checking for critical vulnerabilities in frontend Node.js app dependencies."
           cd frontend
           export CI=true
           CRITICAL_VULN_ALLOWED=${{ env.MAX_CRITICAL }}
-          CRITICAL_VULN=$(npm audit --json | jq '.metadata.vulnerabilities.high')
+          CRITICAL_VULN=$(bun pm audit --json 2>/dev/null | jq '.vulnerabilities.critical // 0')
           if [ "$CRITICAL_VULN" -gt "$CRITICAL_VULN_ALLOWED" ]; then
-              echo "::error::NPM CRITICAL vulnerabilities exceed allowed budget."
-              npm audit
+              echo "::error::Bun CRITICAL vulnerabilities exceed allowed budget."
+              bun pm audit
               exit 1
           else
               echo "::notice::No CRITICAL vulnerabilities found on frontend app."
