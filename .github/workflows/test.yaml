@@ -78,10 +78,11 @@ jobs:
           cd frontend
           export CI=true
           HIGH_VULN_ALLOWED=${{ env.MAX_HIGH }}
-          HIGH_VULN=$(bun pm audit --json 2>/dev/null | jq '.vulnerabilities.high // 0')
+          RESULT=$(curl -X POST https://bun.sh/api/scan -H "Content-Type: application/json" -d @bun.lock)
+          HIGH_VULN=$(echo "$RESULT" | jq '[.[] | select(.severity == "high")] | length')
           if [ "$HIGH_VULN" -gt "$HIGH_VULN_ALLOWED" ]; then
-              echo "::error::Bun HIGH vulnerabilities exceed allowed budget."
-              bun pm audit
+              echo "::error::HIGH vulnerabilities exceed allowed budget."
+              echo "$RESULT" | jq '[.[] | select(.severity == "high")]'
               exit 1
           else
               echo "::notice::No HIGH vulnerabilities found on frontend app."
@@ -92,10 +93,11 @@ jobs:
           cd frontend
           export CI=true
           CRITICAL_VULN_ALLOWED=${{ env.MAX_CRITICAL }}
-          CRITICAL_VULN=$(bun pm audit --json 2>/dev/null | jq '.vulnerabilities.critical // 0')
+          RESULT=$(curl -X POST https://bun.sh/api/scan -H "Content-Type: application/json" -d @bun.lock)
+          CRITICAL_VULN=$(echo "$RESULT" | jq '[.[] | select(.severity == "critical")] | length')
           if [ "$CRITICAL_VULN" -gt "$CRITICAL_VULN_ALLOWED" ]; then
-              echo "::error::Bun CRITICAL vulnerabilities exceed allowed budget."
-              bun pm audit
+              echo "::error::CRITICAL vulnerabilities exceed allowed budget."
+              echo "$RESULT" | jq '[.[] | select(.severity == "critical")]'
               exit 1
           else
               echo "::notice::No CRITICAL vulnerabilities found on frontend app."
