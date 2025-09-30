@@ -9,7 +9,7 @@ applications:
         source:
             root: "frontend"
 
-        type: "nodejs:18"
+        type: "nodejs:20"
 
         build:
             flavor: none
@@ -23,9 +23,9 @@ applications:
         hooks:
             build: |
                 set -eux
-                npm install
+                bun install
                 export REACT_APP_PROJECT_ID=$PLATFORM_PROJECT
-                npm run build
+                bun run build
 
         relationships:
            api: "backend:http"
@@ -51,12 +51,16 @@ applications:
 
         type: "python:3.12"
 
+        dependencies:
+          python3:
+            uv: "*"
+
         build:
             flavor: none
         hooks:
             build: |
                 set -eux
-                pip install -r requirements.txt --disable-pip-version-check
+                uv pip install -r requirements.txt --system
                 
         web:
             commands:

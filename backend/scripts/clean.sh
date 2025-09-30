@@ -2,4 +2,4 @@
 
 # Cleanup
 rm -rf env
-rm .env
+rm -f .env
