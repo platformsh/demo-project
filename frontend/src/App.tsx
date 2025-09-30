@@ -201,11 +201,11 @@ services:
                 >
                   <>
                     <p className="mb-4">
-                      <strong>Congrats!</strong> You now have the Upsun Demo
-                      Guide deployed to a production environment.
+                      <strong>Congrats!</strong> You've deployed this app to
+                      Upsun.
                     </p>
                     <div className="mb-4">
-                      By this point you have:
+                      By this point, you have:
                       <br />
                       <ul className="list-disc list-inside">
                         <li className="mt-2 ml-6">
@@ -241,7 +241,7 @@ services:
                     </div>
                     <p className="mb-2">
                       With the production environment now deployed, you can move
-                      onto the next step: creating preview environments to make
+                      on to the next step: creating preview environments to make
                       your first revision!
                     </p>
                   </>
@@ -258,8 +258,8 @@ services:
                   <>
                     <p className="mb-2">
                       With Upsun, you can clone any environment to get a
-                      byte-for-byte copy to use for staging, features, and
-                      bugfixes.
+                      byte-for-byte copy to use for staging, features, and bug
+                      fixes.
                     </p>
                     <p className="mb-2">
                       Before you make your first revision, let's create a new
@@ -279,7 +279,7 @@ services:
                       <li>
                         <p className="mb-2 mt-2">
                           <span>
-                            Once deployed, open environment in browser
+                            Once deployed, open the environment in browser
                           </span>
                           <CodeExample
                             copyText={commands.branch.user.get_url}
@@ -387,8 +387,8 @@ services:
                     </p>
                     <p className="mb-2">
                       {environment?.toLocaleLowerCase() === "production"
-                        ? "Use your preview environments to stage any future updates."
-                        : "Use this or other preview environments to stage any future updates."}
+                        ? "Use your preview environments to stage future updates."
+                        : "Use this or other preview environments to stage future updates."}
                     </p>
                     <h4 className="mt-5 text-lg font-semibold">Next Step</h4>
                     <ol className="list-decimal list-outside ml-4 mt-2">
@@ -409,7 +409,7 @@ services:
                             Now, use <code className="px-1">resources:set</code>{" "}
                             with
                             <code className="px-1">--count backend:2</code> to
-                            horizontally scale the backend app and{" "}
+                            horizontally scale the backend app, and{" "}
                             <code className="px-1">
                               --size redis_service:0.5
                             </code>{" "}
@@ -429,7 +429,9 @@ services:
                       </li>
                       <li>
                         <p className="mb-2 mt-2">
-                          <span>Open production frontend in your browser</span>
+                          <span>
+                            Open the production frontend in your browser
+                          </span>
                           <CodeExample
                             copyText={commands["merge_production"].user.get_url}
                             codeExampleText={
@@ -466,8 +468,8 @@ services:
                       </span> */}
                       <span>
                         You've used the Upsun CLI to merge a new service into
-                        production, and to match the resources you worked with
-                        in staging to that environment. From here, you can{" "}
+                        production and to match the resources you worked with in
+                        staging to that environment. From here, you can{" "}
                         <strong>scale those resources</strong> to whatever you
                         need. For example, at this moment your production Redis
                         service has 0.5 CPU. You can scale down the amount of
@@ -559,9 +561,9 @@ const ProductionIntroduction = () => {
       <p className="text-sm leading-6">
         This app is the React frontend of your demo project’s production
         environment, which is associated with the default branch of the
-        repository: <code className="px-2 py-1">main</code>. With it now
+        repository, <code className="px-2 py-1">main</code>. With it now
         deployed, we can add features, services, and runtimes in preview
-        environments - which are byte-for-byte copies of production.
+        environments—which are byte-for-byte copies of production.
       </p>
     </>
   );
