@@ -18,7 +18,7 @@ jobs:
       matrix:
         # These versions match Upsun support
         #   Node.js: https://docs.upsun.com/languages/nodejs.html#supported-versions
-        node-version: [18.x, 20.x, 21.x]
+        node-version: [22.x, 24.x]
         #   Python: https://docs.upsun.com/languages/python.html#supported-versions
         python-version: ['3.9', '3.10', '3.11', '3.12']
 
