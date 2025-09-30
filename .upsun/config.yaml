@@ -64,7 +64,7 @@ applications:
                 
         web:
             commands:
-                start: "gunicorn main:app"
+                start: "uv run gunicorn main:app"
             upstream:
                 socket_family: tcp
             locations:
