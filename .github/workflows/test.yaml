@@ -24,38 +24,31 @@ jobs:
     steps:
       ################################################################################################
       # A. Setup workflow.
-      - name: "1. Retrieve local files."
+      - name: "Retrieve local files."
         uses: actions/checkout@v4
         with:
             ref: ${{ github.event.pull_request.head.sha }}
-      - name: "2. Set up Node.js."
+      - name: "Set up Node.js."
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: "3. Python."
+      - name: "Python."
         uses: actions/setup-python@v4 
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'   # harmless even though we'll use uv
-
-      ################################################################################################
-      # B. Prettify, lint, and test repo.
-      - name: "4. Preparing"
+      - name: "Install uv"
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: latest 
+      - name: "Install bun"
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: "Install application dependencies"
         run: |
           echo "::notice::Running react-scripts tests."
           export CI=true
-
-          # Install Bun (CI-friendly; avoids adding an extra setup step)
-          curl -fsSL https://bun.sh/install | bash
-          export BUN_INSTALL="$HOME/.bun"
-          export PATH="$BUN_INSTALL/bin:$PATH"
-          bun --version
-
-          # Install uv (fast Python resolver/installer)
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          export PATH="$HOME/.local/bin:$PATH"
-          uv --version
-
           bun install
       - name: "5. Verifying backend code is pretty"
         run: bun run prettier:backend
