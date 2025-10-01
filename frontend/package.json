@@ -15,7 +15,6 @@
     "ajv": "^7",
     "postcss": "^8.4.38",
     "react": "^18.2.0",
-    "react-code-blocks": "^0.1.5",
     "react-dom": "^18.2.0",
     "react-inject-env": "^2.1.0",
     "react-router-dom": "^6.21.2",
