@@ -11,10 +11,6 @@ applications:
 
         type: "nodejs:22"
 
-        dependencies:
-          nodejs:
-            bun: "v1.2.23"
-
         build:
             flavor: none
 
