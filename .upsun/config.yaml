@@ -69,7 +69,7 @@ applications:
                 
         web:
             commands:
-                start: "uv run gunicorn main:app"
+                start: ".venv/bin/gunicorn main:app"
             upstream:
                 socket_family: tcp
             locations:
