@@ -57,6 +57,11 @@ applications:
 
         build:
             flavor: none
+        
+        variables: 
+          env:
+            UV_CACHE_DIR: .uv_cache
+
         hooks:
             build: |
                 set -eux
