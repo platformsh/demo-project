@@ -1,4 +1,4 @@
-import "path"
+import path from "path"
 
 /**
  * This function build module.
