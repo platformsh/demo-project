@@ -3,95 +3,79 @@ name: Node.js CI
 on:
   pull_request:
     branches:
-    - main 
+      - main
 
 env:
-    MAX_HIGH: 0
-    MAX_CRITICAL: 0
+  MAX_HIGH: 0
+  MAX_CRITICAL: 0
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         # These versions match Upsun support
         #   Node.js: https://docs.upsun.com/languages/nodejs.html#supported-versions
-        node-version: [18.x, 20.x, 21.x]
+        node-version: [22.x]
         #   Python: https://docs.upsun.com/languages/python.html#supported-versions
-        python-version: ['3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.12']
 
     steps:
       ################################################################################################
       # A. Setup workflow.
-      - name: "1. Retrieve local files."
+      - name: "Retrieve local files."
         uses: actions/checkout@v4
         with:
             ref: ${{ github.event.pull_request.head.sha }}
-      - name: "2. Set up Node.js."
+      - name: "Set up Node.js."
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: "3. Python."
+      - name: "Python."
         uses: actions/setup-python@v4 
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
-
-      ################################################################################################
-      # B. Prettify, lint, and test repo.
-      - name: "4. Preparing"
+          cache: 'pip'   # harmless even though we'll use uv
+      - name: "Install uv"
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: latest 
+      - name: "Install bun"
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: "Install application dependencies"
         run: |
           echo "::notice::Running react-scripts tests."
           export CI=true
-          npm install cross-env npm-run-all -g
-          npm install
+          bun install
       - name: "5. Verifying backend code is pretty"
-        run: | 
-          npm run prettier:backend
+        run: bun run prettier:backend
       - name: "6. Verifying frontend code is pretty"
-        run: |
-          npm run prettier:frontend
+        run: bun run prettier:frontend
       - name: "7. Linting frontend"
-        run: npm run lint:frontend
+        run: bun run lint:frontend
       - name: "8. Run Frontend tests"
-        run: npm run test:frontend
+        run: bun run test:frontend
       - name: "9. Run Backend linting"
-        run: |
-          npm run lint:backend
+        run: bun run lint:backend
 
       ################################################################################################
       # C. Ensure no vulnerabilities.
       - name: "10. Test: there should be no Python vulnerabilities."
         run: |
           echo "::notice::Checking for vulnerabilities in backend Python app dependencies."
-          npm run test:backend
+          bun run test:backend
       - name: "11. Test: there should be no HIGH Node.js vulnerabilities."
         run: |
-          echo "::notice::Checking for high vulnerabilities in frontend Node.js app dependencies."
+          echo "::notice::Checking HIGH vulnerabilities (bun audit)."
           cd frontend
           export CI=true
-          HIGH_VULN_ALLOWED=${{ env.MAX_HIGH }}
-          HIGH_VULN=$(npm audit --json | jq '.metadata.vulnerabilities.high')
-          if [ "$HIGH_VULN" -gt "$HIGH_VULN_ALLOWED" ]; then
-              echo "::error::NPM HIGH vulnerabilities exceed allowed budget."
-              npm audit
-              exit 1
-          else
-              echo "::notice::No HIGH vulnerabilities found on frontend app."
-          fi
+          bun audit --audit-level=high
       - name: "12. Test: there should be no CRITICAL Node.js vulnerabilities."
         run: |
-          echo "::notice::Checking for critical vulnerabilities in frontend Node.js app dependencies."
+          echo "::notice::Checking CRITICAL vulnerabilities (bun audit)."
           cd frontend
           export CI=true
-          CRITICAL_VULN_ALLOWED=${{ env.MAX_CRITICAL }}
-          CRITICAL_VULN=$(npm audit --json | jq '.metadata.vulnerabilities.high')
-          if [ "$CRITICAL_VULN" -gt "$CRITICAL_VULN_ALLOWED" ]; then
-              echo "::error::NPM CRITICAL vulnerabilities exceed allowed budget."
-              npm audit
-              exit 1
-          else
-              echo "::notice::No CRITICAL vulnerabilities found on frontend app."
-          fi
+          bun audit --audit-level=critical

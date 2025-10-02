@@ -6,21 +6,29 @@
   "scripts": {
     "clean:backend": "cd backend && ./scripts/clean.sh",
     "clean:frontend": "cd frontend && ./scripts/clean.sh",
-    "clean": "clear && cross-env FORCE_COLOR=1 npm-run-all -l -p clean:*",
+    "clean": "clear && cross-env FORCE_COLOR=1 concurrently -n front,back -c blue,green \"bun run clean:frontend\" \"bun run clean:backend\"",
+
+
     "start:backend": "cd backend && ./scripts/start.sh",
-    "start:frontend": "cd frontend && npm run build && npm run start",
-    "start": "clear && cross-env FORCE_COLOR=1 npm-run-all -l -p start:*",
-    "postinstall": "cross-env FORCE_COLOR=1 npm-run-all -l postinstall:*",
+    "start:frontend": "cd frontend && bun run start",
+    "start": "clear && cross-env FORCE_COLOR=1 concurrently -n front,back -c blue,green \"bun run start:frontend\" \"bun run start:backend\"",
+
+
     "postinstall:backend": "cd backend && ./scripts/build.sh",
-    "postinstall:frontend": "cd frontend && npm install",
-    "lint:frontend": "cd frontend && npm run lint",
+    "postinstall:frontend": "cd frontend && bun install",
+    "postinstall": "cross-env FORCE_COLOR=1 concurrently -n front,back -c blue,green \"bun run postinstall:frontend\" \"bun run postinstall:backend\"",
+
+
+    "lint:frontend": "cd frontend && bun run lint",
     "lint:backend": "cd backend && ./scripts/lint_backend.sh",
-    "test:frontend": "cd frontend && npm run test",
+
+    "test:frontend": "cd frontend && bun run test",
     "test:backend": "cd backend && ./scripts/test.sh",
+
     "prettier:backend": "cd backend && ./scripts/prettier_backend.sh",
     "prettier:backend:fix": "cd backend && black .",
-    "prettier:frontend": "cd frontend && npm run pretty",
-    "prettier:frontend:fix": "cd frontend && npm run pretty:fix"
+    "prettier:frontend": "cd frontend && bun run pretty",
+    "prettier:frontend:fix": "cd frontend && bun run pretty:fix"
   },
   "repository": {
     "type": "git",
@@ -36,10 +44,12 @@
   },
   "homepage": "https://github.com/platformsh/demo-project#readme",
   "dependencies": {
-    "cross-env": "^7.0.3",
-    "npm-run-all": "^4.1.5"
+    "cross-env": "^7.0.3"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
