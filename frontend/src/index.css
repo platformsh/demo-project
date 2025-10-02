@@ -91,7 +91,7 @@
   }
 
   :not(.gutter) > code[class*="language-"] {
-    @apply text-gray-400
+    @apply text-gray-400;
   }
 
   pre[class*="language-"] {
@@ -99,7 +99,7 @@
   }
 
   code[class*="language-"] .token.comment {
-    @apply text-white italic ;
+    @apply text-white italic;
   }
 
   code[class*="language-"] .token.key {

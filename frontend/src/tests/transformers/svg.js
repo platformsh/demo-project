@@ -1,4 +1,4 @@
-import path from "path"
+import path from "path";
 
 /**
  * This function build module.
@@ -79,4 +79,4 @@ const processSvg = (contents, filename) => {
 };
 
 const output = { process: processSvg };
-export default output
+export default output;

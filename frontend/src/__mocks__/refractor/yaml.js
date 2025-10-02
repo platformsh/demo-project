@@ -1,2 +1,2 @@
-const yaml = {}
+const yaml = {};
 export default yaml;
