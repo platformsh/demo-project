@@ -69,7 +69,7 @@ services:
                 text={servicesText}
                 language="yaml"
                 showLineNumbers
-                startingLineNumber={67}
+                startingLineNumber={79}
               />
             </div>
           </li>

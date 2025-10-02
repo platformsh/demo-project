@@ -90,6 +90,10 @@
     @apply block;
   }
 
+  :not(.gutter) > code[class*="language-"] {
+    @apply text-gray-400
+  }
+
   pre[class*="language-"] {
     @apply text-white bg-black p-4 m-0 overflow-auto rounded-md;
   }
