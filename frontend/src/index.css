@@ -84,3 +84,46 @@
     /*@apply border-b-[40px] border-l-[50px] border-b-upsun-violet-600 border-l-transparent;*/
   }
 }
+
+@layer components {
+  code[class*="language-"] {
+    @apply block;
+  }
+
+  :not(.gutter) > code[class*="language-"] {
+    @apply text-gray-400;
+  }
+
+  pre[class*="language-"] {
+    @apply text-white bg-black p-4 m-0 overflow-auto rounded-md;
+  }
+
+  code[class*="language-"] .token.comment {
+    @apply text-white italic;
+  }
+
+  code[class*="language-"] .token.key {
+    @apply text-upsun-yellow-400;
+  }
+
+  code[class*="language-"] .token.string,
+  code[class*="language-"] .token.char {
+    @apply text-[#34E2E2];
+  }
+
+  code[class*="language-"] .token.punctuation {
+    @apply text-[#ccc];
+  }
+
+  code[class*="language-"] .token.function {
+    @apply text-[#FFD700];
+  }
+
+  code[class*="language-"] .token.variable {
+    @apply text-[#F0E68C];
+  }
+
+  code[class*="language-"] .token.number {
+    @apply text-[#FFA500];
+  }
+}

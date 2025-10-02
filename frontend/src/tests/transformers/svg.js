@@ -1,4 +1,4 @@
-const path = require("path");
+import path from "path";
 
 /**
  * This function build module.
@@ -78,4 +78,5 @@ const processSvg = (contents, filename) => {
   // return { code: contents };
 };
 
-module.exports = { process: processSvg };
+const output = { process: processSvg };
+export default output;

@@ -1,8 +1,7 @@
 import React from "react";
 import FeatureStep from "../components/FeatureStep";
 import { ReactComponent as RedisIcon } from "../assets/utility/service_redis.svg";
-import { CodeBlock } from "react-code-blocks";
-import UpsunCodeTheme from "../theme/code";
+import CodeBlock from "../components/CodeBlock";
 import CopyButton from "../components/CopyButton";
 import commands from "../commands.json";
 import CodeExample from "../components/CodeExample";
@@ -70,8 +69,7 @@ services:
                 text={servicesText}
                 language="yaml"
                 showLineNumbers
-                theme={UpsunCodeTheme}
-                startingLineNumber={67}
+                startingLineNumber={79}
               />
             </div>
           </li>
